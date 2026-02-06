@@ -784,40 +784,40 @@ volumes:
 ### Fase 0 — Fundamentos y Configuración Base
 
 - [x] Crear `.github/copilot-instructions.md` (este archivo)
-- [ ] Crear `.gitignore` raíz
-- [ ] Crear `docker-compose.yml` con PostgreSQL 17
-- [ ] Crear `README.md` con descripción, stack, prerrequisitos y setup
+- [x] Crear `.gitignore` raíz
+- [x] Crear `docker-compose.yml` con PostgreSQL 17
+- [x] Crear `README.md` con descripción, stack, prerrequisitos y setup
 
 ### Fase 1 — Backend Setup
 
-- [ ] Inicializar `venv` en `be/`
-- [ ] Crear `requirements.txt` con todas las dependencias
-- [ ] Instalar dependencias
-- [ ] Crear `app/config.py` — Pydantic Settings
-- [ ] Crear `app/database.py` — SQLAlchemy engine + session
-- [ ] Crear `app/main.py` — FastAPI app con CORS
-- [ ] Crear `.env.example` y `.env`
-- [ ] ✅ Verificar: `uvicorn app.main:app --reload` → Swagger UI en `/docs`
+- [x] Inicializar `venv` en `be/`
+- [x] Crear `requirements.txt` con todas las dependencias
+- [x] Instalar dependencias
+- [x] Crear `app/config.py` — Pydantic Settings
+- [x] Crear `app/database.py` — SQLAlchemy engine + session
+- [x] Crear `app/main.py` — FastAPI app con CORS
+- [x] Crear `.env.example` y `.env`
+- [x] ✅ Verificar: `uvicorn app.main:app --reload` → Swagger UI en `/docs`
 
 ### Fase 2 — Modelo de Datos y Migraciones
 
-- [ ] Crear `app/models/user.py` — Modelo User
-- [ ] Crear `app/models/password_reset_token.py` — Modelo PasswordResetToken
-- [ ] Inicializar Alembic
-- [ ] Crear primera migración
-- [ ] Ejecutar migración
-- [ ] ✅ Verificar: tablas creadas en PostgreSQL
+- [x] Crear `app/models/user.py` — Modelo User
+- [x] Crear `app/models/password_reset_token.py` — Modelo PasswordResetToken
+- [x] Inicializar Alembic
+- [x] Crear primera migración
+- [x] Ejecutar migración
+- [x] ✅ Verificar: tablas creadas en PostgreSQL
 
 ### Fase 3 — Autenticación Backend
 
-- [ ] Crear `app/utils/security.py` — hashing + JWT
-- [ ] Crear `app/schemas/user.py` — schemas Pydantic
-- [ ] Crear `app/services/auth_service.py` — lógica de negocio
-- [ ] Crear `app/utils/email.py` — envío de email de recuperación
-- [ ] Crear `app/dependencies.py` — get_db, get_current_user
-- [ ] Crear `app/routers/auth.py` — endpoints de auth
-- [ ] Crear `app/routers/users.py` — endpoint GET /me
-- [ ] ✅ Verificar: probar todos los endpoints en Swagger UI
+- [x] Crear `app/utils/security.py` — hashing + JWT
+- [x] Crear `app/schemas/user.py` — schemas Pydantic
+- [x] Crear `app/services/auth_service.py` — lógica de negocio
+- [x] Crear `app/utils/email.py` — envío de email de recuperación
+- [x] Crear `app/dependencies.py` — get_db, get_current_user
+- [x] Crear `app/routers/auth.py` — endpoints de auth
+- [x] Crear `app/routers/users.py` — endpoint GET /me
+- [x] ✅ Verificar: probar todos los endpoints en Swagger UI
 
 ### Fase 4 — Tests Backend
 

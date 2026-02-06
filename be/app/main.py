@@ -14,6 +14,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
+from app.routers.auth import router as auth_router
+from app.routers.users import router as users_router
 
 
 # ¿Qué? Función de ciclo de vida (lifespan) que se ejecuta al iniciar y al cerrar la app.
@@ -71,6 +73,19 @@ app.add_middleware(
     allow_methods=["*"],  # Permitir todos los métodos HTTP (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],  # Permitir todos los headers (incluyendo Authorization)
 )
+
+
+# ────────────────────────────
+# 📍 Incluir routers
+# ────────────────────────────
+
+# ¿Qué? Registro de los routers de autenticación y usuarios en la app.
+# ¿Para qué? Conectar todos los endpoints definidos en los módulos routers/ a la aplicación
+#            principal, para que FastAPI pueda enrutarlos correctamente.
+# ¿Impacto? Sin include_router(), los endpoints de auth y users NO existirían — las
+#           peticiones a /api/v1/auth/* y /api/v1/users/* retornarían 404.
+app.include_router(auth_router)
+app.include_router(users_router)
 
 
 # ────────────────────────────
