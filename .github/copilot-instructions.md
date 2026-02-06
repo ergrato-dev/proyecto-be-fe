@@ -760,6 +760,44 @@ volumes:
 - ✅ Manejo de errores con feedback visual al usuario
 - ✅ Loading states para operaciones asíncronas
 
+### 14.4 Diseño y UX/UI — OBLIGATORIO
+
+| Aspecto              | Regla                                                                |
+| -------------------- | -------------------------------------------------------------------- |
+| **Temas**            | Dark mode y Light mode con toggle — usar `prefers-color-scheme`      |
+| **Tipografía**       | Fuentes **sans-serif** exclusivamente (`Inter`, `system-ui`)         |
+| **Colores**          | Sólidos y planos — **SIN degradados** (`gradient`) en ningún lugar   |
+| **Estilo visual**    | Diseño moderno, limpio, minimalista con excelente UX/UI              |
+| **Botones de acción**| Siempre alineados a la **derecha** (`justify-end`, `text-right`)     |
+| **Spacing**          | Usar escala consistente de Tailwind (`p-4`, `gap-6`, `space-y-4`)   |
+| **Bordes**           | Sutiles (`border`, `border-gray-200 dark:border-gray-700`)           |
+| **Transiciones**     | Suaves en hover/focus (`transition-colors`, `duration-200`)          |
+| **Responsividad**    | Mobile-first — los formularios de auth deben verse bien en móvil     |
+| **Accesibilidad**    | Labels en inputs, `aria-*` básicos, contraste suficiente (WCAG AA)   |
+
+```typescript
+// ✅ CORRECTO — Botón de acción a la derecha, sin degradados, sans-serif
+<div className="flex justify-end gap-3">
+  <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300
+    bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600
+    rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+    Cancelar
+  </button>
+  <button className="px-4 py-2 text-sm font-medium text-white
+    bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600
+    rounded-lg transition-colors">
+    Guardar
+  </button>
+</div>
+
+// ❌ INCORRECTO — Degradados, botones centrados/izquierda, fuente serif
+<div className="flex justify-center">
+  <button className="bg-gradient-to-r from-blue-500 to-purple-500 font-serif">
+    Guardar
+  </button>
+</div>
+```
+
 ---
 
 ## 15. Reglas para Copilot / IA — Al Generar Código
@@ -827,12 +865,12 @@ volumes:
 
 ### Fase 5 — Frontend Setup
 
-- [ ] Inicializar proyecto Vite con React + TypeScript en `fe/`
-- [ ] Instalar dependencias con `pnpm`
-- [ ] Configurar TailwindCSS
-- [ ] Configurar TypeScript strict mode
-- [ ] Crear `.env.example`
-- [ ] ✅ Verificar: `pnpm dev` → app base visible en `http://localhost:5173`
+- [x] Inicializar proyecto Vite con React + TypeScript en `fe/`
+- [x] Instalar dependencias con `pnpm`
+- [x] Configurar TailwindCSS
+- [x] Configurar TypeScript strict mode
+- [x] Crear `.env.example`
+- [x] ✅ Verificar: `pnpm dev` → app base visible en `http://localhost:5173`
 
 ### Fase 6 — Frontend Auth
 

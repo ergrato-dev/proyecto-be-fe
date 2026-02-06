@@ -1,0 +1,53 @@
+/**
+ * Archivo: index.css
+ * Descripción: Hoja de estilos global — importa TailwindCSS y define tema personalizado.
+ * ¿Para qué? Cargar TailwindCSS y establecer variables CSS para el tema dark/light.
+ * ¿Impacto? Sin este archivo, ninguna clase utilitaria de Tailwind funcionaría en la app.
+ */
+
+/* ¿Qué? Importación de TailwindCSS v4 — carga todas las utilidades automáticamente. */
+/* ¿Para qué? Habilitar clases como bg-blue-600, flex, p-4, etc. en toda la aplicación. */
+/* ¿Impacto? Es la única línea necesaria para activar TailwindCSS 4 (detección automática). */
+@import "tailwindcss";
+
+/* ============================================================================
+   TEMA PERSONALIZADO — NN Auth System
+   ¿Qué? Variables CSS personalizadas para colores, tipografía y transiciones.
+   ¿Para qué? Mantener consistencia visual y permitir dark/light mode fácilmente.
+   ¿Impacto? Cambiar un valor aquí se refleja en toda la aplicación.
+   ============================================================================ */
+
+@theme {
+  /* Fuentes — solo sans-serif, sin serifas nunca */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* ¿Qué? Estilos base aplicados al body y al root de la app. */
+/* ¿Para qué? Establecer tipografía sans-serif, colores de fondo/texto y transición smooth. */
+/* ¿Impacto? Garantiza que toda la app use sans-serif y soporte dark mode desde el inicio. */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: theme(--color-gray-200);
+  }
+
+  html {
+    font-family: theme(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+    @apply min-h-screen antialiased;
+    @apply transition-colors duration-200;
+    margin: 0;
+  }
+
+  .dark *,
+  .dark *::before,
+  .dark *::after {
+    border-color: theme(--color-gray-700);
+  }
+}
