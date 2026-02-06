@@ -821,9 +821,9 @@ volumes:
 
 ### Fase 4 — Tests Backend
 
-- [ ] Crear `app/tests/conftest.py` — fixtures
-- [ ] Crear `app/tests/test_auth.py` — tests completos
-- [ ] ✅ Verificar: `pytest -v` → todos los tests pasan
+- [x] Crear `app/tests/conftest.py` — fixtures
+- [x] Crear `app/tests/test_auth.py` — tests completos
+- [x] ✅ Verificar: `pytest -v` → todos los tests pasan (32/32, 96% cobertura)
 
 ### Fase 5 — Frontend Setup
 
