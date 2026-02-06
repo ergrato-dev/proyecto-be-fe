@@ -1,0 +1,94 @@
+# ========================
+# NN Auth System — .gitignore
+# ========================
+# ¿Qué? Archivo que define qué archivos y carpetas NO deben ser rastreados por Git.
+# ¿Para qué? Evitar subir archivos sensibles, temporales o generados al repositorio.
+# ¿Impacto? Sin este archivo, se podrían versionar contraseñas, dependencias pesadas
+#           o archivos de compilación, comprometiendo seguridad y rendimiento del repo.
+
+# ────────────────────────────
+# 🐍 Python / Backend
+# ────────────────────────────
+
+# Entorno virtual — NUNCA versionar
+be/.venv/
+.venv/
+venv/
+env/
+
+# Cache de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# Distribución / empaquetado
+*.egg-info/
+dist/
+build/
+*.egg
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
+
+# ruff
+.ruff_cache/
+
+# ────────────────────────────
+# ⚛️ Node.js / Frontend
+# ────────────────────────────
+
+# Dependencias — se reinstalan con pnpm install
+node_modules/
+
+# Build de producción
+fe/dist/
+
+# Cache de Vite
+fe/.vite/
+
+# Vitest
+fe/coverage/
+
+# ────────────────────────────
+# 🔐 Variables de entorno
+# ────────────────────────────
+# NUNCA versionar archivos .env con credenciales reales
+.env
+*.env.local
+.env.*.local
+
+# Sí versionar los .env.example (plantillas sin datos reales)
+!.env.example
+!*.env.example
+
+# ────────────────────────────
+# 🖥️ IDEs y Editores
+# ────────────────────────────
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ────────────────────────────
+# 📦 Docker
+# ────────────────────────────
+# No ignorar docker-compose.yml (sí se versiona)
+# Ignorar volúmenes locales si existieran
+docker-volumes/
+
+# ────────────────────────────
+# 📄 Otros
+# ────────────────────────────
+*.log
+*.tmp
+*.bak

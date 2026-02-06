@@ -1,0 +1,53 @@
+# ¿Qué? Archivo de Docker Compose para orquestar servicios de desarrollo.
+# ¿Para qué? Levantar PostgreSQL 17 con un solo comando, sin instalación local.
+# ¿Impacto? Garantiza que todos los desarrolladores usen la misma versión de BD
+#           con la misma configuración, eliminando el clásico "en mi máquina funciona".
+
+services:
+  # ────────────────────────────
+  # 🐘 PostgreSQL 17 — Base de datos principal
+  # ────────────────────────────
+  db:
+    # ¿Qué? Imagen oficial de PostgreSQL 17 basada en Alpine Linux (más liviana).
+    # ¿Para qué? Proveer la base de datos relacional del sistema de autenticación.
+    # ¿Impacto? Sin este servicio, el backend no puede persistir datos de usuarios ni tokens.
+    image: postgres:17-alpine
+    container_name: nn_auth_db
+    restart: unless-stopped
+
+    environment:
+      # Variables que PostgreSQL usa al inicializar por primera vez el contenedor.
+      # Estos valores son SOLO para desarrollo local — en producción se usan secrets.
+      POSTGRES_USER: nn_user
+      POSTGRES_PASSWORD: nn_password
+      POSTGRES_DB: nn_auth_db
+
+    ports:
+      # ¿Qué? Mapea el puerto 5432 del contenedor al 5432 del host.
+      # ¿Para qué? Permitir que el backend (que corre fuera de Docker) se conecte a la BD.
+      # ¿Impacto? Si el puerto está ocupado, cambiar el lado izquierdo (ej: "5433:5432").
+      - "5432:5432"
+
+    volumes:
+      # ¿Qué? Volumen nombrado que persiste los datos de PostgreSQL.
+      # ¿Para qué? Que los datos sobrevivan al reinicio o recreación del contenedor.
+      # ¿Impacto? Sin volumen, cada `docker compose down` borraría todos los datos.
+      - nn_auth_data:/var/lib/postgresql/data
+
+    healthcheck:
+      # ¿Qué? Comando que Docker ejecuta periódicamente para verificar que PostgreSQL responde.
+      # ¿Para qué? Saber si la BD está lista para aceptar conexiones antes de que el backend intente conectarse.
+      # ¿Impacto? Sin healthcheck, el backend podría intentar conectarse antes de que la BD esté lista.
+      test: ["CMD-SHELL", "pg_isready -U nn_user -d nn_auth_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+# ────────────────────────────
+# 📦 Volúmenes nombrados
+# ────────────────────────────
+volumes:
+  # ¿Qué? Volumen Docker nombrado para persistencia de datos de PostgreSQL.
+  # ¿Para qué? Almacenar datos de la BD de forma durable entre reinicios del contenedor.
+  # ¿Impacto? Para borrar TODOS los datos: `docker compose down -v` (¡cuidado en producción!).
+  nn_auth_data:
