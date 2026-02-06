@@ -7,6 +7,7 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { User, Mail, Lock, KeyRound } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { InputField } from "@/components/ui/InputField";
@@ -111,6 +112,7 @@ export function RegisterPage() {
           value={formData.full_name}
           placeholder="Juan Pérez"
           autoComplete="name"
+          icon={<User className="h-5 w-5" />}
           error={errors.full_name}
           onChange={handleChange}
         />
@@ -122,6 +124,7 @@ export function RegisterPage() {
           value={formData.email}
           placeholder="correo@ejemplo.com"
           autoComplete="email"
+          icon={<Mail className="h-5 w-5" />}
           error={errors.email}
           onChange={handleChange}
         />
@@ -133,6 +136,7 @@ export function RegisterPage() {
           value={formData.password}
           placeholder="Mínimo 8 caracteres"
           autoComplete="new-password"
+          icon={<Lock className="h-5 w-5" />}
           error={errors.password}
           onChange={handleChange}
         />
@@ -144,6 +148,7 @@ export function RegisterPage() {
           value={formData.confirmPassword}
           placeholder="Repite tu contraseña"
           autoComplete="new-password"
+          icon={<KeyRound className="h-5 w-5" />}
           error={errors.confirmPassword}
           onChange={handleChange}
         />

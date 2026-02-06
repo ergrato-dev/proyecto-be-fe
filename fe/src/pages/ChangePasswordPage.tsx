@@ -7,6 +7,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Lock, KeyRound, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { InputField } from "@/components/ui/InputField";
 import { Button } from "@/components/ui/Button";
@@ -121,6 +122,7 @@ export function ChangePasswordPage() {
             value={formData.current_password}
             placeholder="••••••••"
             autoComplete="current-password"
+            icon={<Lock className="h-5 w-5" />}
             error={errors.current_password}
             onChange={handleChange}
           />
@@ -132,6 +134,7 @@ export function ChangePasswordPage() {
             value={formData.new_password}
             placeholder="Mínimo 8 caracteres"
             autoComplete="new-password"
+            icon={<KeyRound className="h-5 w-5" />}
             error={errors.new_password}
             onChange={handleChange}
           />
@@ -143,6 +146,7 @@ export function ChangePasswordPage() {
             value={formData.confirmPassword}
             placeholder="Repite la nueva contraseña"
             autoComplete="new-password"
+            icon={<ShieldCheck className="h-5 w-5" />}
             error={errors.confirmPassword}
             onChange={handleChange}
           />

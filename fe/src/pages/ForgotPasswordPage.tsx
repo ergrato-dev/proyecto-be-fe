@@ -8,6 +8,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Mail } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { InputField } from "@/components/ui/InputField";
@@ -76,6 +77,7 @@ export function ForgotPasswordPage() {
           value={email}
           placeholder="correo@ejemplo.com"
           autoComplete="email"
+          icon={<Mail className="h-5 w-5" />}
           onChange={(e) => {
             setEmail(e.target.value);
             setError(null);

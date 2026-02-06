@@ -6,6 +6,7 @@
  */
 
 import { Link, useNavigate } from "react-router-dom";
+import { LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
@@ -52,11 +53,12 @@ export function Navbar() {
                 {user.full_name}
               </span>
 
-              {/* ¿Qué? Botón de cerrar sesión. */}
+              {/* ¿Qué? Botón de cerrar sesión con icono de Lucide. */}
               <button
                 onClick={handleLogout}
-                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
               >
+                <LogOut className="h-4 w-4" aria-hidden="true" />
                 Salir
               </button>
             </>

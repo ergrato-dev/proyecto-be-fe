@@ -8,6 +8,7 @@
 
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { KeyRound, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { InputField } from "@/components/ui/InputField";
@@ -136,6 +137,7 @@ export function ResetPasswordPage() {
             value={formData.new_password}
             placeholder="Mínimo 8 caracteres"
             autoComplete="new-password"
+            icon={<KeyRound className="h-5 w-5" />}
             error={errors.new_password}
             onChange={handleChange}
           />
@@ -147,6 +149,7 @@ export function ResetPasswordPage() {
             value={formData.confirmPassword}
             placeholder="Repite la nueva contraseña"
             autoComplete="new-password"
+            icon={<ShieldCheck className="h-5 w-5" />}
             error={errors.confirmPassword}
             onChange={handleChange}
           />

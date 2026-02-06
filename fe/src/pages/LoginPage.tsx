@@ -7,6 +7,7 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Mail, Lock } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { InputField } from "@/components/ui/InputField";
@@ -77,6 +78,7 @@ export function LoginPage() {
           value={formData.email}
           placeholder="correo@ejemplo.com"
           autoComplete="email"
+          icon={<Mail className="h-5 w-5" />}
           onChange={handleChange}
         />
 
@@ -87,6 +89,7 @@ export function LoginPage() {
           value={formData.password}
           placeholder="••••••••"
           autoComplete="current-password"
+          icon={<Lock className="h-5 w-5" />}
           onChange={handleChange}
         />
 

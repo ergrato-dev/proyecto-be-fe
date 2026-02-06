@@ -102,4 +102,20 @@ describe("InputField", () => {
     render(<InputField {...baseProps} type="text" />);
     expect(screen.queryByLabelText("Mostrar contraseña")).not.toBeInTheDocument();
   });
+
+  // ¿Qué? Verifica que el icono se renderiza a la izquierda del input.
+  // ¿Para qué? Confirmar que la prop icon se muestra correctamente.
+  // ¿Impacto? Sin este test, podríamos romper los iconos sin darnos cuenta.
+  it("renderiza el icono cuando se pasa la prop icon", () => {
+    render(
+      <InputField {...baseProps} icon={<span data-testid="test-icon">icon</span>} />,
+    );
+    expect(screen.getByTestId("test-icon")).toBeInTheDocument();
+  });
+
+  // ¿Qué? Verifica que sin la prop icon no se agrega el contenedor del icono.
+  it("no renderiza contenedor de icono cuando no se pasa la prop", () => {
+    const { container } = render(<InputField {...baseProps} />);
+    expect(container.querySelector(".pointer-events-none")).not.toBeInTheDocument();
+  });
 });
