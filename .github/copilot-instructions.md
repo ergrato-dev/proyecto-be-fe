@@ -886,9 +886,9 @@ volumes:
 
 ### Fase 7 — Tests Frontend
 
-- [ ] Configurar Vitest + Testing Library
-- [ ] Crear tests para componentes y flujos de auth
-- [ ] ✅ Verificar: `pnpm test` → todos los tests pasan
+- [x] Configurar Vitest + Testing Library
+- [x] Crear tests para componentes y flujos de auth
+- [x] ✅ Verificar: `pnpm test` → todos los tests pasan (80/80)
 
 ### Fase 8 — Documentación Final
 
