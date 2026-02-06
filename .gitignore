@@ -70,7 +70,7 @@ fe/coverage/
 # ────────────────────────────
 # 🖥️ IDEs y Editores
 # ────────────────────────────
-.vscode/settings.json
+# .vscode/settings.json → SÍ se versiona (config compartida del proyecto)
 .vscode/launch.json
 .idea/
 *.swp

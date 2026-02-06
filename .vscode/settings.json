@@ -1,0 +1,46 @@
+{
+  // ¿Qué? Configuración de VS Code para el workspace del proyecto.
+  // ¿Para qué? Activar automáticamente el venv en cada terminal nueva y configurar
+  //            herramientas de desarrollo (linter, formatter, intérprete Python).
+  // ¿Impacto? Sin esto, habría que activar el venv manualmente con `source .venv/bin/activate`
+  //           en cada terminal nueva, lo cual es tedioso y propenso a olvidos.
+
+  // ────────────────────────────
+  // 🐍 Python — Intérprete y entorno virtual
+  // ────────────────────────────
+  "python.defaultInterpreterPath": "${workspaceFolder}/be/.venv/bin/python",
+  "python.terminal.activateEnvironment": true,
+
+  // ────────────────────────────
+  // 🔍 Python — Linting y formateo con ruff
+  // ────────────────────────────
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+
+  // ────────────────────────────
+  // ⚛️ TypeScript/React — Formateo con Prettier
+  // ────────────────────────────
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  // ────────────────────────────
+  // 📁 Archivos — Excluir ruido del explorador
+  // ────────────────────────────
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true,
+    "**/node_modules": true
+  }
+}
