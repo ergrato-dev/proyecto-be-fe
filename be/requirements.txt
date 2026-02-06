@@ -1,0 +1,52 @@
+# ========================
+# NN Auth System — Dependencias del Backend
+# ========================
+# ¿Qué? Lista de todas las dependencias Python del backend.
+# ¿Para qué? Permitir la instalación reproducible del proyecto con `pip install -r requirements.txt`.
+# ¿Impacto? Sin este archivo, cada desarrollador tendría que adivinar qué paquetes instalar
+#           y en qué versiones, causando inconsistencias entre entornos.
+
+# ────────────────────────────
+# 🚀 Framework y servidor
+# ────────────────────────────
+fastapi>=0.115.0            # Framework web async de alto rendimiento
+uvicorn[standard]>=0.32.0   # Servidor ASGI para ejecutar FastAPI
+python-multipart>=0.0.18    # Soporte para form data (requerido por OAuth2PasswordRequestForm)
+
+# ────────────────────────────
+# 🗄️ Base de datos y ORM
+# ────────────────────────────
+sqlalchemy>=2.0.0           # ORM para interactuar con PostgreSQL
+alembic>=1.14.0             # Migraciones de base de datos versionadas
+psycopg2-binary>=2.9.0      # Driver PostgreSQL para Python
+
+# ────────────────────────────
+# 📋 Validación y configuración
+# ────────────────────────────
+pydantic>=2.0.0             # Validación de datos y schemas (ya incluido con FastAPI)
+pydantic-settings>=2.0.0    # Cargar configuración desde variables de entorno (.env)
+
+# ────────────────────────────
+# 🔐 Seguridad y autenticación
+# ────────────────────────────
+python-jose[cryptography]>=3.3.0  # Creación y verificación de tokens JWT
+passlib[bcrypt]>=1.7.0            # Hashing seguro de contraseñas con bcrypt
+bcrypt>=4.0.0                     # Backend de bcrypt (requerido por passlib)
+
+# ────────────────────────────
+# 📧 Email
+# ────────────────────────────
+aiosmtplib>=3.0.0           # Cliente SMTP async para envío de emails
+
+# ────────────────────────────
+# 🧪 Testing
+# ────────────────────────────
+pytest>=8.0.0               # Framework principal de testing
+pytest-asyncio>=0.24.0      # Soporte para tests asíncronos
+httpx>=0.27.0               # Cliente HTTP async para tests de integración con FastAPI
+pytest-cov>=6.0.0           # Medir cobertura de código
+
+# ────────────────────────────
+# 🔍 Linting y formateo
+# ────────────────────────────
+ruff>=0.8.0                 # Linter + formatter ultrarrápido para Python
