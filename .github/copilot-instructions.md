@@ -874,15 +874,15 @@ volumes:
 
 ### Fase 6 — Frontend Auth
 
-- [ ] Crear tipos TypeScript (`types/auth.ts`)
-- [ ] Crear cliente HTTP (`api/auth.ts`)
-- [ ] Crear AuthContext + Provider
-- [ ] Crear hook `useAuth`
-- [ ] Crear componentes UI (InputField, Button, Alert)
-- [ ] Crear ProtectedRoute
-- [ ] Crear páginas: Login, Register, Dashboard, ChangePassword, ForgotPassword, ResetPassword
-- [ ] Configurar rutas en App.tsx
-- [ ] ✅ Verificar: flujo completo funciona contra la API
+- [x] Crear tipos TypeScript (`types/auth.ts`)
+- [x] Crear cliente HTTP (`api/auth.ts`)
+- [x] Crear AuthContext + Provider
+- [x] Crear hook `useAuth`
+- [x] Crear componentes UI (InputField, Button, Alert)
+- [x] Crear ProtectedRoute
+- [x] Crear páginas: Login, Register, Dashboard, ChangePassword, ForgotPassword, ResetPassword
+- [x] Configurar rutas en App.tsx
+- [x] ✅ Verificar: flujo completo funciona contra la API
 
 ### Fase 7 — Tests Frontend
 

@@ -1,46 +1,70 @@
 /**
  * Archivo: App.tsx
  * Descripción: Componente raíz de la aplicación — define el enrutamiento principal.
- * ¿Para qué? Centralizar la estructura de rutas y proveer los contexts globales (theme, auth).
+ * ¿Para qué? Centralizar la estructura de rutas y proveer los contexts globales (auth).
  * ¿Impacto? Sin este componente, la app no tendría navegación ni estructura de páginas.
  */
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "@/context/AuthContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { AppLayout } from "@/components/layout/AppLayout";
+
+// ¿Qué? Imports de todas las páginas de la aplicación.
+// ¿Para qué? Cada página se renderiza según la ruta activa.
+// ¿Impacto? Al agregar una nueva página, se importa aquí y se agrega una <Route>.
+import { LoginPage } from "@/pages/LoginPage";
+import { RegisterPage } from "@/pages/RegisterPage";
+import { DashboardPage } from "@/pages/DashboardPage";
+import { ChangePasswordPage } from "@/pages/ChangePasswordPage";
+import { ForgotPasswordPage } from "@/pages/ForgotPasswordPage";
+import { ResetPasswordPage } from "@/pages/ResetPasswordPage";
 
 /**
- * ¿Qué? Componente raíz que configura el router y las rutas de la aplicación.
+ * ¿Qué? Componente raíz que configura el AuthProvider y las rutas de la aplicación.
  * ¿Para qué? Definir qué página se muestra según la URL del navegador.
  * ¿Impacto? Es el punto de entrada visual — toda la interfaz se renderiza dentro de este componente.
  */
 function App() {
   return (
     <BrowserRouter>
-      <div className="flex min-h-screen flex-col bg-gray-50 font-sans text-gray-900 dark:bg-gray-950 dark:text-gray-100">
-        {/* ¿Qué? Contenedor principal con soporte para dark mode */}
-        {/* ¿Para qué? Aplicar estilos base y asegurar que el contenido ocupe toda la pantalla */}
-        {/* ¿Impacto? Sin este wrapper, el dark mode y el layout base no funcionarían correctamente */}
-        <main className="flex flex-1 items-center justify-center">
-          <Routes>
-            {/* Ruta temporal — será reemplazada por las páginas de auth en Fase 6 */}
-            <Route
-              path="/"
-              element={
-                <div className="text-center">
-                  <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
-                    NN Auth System
-                  </h1>
-                  <p className="mt-3 text-lg text-gray-600 dark:text-gray-400">
-                    Sistema de autenticación — Fase 5 completada
-                  </p>
-                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
-                    React + Vite + TypeScript + TailwindCSS
-                  </p>
-                </div>
-              }
-            />
-          </Routes>
-        </main>
-      </div>
+      {/* ¿Qué? AuthProvider envuelve todas las rutas para que useAuth() funcione. */}
+      {/* ¿Para qué? Sin AuthProvider, ningún componente hijo puede acceder al contexto de auth. */}
+      {/* ¿Impacto? Debe ser el wrapper más externo después del BrowserRouter. */}
+      <AuthProvider>
+        <Routes>
+          {/* ════════════════════════════════════════ */}
+          {/* 🔓 Rutas públicas (no requieren autenticación) */}
+          {/* ════════════════════════════════════════ */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+          {/* ════════════════════════════════════════ */}
+          {/* 🔒 Rutas protegidas (requieren sesión activa) */}
+          {/* ════════════════════════════════════════ */}
+          <Route
+            element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/change-password" element={<ChangePasswordPage />} />
+          </Route>
+
+          {/* ¿Qué? Ruta raíz redirige al login. */}
+          {/* ¿Para qué? Si el usuario accede a "/", lo enviamos al login. */}
+          {/* ¿Impacto? Evita una página en blanco en la ruta raíz. */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+
+          {/* ¿Qué? Ruta catch-all para URLs no existentes. */}
+          {/* ¿Para qué? Redirigir al login cualquier ruta desconocida. */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
