@@ -1,0 +1,37 @@
+# ========================
+# NN Auth System — .dockerignore del Frontend
+# ========================
+# ¿Qué? Archivos y carpetas que Docker excluye al copiar el contexto al contenedor.
+# ¿Para qué? Evitar subir archivos innecesarios o sensibles al contexto de build.
+# ¿Impacto? Sin este archivo, node_modules (~500MB) se enviaría al contexto de build
+#           en cada compilación, haciéndola extremadamente lenta. El Dockerfile
+#           instala sus propias dependencias dentro del contenedor.
+
+# ────────────────────────────
+# 📦 Dependencias — el contenedor las instala por su cuenta con pnpm install
+# ────────────────────────────
+node_modules/
+
+# ────────────────────────────
+# 🏗️ Artefactos de build — el Stage 1 del Dockerfile los regenera
+# ────────────────────────────
+dist/
+
+# ────────────────────────────
+# 🔐 Archivos sensibles — NUNCA deben estar en la imagen
+# ────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ────────────────────────────
+# 🧪 Artefactos de testing y cobertura
+# ────────────────────────────
+coverage/
+
+# ────────────────────────────
+# 🔧 Herramientas de desarrollo
+# ────────────────────────────
+.git/
+.gitignore
+*.md

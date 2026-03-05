@@ -1,7 +1,22 @@
-# ¿Qué? Archivo de Docker Compose para orquestar servicios de desarrollo.
-# ¿Para qué? Levantar PostgreSQL 17 con un solo comando, sin instalación local.
-# ¿Impacto? Garantiza que todos los desarrolladores usen la misma versión de BD
-#           con la misma configuración, eliminando el clásico "en mi máquina funciona".
+# ¿Qué? Archivo de Docker Compose para orquestar TODOS los servicios del proyecto.
+# ¿Para qué? Levantar PostgreSQL, el backend FastAPI y el frontend React con un solo
+#            comando (`docker compose up`), sin instalación manual de dependencias.
+# ¿Impacto? Garantiza que todos los desarrolladores usen el mismo entorno de ejecución,
+#           eliminando el clásico "en mi máquina funciona".
+#
+# ─────────────────────────────────────────────────
+# SERVICIOS:
+#   db  → PostgreSQL 17 (puerto 5432)
+#   be  → FastAPI + Uvicorn (puerto 8000) — depende de db
+#   fe  → React + Nginx (puerto 80) — depende de be
+# ─────────────────────────────────────────────────
+#
+# USO RÁPIDO:
+#   docker compose up --build          # construye imágenes y levanta todos
+#   docker compose up -d               # levanta en segundo plano
+#   docker compose logs -f be          # ver logs del backend en tiempo real
+#   docker compose down                # detiene y elimina contenedores
+#   docker compose down -v             # ídem + borra volúmenes (¡pierde datos de BD!)
 
 services:
   # ────────────────────────────
@@ -24,7 +39,8 @@ services:
 
     ports:
       # ¿Qué? Mapea el puerto 5432 del contenedor al 5432 del host.
-      # ¿Para qué? Permitir que el backend (que corre fuera de Docker) se conecte a la BD.
+      # ¿Para qué? Permitir conexiones directas a PostgreSQL desde herramientas externas
+      #            (DBeaver, psql, pgAdmin) o desde el backend corriendo fuera de Docker.
       # ¿Impacto? Si el puerto está ocupado, cambiar el lado izquierdo (ej: "5433:5432").
       - "5432:5432"
 
@@ -36,12 +52,130 @@ services:
 
     healthcheck:
       # ¿Qué? Comando que Docker ejecuta periódicamente para verificar que PostgreSQL responde.
-      # ¿Para qué? Saber si la BD está lista para aceptar conexiones antes de que el backend intente conectarse.
-      # ¿Impacto? Sin healthcheck, el backend podría intentar conectarse antes de que la BD esté lista.
+      # ¿Para qué? Saber si la BD está lista ANTES de que el backend intente conectarse.
+      # ¿Impacto? Sin healthcheck, el backend podría arrancar antes de que la BD esté lista,
+      #           causando errores de conexión en los primeros segundos.
       test: ["CMD-SHELL", "pg_isready -U nn_user -d nn_auth_db"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+    networks:
+      - nn_auth_network
+
+  # ────────────────────────────
+  # 🐍 Backend — FastAPI + Uvicorn
+  # ────────────────────────────
+  be:
+    # ¿Qué? Construye la imagen del backend desde el Dockerfile en ./be.
+    # ¿Para qué? Crear una imagen Docker con Python 3.12, las dependencias del proyecto
+    #            y el código de la aplicación FastAPI.
+    # ¿Impacto? Cada `docker compose up --build` reconstruye la imagen si hay cambios.
+    build:
+      context: ./be
+      dockerfile: Dockerfile
+
+    container_name: nn_auth_be
+    restart: unless-stopped
+
+    environment:
+      # ¿Qué? URL de conexión a PostgreSQL usando el hostname del servicio `db`.
+      # ¿Para qué? Dentro de la red Docker, los servicios se referencian por su nombre,
+      #            no por localhost. `db` resuelve a la IP interna del contenedor PostgreSQL.
+      # ¿Impacto? Si se usara `localhost`, el backend no podría conectarse a la BD ya que
+      #           localhost dentro del contenedor be apunta a sí mismo, no a db.
+      DATABASE_URL: postgresql://nn_user:nn_password@db:5432/nn_auth_db
+
+      # ¿Qué? Clave secreta para firmar y verificar tokens JWT.
+      # ¿Para qué? El backend la necesita para generar access/refresh tokens seguros.
+      # ¿Impacto? CAMBIAR este valor en producción — generarlo con:
+      #           python -c "import secrets; print(secrets.token_urlsafe(32))"
+      SECRET_KEY: dev-secret-key-change-in-production-min-32-chars
+
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 15
+      REFRESH_TOKEN_EXPIRE_DAYS: 7
+
+      # ¿Qué? URL del frontend — usada en el email de recuperación de contraseña.
+      # ¿Para qué? Construir el enlace de reset: {FRONTEND_URL}/reset-password?token=...
+      # ¿Impacto? Si apunta a una URL incorrecta, el enlace en el email no funcionará.
+      FRONTEND_URL: http://localhost:80
+
+      # ─── Configuración de email (para recuperación de contraseña) ───
+      # Ajustar con credenciales reales de un servidor SMTP para que funcione el email.
+      MAIL_SERVER: smtp.example.com
+      MAIL_PORT: 587
+      MAIL_USERNAME: noreply@nn-company.com
+      MAIL_PASSWORD: your-mail-password
+      MAIL_FROM: noreply@nn-company.com
+
+    ports:
+      # ¿Qué? Mapea el puerto 8000 del contenedor al 8000 del host.
+      # ¿Para qué? Permite acceder a la API y Swagger desde el host en http://localhost:8000.
+      # ¿Impacto? El frontend (en el navegador) se conecta al backend en este puerto.
+      - "8000:8000"
+
+    depends_on:
+      # ¿Qué? El servicio be sólo arranca cuando db esté healthy (responde pg_isready).
+      # ¿Para qué? Evitar errores de conexión durante el arranque — sin esto, el backend
+      #            podría intentar conectarse a PostgreSQL antes de que esté listo.
+      # ¿Impacto? Docker Compose esperará a que db pase su healthcheck antes de iniciar be.
+      db:
+        condition: service_healthy
+
+    networks:
+      - nn_auth_network
+
+  # ────────────────────────────
+  # ⚛️ Frontend — React + Nginx
+  # ────────────────────────────
+  fe:
+    # ¿Qué? Construye la imagen del frontend desde el Dockerfile en ./fe.
+    # ¿Para qué? Stage 1 compila React con Vite; Stage 2 sirve dist/ con Nginx Alpine.
+    # ¿Impacto? La imagen final sólo contiene los archivos estáticos y Nginx (~30MB),
+    #           sin Node.js ni código fuente.
+    build:
+      context: ./fe
+      dockerfile: Dockerfile
+      # ¿Qué? Build argument que Vite incrusta en el bundle JavaScript en tiempo de compilación.
+      # ¿Para qué? El navegador necesita saber la URL del backend para hacer peticiones HTTP.
+      #            Al ser una variable de Vite (VITE_*), se embebe en el JS generado.
+      # ¿Impacto? IMPORTANTE: Si cambia la URL del backend, hay que reconstruir la imagen
+      #           (`docker compose up --build fe`) para que el nuevo valor se incruste.
+      args:
+        VITE_API_URL: http://localhost:8000
+
+    container_name: nn_auth_fe
+    restart: unless-stopped
+
+    ports:
+      # ¿Qué? Mapea el puerto 80 del Nginx del contenedor al puerto 80 del host.
+      # ¿Para qué? Acceder al frontend desde el navegador en http://localhost o http://localhost:80.
+      # ¿Impacto? Si el puerto 80 está ocupado, cambiar a "3000:80" y acceder en :3000.
+      - "80:80"
+
+    depends_on:
+      # ¿Qué? El servicio fe sólo arranca después de que be haya iniciado.
+      # ¿Para qué? Garantizar que el backend esté disponible cuando el usuario
+      #            abra la app y realice la primera petición a la API.
+      # ¿Impacto? Fe es un servidor de archivos estáticos — puede funcionar sin be,
+      #           pero el usuario vería errores de red inmediatamente.
+      - be
+
+    networks:
+      - nn_auth_network
+
+# ────────────────────────────
+# 🌐 Redes
+# ────────────────────────────
+networks:
+  nn_auth_network:
+    # ¿Qué? Red bridge privada que conecta los tres servicios (db, be, fe).
+    # ¿Para qué? Aislar los contenedores del resto de la red del host y permitir que
+    #            se comuniquen entre sí usando sus nombres de servicio como hostnames.
+    # ¿Impacto? Sin esta red, `db` no sería resoluble desde `be`, y la BD sería
+    #           inaccesible desde dentro del contenedor del backend.
+    driver: bridge
 
 # ────────────────────────────
 # 📦 Volúmenes nombrados

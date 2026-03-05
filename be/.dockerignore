@@ -1,0 +1,43 @@
+# ========================
+# NN Auth System — .dockerignore del Backend
+# ========================
+# ¿Qué? Lista de archivos y carpetas que Docker excluye al copiar el contexto al contenedor.
+# ¿Para qué? Evitar copiar al contenedor archivos innecesarios o sensibles.
+# ¿Impacto? Sin este archivo, .env con credenciales reales podría quedar embebido en la imagen.
+#           También reduce el tamaño del contexto de build, haciéndolo más rápido.
+
+# ────────────────────────────
+# 🔐 Archivos sensibles — NUNCA deben estar en la imagen
+# ────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ────────────────────────────
+# 🐍 Entorno virtual local — la imagen usa su propio venv en /opt/venv
+# ────────────────────────────
+.venv/
+
+# ────────────────────────────
+# 🗑️ Archivos de caché Python
+# ────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+
+# ────────────────────────────
+# 🧪 Artefactos de testing y cobertura
+# ────────────────────────────
+htmlcov/
+.coverage
+coverage.xml
+
+# ────────────────────────────
+# 🔧 Herramientas de desarrollo
+# ────────────────────────────
+.git/
+.gitignore
+*.md
