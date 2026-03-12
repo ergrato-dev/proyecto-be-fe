@@ -19,6 +19,7 @@ import { DashboardPage } from "@/pages/DashboardPage";
 import { ChangePasswordPage } from "@/pages/ChangePasswordPage";
 import { ForgotPasswordPage } from "@/pages/ForgotPasswordPage";
 import { ResetPasswordPage } from "@/pages/ResetPasswordPage";
+import { DataTableDemoPage } from "@/pages/DataTableDemoPage";
 
 /**
  * ¿Qué? Componente raíz que configura el AuthProvider y las rutas de la aplicación.
@@ -40,6 +41,10 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+          {/* ¿Qué? Ruta de demo del componente DataTable (acceso público, sin auth). */}
+          {/* ¿Para qué? Demostrar todas las funcionalidades del componente en un sandbox. */}
+          <Route path="/demo/datatable" element={<DataTableDemoPage />} />
 
           {/* ════════════════════════════════════════ */}
           {/* 🔒 Rutas protegidas (requieren sesión activa) */}
