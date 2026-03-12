@@ -614,6 +614,8 @@ export function DataTableDemoPage() {
           pageSizeOptions={[5, 8, 15, 18]}
           searchPlaceholder="Buscar por nombre, cargo, departamento..."
           emptyMessage="No se encontraron empleados con ese criterio."
+          exportable
+          exportFilename="empleados_nn_corp"
         />
       )}
 
@@ -628,6 +630,8 @@ export function DataTableDemoPage() {
           pageSizeOptions={[5, 8, 12]}
           searchPlaceholder="Buscar por nombre, categoría, referencia..."
           emptyMessage="No se encontraron productos con ese criterio."
+          exportable
+          exportFilename="catalogo_productos_nn_corp"
         />
       )}
 
@@ -647,7 +651,13 @@ export function DataTableDemoPage() {
             ⚡ <strong>Paginación:</strong> navega con los botones o cambia el tamaño de página
           </li>
           <li>
-            ⋯ <strong>Acciones:</strong> haz clic en los tres puntos de cualquier fila
+            ⏯ <strong>Acciones:</strong> haz clic en los tres puntos de cualquier fila
+          </li>
+          <li>
+            📄 <strong>Exportar CSV:</strong> descarga los datos filtrados como archivo CSV
+          </li>
+          <li>
+            📊 <strong>Exportar PDF:</strong> descarga los datos filtrados como archivo PDF
           </li>
           <li>
             🎨 <strong>Estilo cebra:</strong> filas alternadas para mejor legibilidad

@@ -20,6 +20,8 @@ import {
   type RefObject,
   type ChangeEvent,
 } from "react";
+import jsPDF from "jspdf";
+import { autoTable } from "jspdf-autotable";
 import {
   ChevronUp,
   ChevronDown,
@@ -28,6 +30,7 @@ import {
   MoreVertical,
   ChevronLeft,
   ChevronRight,
+  FileDown,
 } from "lucide-react";
 
 // ============================================================================
@@ -175,6 +178,141 @@ export interface DataTableProps<T extends Record<string, any>> {
    * Recomendado para lectores de pantalla.
    */
   caption?: string;
+
+  /**
+   * ¿Qué? Muestra botones de exportación (CSV y PDF) en la barra superior.
+   * ¿Para qué? Permitir al usuario descargar los datos filtrados/ordenados.
+   * ¿Impacto? Solo exporta lo que el usuario ve (filtrado + ordenado), no el dataset completo.
+   * Default: false.
+   */
+  exportable?: boolean;
+
+  /**
+   * Nombre base del archivo exportado, sin extensión.
+   * ¿Para qué? El archivo descargado tendrá este nombre + ".csv" o ".pdf".
+   * Default: valor de `caption` si existe, o "tabla".
+   */
+  exportFilename?: string;
+}
+
+// ============================================================================
+// FUNCIONES DE EXPORTACIÓN
+// ¿Qué? Transforman los datos de la tabla en archivos CSV o PDF descargables.
+// ¿Para qué? Permitir que el usuario exporte los datos filtrados/ordenados a su equipo.
+// ¿Impacto? Operan sobre `sortedData` (datos filtrados + ordenados, todas las páginas),
+//           no sobre `pagedData` — el usuario obtiene todos los registros visibles,
+//           no solo los de la página actual.
+// ============================================================================
+
+/**
+ * Genera y descarga un archivo CSV con las columnas y filas proporcionadas.
+ *
+ * ¿Qué? Construye una cadena CSV válida y la descarga como archivo en el navegador.
+ * ¿Para qué? Dar al usuario una copia de los datos en un formato universal.
+ * ¿Impacto? No requiere librería externa — usa la API nativa de Blob + URL del navegador.
+ *
+ * @param columns  - Definición de columnas (para extraer headers y keys).
+ * @param rows     - Filas de datos ya filtradas y ordenadas.
+ * @param filename - Nombre del archivo sin extensión.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function exportToCSV<T extends Record<string, any>>(
+  columns: ColumnDef<T>[],
+  rows: T[],
+  filename: string,
+): void {
+  // ¿Qué? Primera fila del CSV con los nombres de columna.
+  // ¿Para qué? El receptor del archivo sabrá qué representa cada columna.
+  const headerRow = columns.map((col) => `"${col.header.replace(/"/g, '""')}"`).join(",");
+
+  // ¿Qué? Filas de datos transformadas a strings escapados correctamente.
+  // ¿Para qué? El estándar CSV requiere que los valores que contienen comas o comillas
+  //            sean envueltos en comillas dobles, con las comillas internas duplicadas.
+  const dataRows = rows.map((row) =>
+    columns
+      .map((col) => {
+        const value = getNestedValue(row, col.key);
+        const str = valueToString(value);
+        // Escapar comillas dobles internas duplicándolas (RFC 4180).
+        return `"${str.replace(/"/g, '""')}"`;
+      })
+      .join(","),
+  );
+
+  // ¿Qué? Unir encabezado y filas con saltos de línea.
+  const csvContent = [headerRow, ...dataRows].join("\n");
+
+  // ¿Qué? Crear un Blob con el contenido y forzar la descarga via <a href>.
+  // ¿Para qué? Esta es la técnica estándar para descargar archivos generados en el cliente.
+  // ¿Impacto? No se hace ninguna solicitud al servidor — todo ocurre en el navegador.
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${filename}.csv`;
+  link.click();
+  // Liberar la URL del objeto para evitar fugas de memoria.
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * Genera y descarga un archivo PDF con las columnas y filas proporcionadas.
+ *
+ * ¿Qué? Usa jsPDF + jspdf-autotable para crear un PDF con una tabla formateada.
+ * ¿Para qué? Dar al usuario una representación de los datos lista para imprimir.
+ * ¿Impacto? Requiere jspdf + jspdf-autotable. El PDF se descarga directamente
+ *           en el navegador sin pasar por el servidor.
+ *
+ * @param columns  - Definición de columnas (para encabezados de tabla).
+ * @param rows     - Filas de datos ya filtradas y ordenadas.
+ * @param filename - Nombre del archivo sin extensión.
+ * @param title    - Título opcional a mostrar en la parte superior del PDF.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function exportToPDF<T extends Record<string, any>>(
+  columns: ColumnDef<T>[],
+  rows: T[],
+  filename: string,
+  title?: string,
+): void {
+  // ¿Qué? Crear instancia de jsPDF en modo horizontal si hay muchas columnas.
+  // ¿Para qué? Evitar que columnas se corten si son más de 5-6.
+  const orientation = columns.length > 6 ? "landscape" : "portrait";
+  const doc = new jsPDF({ orientation });
+
+  // ¿Qué? Agregar un título en la parte superior si se proporcionó `caption`.
+  // ¿Para qué? El PDF debe ser auto-descriptivo al abrirse o imprimirse.
+  if (title) {
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text(title, 14, 16);
+  }
+
+  // ¿Qué? Construir los encabezados y cuerpo de la tabla para autoTable.
+  // ¿Para qué? autoTable espera arrays de strings para head y body.
+  const tableHead = [columns.map((col) => col.header)];
+  const tableBody = rows.map((row) =>
+    columns.map((col) => {
+      const value = getNestedValue(row, col.key);
+      return valueToString(value);
+    }),
+  );
+
+  // ¿Qué? Llamar a autoTable para renderizar la tabla en el documento PDF.
+  // ¿Para qué? autoTable maneja automáticamente el layout, paginación y estilos de la tabla.
+  // ¿Impacto? Sin autoTable, dibujar una tabla en jsPDF requeriría cálculos manuales complejos.
+  autoTable(doc, {
+    head: tableHead,
+    body: tableBody,
+    startY: title ? 22 : 10,
+    headStyles: { fillColor: [59, 130, 246] }, // Azul-500 de Tailwind
+    alternateRowStyles: { fillColor: [249, 250, 251] }, // Gray-50 de Tailwind
+    styles: { fontSize: 9, cellPadding: 3 },
+    margin: { left: 14, right: 14 },
+  });
+
+  // ¿Qué? Guardar el PDF con el nombre de archivo provisto.
+  doc.save(`${filename}.pdf`);
 }
 
 // ============================================================================
@@ -418,10 +556,8 @@ function SkeletonRows({ rows, cols }: Readonly<SkeletonRowsProps>) {
   return (
     <>
       {Array.from({ length: rows }).map((_, rowIdx) => (
-        // eslint-disable-next-line react/no-array-index-key
         <tr key={`sk-row-${rowIdx}`} className="border-b border-gray-100 dark:border-gray-700">
           {Array.from({ length: cols }).map((_, colIdx) => (
-            // eslint-disable-next-line react/no-array-index-key
             <td key={`sk-col-${rowIdx}-${colIdx}`} className="px-4 py-3">
               {/* Barra animada que simula el texto de la celda */}
               <div
@@ -457,6 +593,8 @@ export function DataTable<T extends Record<string, any>>({
   emptyMessage = "No se encontraron resultados.",
   isLoading = false,
   caption,
+  exportable = false,
+  exportFilename,
 }: Readonly<DataTableProps<T>>) {
   // ──────────────────────────────────────────────────────────────────────────
   // ESTADO DEL COMPONENTE
@@ -675,6 +813,30 @@ export function DataTable<T extends Record<string, any>>({
   const rangeStart = sortedData.length === 0 ? 0 : (safePage - 1) * rowsPerPage + 1;
   const rangeEnd = Math.min(safePage * rowsPerPage, sortedData.length);
 
+  // ──────────────────────────────────────────────────────────────────────────
+  // NOMBRE DE ARCHIVO PARA EXPORTACIÓN
+  // ¿Qué? Nombre base del archivo descargado, sin extensión.
+  // ¿Para qué? Usar la prop `exportFilename` si se provee; si no, el `caption`
+  //            limpio de espacios; si tampoco, el fallback "tabla".
+  // ──────────────────────────────────────────────────────────────────────────
+  const effectiveFilename =
+    exportFilename ?? (caption != null ? caption.trim().replace(/\s+/g, "_") : "tabla");
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // MANEJADORES DE EXPORTACIÓN
+  // ¿Qué? Callbacks que invocan las funciones de exportación con los datos actuales.
+  // ¿Para qué? Memoizar con useCallback evita regenerar funciones en cada render.
+  // ¿Impacto? Exportan `sortedData` (filtrado + ordenado, TODAS las páginas),
+  //           no solo la página visible — el usuario obtiene el conjunto completo.
+  // ──────────────────────────────────────────────────────────────────────────
+  const handleExportCSV = useCallback(() => {
+    exportToCSV(columns, sortedData, effectiveFilename);
+  }, [columns, sortedData, effectiveFilename]);
+
+  const handleExportPDF = useCallback(() => {
+    exportToPDF(columns, sortedData, effectiveFilename, caption);
+  }, [columns, sortedData, effectiveFilename, caption]);
+
   // ══════════════════════════════════════════════════════════════════════════
   // RENDER
   // ¿Qué? JSX que describe la estructura visual del componente.
@@ -716,27 +878,74 @@ export function DataTable<T extends Record<string, any>>({
           </div>
         )}
 
-        {/* ── Selector de filas por página ── */}
-        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-          <label htmlFor="dt-page-size" className="whitespace-nowrap">
-            Filas por página:
-          </label>
-          <select
-            id="dt-page-size"
-            value={rowsPerPage}
-            onChange={handlePageSizeChange}
-            className="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-sm
-              transition-colors duration-200 focus:border-blue-500 focus:outline-none
-              focus:ring-2 focus:ring-blue-500/20
-              dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100
-              dark:focus:border-blue-400 dark:focus:ring-blue-400/20"
-          >
-            {pageSizeOptions.map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
-            ))}
-          </select>
+        {/* ── Selector de filas por página + botones de exportación ── */}
+        <div className="flex flex-wrap items-center justify-end gap-3">
+          {/* Selector de filas por página */}
+          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <label htmlFor="dt-page-size" className="whitespace-nowrap">
+              Filas por página:
+            </label>
+            <select
+              id="dt-page-size"
+              value={rowsPerPage}
+              onChange={handlePageSizeChange}
+              className="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-sm
+                transition-colors duration-200 focus:border-blue-500 focus:outline-none
+                focus:ring-2 focus:ring-blue-500/20
+                dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100
+                dark:focus:border-blue-400 dark:focus:ring-blue-400/20"
+            >
+              {pageSizeOptions.map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/*
+            Botones de exportación CSV y PDF.
+            ¿Qué? Solo visibles cuando `exportable={true}`.
+            ¿Para qué? No ocupar espacio visual cuando la exportación no es necesaria.
+            ¿Impacto? Exportan los datos filtrados y ordenados de TODAS las páginas.
+          */}
+          {exportable && (
+            <div className="flex items-center gap-1">
+              {/* Botón exportar CSV */}
+              <button
+                type="button"
+                onClick={handleExportCSV}
+                aria-label="Exportar a CSV"
+                title="Exportar a CSV"
+                className="flex items-center gap-1.5 rounded-lg border border-gray-300
+                  bg-white px-3 py-1.5 text-xs font-medium text-gray-700
+                  transition-colors duration-200 hover:bg-gray-50 hover:border-gray-400
+                  focus:outline-none focus:ring-2 focus:ring-blue-500/20
+                  dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300
+                  dark:hover:bg-gray-700 dark:hover:border-gray-500"
+              >
+                <FileDown className="h-3.5 w-3.5" aria-hidden="true" />
+                CSV
+              </button>
+
+              {/* Botón exportar PDF */}
+              <button
+                type="button"
+                onClick={handleExportPDF}
+                aria-label="Exportar a PDF"
+                title="Exportar a PDF"
+                className="flex items-center gap-1.5 rounded-lg border border-gray-300
+                  bg-white px-3 py-1.5 text-xs font-medium text-gray-700
+                  transition-colors duration-200 hover:bg-gray-50 hover:border-gray-400
+                  focus:outline-none focus:ring-2 focus:ring-blue-500/20
+                  dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300
+                  dark:hover:bg-gray-700 dark:hover:border-gray-500"
+              >
+                <FileDown className="h-3.5 w-3.5" aria-hidden="true" />
+                PDF
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

@@ -13,6 +13,36 @@ import userEvent from "@testing-library/user-event";
 import { DataTable, type ColumnDef, type RowAction } from "@/components/ui/DataTable";
 
 // ============================================================================
+// MOCKS DE MÓDULOS EXTERNOS (hoizados automáticamente por vitest)
+// ¿Qué? Reemplaza jspdf y jspdf-autotable con implementaciones simuladas.
+// ¿Para qué? jsdom no puede generar PDFs reales; los mocks permiten verificar
+//            que las funciones corrrectas se llaman con los datos correctos.
+// ¿Impacto? Solo aplican en este archivo de tests, nunca en producción.
+// ============================================================================
+
+// ¿Qué? vi.hoisted crea variables ANTES de que se resuelvan las importaciones.
+// ¿Para qué? Compartir la referencia de `mockSave` entre el mock factory y los tests.
+// ¿Impacto? Sin hoisted, `mockSave` sería undefined cuando el mock factory lo capture.
+const { mockSave } = vi.hoisted(() => ({ mockSave: vi.fn() }));
+
+// ¿Qué? Clase simulada de jsPDF — reemplaza la librería real en el entorno de tests.
+// ¿Para qué? jsdom no puede renderizar PDFs; la clase captura las llamadas a save()
+//            sin intentar generar un documento real.
+vi.mock("jspdf", () => ({
+  default: class MockJsPDF {
+    setFontSize() {}
+    setFont() {}
+    text() {}
+    save(filename: string) {
+      mockSave(filename);
+    }
+  },
+}));
+vi.mock("jspdf-autotable", () => ({
+  autoTable: vi.fn(),
+}));
+
+// ============================================================================
 // DATOS DE PRUEBA
 // ¿Qué? Dataset ficticio usado en los tests.
 // ¿Para qué? Proveer datos predecibles para verificar ordenación, búsqueda y paginación.
@@ -721,5 +751,201 @@ describe("DataTable — Integración", () => {
     // El total debe ser 2 (hay 2 usuarios admin en los datos de prueba).
     const spans = within(rangeInfo).getAllByText("2");
     expect(spans.length).toBeGreaterThanOrEqual(1);
+  });
+});
+
+// ============================================================================
+// SUITE: Exportación CSV y PDF
+// ¿Qué? Tests que verifican la funcionalidad de exportación de datos.
+// ¿Para qué? Garantizar que los botones se renderizan correctamente, que el
+//            contenido exportado es fiel a los datos filtrados/ordenados y que
+//            las APIs de descarga se invocan con los argumentos correctos.
+// ¿Impacto? Sin estos tests, un cambio en exportToCSV o exportToPDF podría
+//            silenciosamente generar archivos con datos incorrectos o vacíos.
+// ============================================================================
+describe("DataTable — Exportación CSV y PDF", () => {
+  /**
+   * ¿Qué? Nombre del archivo capturado al momento del clic en el <a> de descarga.
+   * ¿Para qué? Verificar que el atributo `download` se setea con el valor correcto.
+   */
+  let capturedDownloadName: string;
+
+  beforeEach(() => {
+    capturedDownloadName = "";
+
+    // ¿Qué? Mockear URL.createObjectURL — no disponible en jsdom.
+    // ¿Para qué? Evitar errores al intentar crear URLs de Blob.
+    global.URL.createObjectURL = vi.fn().mockReturnValue("blob:mock-url");
+    global.URL.revokeObjectURL = vi.fn();
+
+    // ¿Qué? Interceptar click() en <a> para capturar el atributo `download`.
+    // ¿Para qué? jsdom no realiza descargas reales; verificamos que el nombre
+    //            del archivo es correcto sin necesitar el sistema de archivos.
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (
+      this: HTMLAnchorElement,
+    ) {
+      capturedDownloadName = this.download;
+    });
+
+    // Limpiar llamadas de mockSave antes de cada test
+    mockSave.mockClear();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    // ¿Qué? Restaurar globales modificados por vi.stubGlobal (como Blob en tests de contenido).
+    vi.unstubAllGlobals();
+  });
+
+  // ── Visibilidad de botones ────────────────────────────────────────────────
+
+  it("no muestra botones de exportación por defecto", () => {
+    // ¿Para qué? La exportación es opt-in — no debe consumir espacio visual si no se activa.
+    renderTable();
+    expect(screen.queryByRole("button", { name: /exportar a csv/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /exportar a pdf/i })).not.toBeInTheDocument();
+  });
+
+  it("muestra botones CSV y PDF cuando exportable es true", () => {
+    // ¿Para qué? Al activar la exportación, ambos botones deben ser visibles y accesibles.
+    renderTable({ exportable: true });
+    expect(screen.getByRole("button", { name: /exportar a csv/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /exportar a pdf/i })).toBeInTheDocument();
+  });
+
+  // ── Exportación CSV ───────────────────────────────────────────────────────
+
+  it("el clic en CSV crea un Blob y dispara la descarga", async () => {
+    // ¿Para qué? Verificar el flujo completo: Blob creado, URL generada y clic disparado.
+    const user = userEvent.setup();
+    renderTable({ exportable: true });
+    await user.click(screen.getByRole("button", { name: /exportar a csv/i }));
+
+    expect(URL.createObjectURL).toHaveBeenCalledTimes(1);
+    expect(URL.revokeObjectURL).toHaveBeenCalledTimes(1);
+    expect(HTMLAnchorElement.prototype.click).toHaveBeenCalledTimes(1);
+  });
+
+  it("el CSV incluye los encabezados de columna en la primera fila", async () => {
+    // ¿Para qué? El CSV debe ser auto-descriptivo — primera fila con nombres de columna.
+    // ¿Qué? Extendemos Blob para capturar el string CSV antes de que se construya el objeto.
+    //        jsdom no implementa Blob.text() / Blob.arrayBuffer(); este patrón es portable.
+    let capturedCsvContent = "";
+    const OriginalBlob = globalThis.Blob;
+    class CaptureBlob extends OriginalBlob {
+      constructor(parts?: BlobPart[], options?: BlobPropertyBag) {
+        super(parts, options);
+        capturedCsvContent = ((parts ?? []) as string[]).join("");
+      }
+    }
+    vi.stubGlobal("Blob", CaptureBlob);
+
+    const user = userEvent.setup();
+    renderTable({ exportable: true });
+    await user.click(screen.getByRole("button", { name: /exportar a csv/i }));
+
+    expect(capturedCsvContent).toContain("Nombre");
+    expect(capturedCsvContent).toContain("Email");
+    expect(capturedCsvContent).toContain("Rol");
+    expect(capturedCsvContent).toContain("Edad");
+  });
+
+  it("el CSV contiene los datos de todas las filas, no solo la página visible", async () => {
+    // ¿Para qué? La exportación debe incluir todos los registros filtrados/ordenados.
+    // ¿Impacto? pageSize=5 muestra 5 filas, pero el export debe tener las 12.
+    let capturedCsvContent = "";
+    const OriginalBlob = globalThis.Blob;
+    class CaptureBlob extends OriginalBlob {
+      constructor(parts?: BlobPart[], options?: BlobPropertyBag) {
+        super(parts, options);
+        capturedCsvContent = ((parts ?? []) as string[]).join("");
+      }
+    }
+    vi.stubGlobal("Blob", CaptureBlob);
+
+    const user = userEvent.setup();
+    // pageSize=5 para confirmar que exporta más allá de la página actual
+    renderTable({ exportable: true, pageSize: 5 });
+    await user.click(screen.getByRole("button", { name: /exportar a csv/i }));
+
+    const lines = capturedCsvContent.trim().split("\n");
+    // 1 línea de encabezado + 12 filas de datos = 13 líneas
+    expect(lines).toHaveLength(13);
+  });
+
+  it("el CSV exporta solo los datos filtrados cuando hay búsqueda activa", async () => {
+    // ¿Para qué? La exportación refleja lo que el usuario ve — no el dataset completo.
+    // ¿Impacto? Buscar "admin" da 2 resultados; el CSV también tendrá solo 2 filas de datos.
+    let capturedCsvContent = "";
+    const OriginalBlob = globalThis.Blob;
+    class CaptureBlob extends OriginalBlob {
+      constructor(parts?: BlobPart[], options?: BlobPropertyBag) {
+        super(parts, options);
+        capturedCsvContent = ((parts ?? []) as string[]).join("");
+      }
+    }
+    vi.stubGlobal("Blob", CaptureBlob);
+
+    const user = userEvent.setup();
+    renderTable({ exportable: true, pageSize: 5 });
+
+    // Activar filtro: "admin" coincide con Ana García (admin) y Felipe Vargas (admin).
+    const searchInput = screen.getByRole("searchbox");
+    await user.type(searchInput, "admin");
+
+    await user.click(screen.getByRole("button", { name: /exportar a csv/i }));
+
+    const lines = capturedCsvContent.trim().split("\n");
+    // 1 encabezado + 2 filas de admin = 3 líneas
+    expect(lines).toHaveLength(3);
+  });
+
+  it("usa 'tabla' como nombre de fallback cuando no hay caption ni exportFilename", async () => {
+    // ¿Para qué? Siempre debe haber un nombre de archivo válido para la descarga.
+    const user = userEvent.setup();
+    renderTable({ exportable: true });
+    await user.click(screen.getByRole("button", { name: /exportar a csv/i }));
+    expect(capturedDownloadName).toBe("tabla.csv");
+  });
+
+  it("usa exportFilename como nombre del archivo CSV", async () => {
+    // ¿Para qué? El consumidor del componente puede personalizar el nombre de descarga.
+    const user = userEvent.setup();
+    renderTable({ exportable: true, exportFilename: "informe_usuarios" });
+    await user.click(screen.getByRole("button", { name: /exportar a csv/i }));
+    expect(capturedDownloadName).toBe("informe_usuarios.csv");
+  });
+
+  it("convierte el caption en nombre de archivo CSV cuando no hay exportFilename", async () => {
+    // ¿Para qué? El caption describe la tabla — es un buen candidato para nombre de archivo.
+    //            Los espacios se reemplazan con guiones bajos para un nombre de archivo válido.
+    const user = userEvent.setup();
+    renderTable({ exportable: true, caption: "Lista de Usuarios" });
+    await user.click(screen.getByRole("button", { name: /exportar a csv/i }));
+    expect(capturedDownloadName).toBe("Lista_de_Usuarios.csv");
+  });
+
+  // ── Exportación PDF ───────────────────────────────────────────────────────
+
+  it("el clic en PDF instancia jsPDF y llama a save()", async () => {
+    // ¿Para qué? Verificar que la integración con jsPDF funciona correctamente.
+    // ¿Impacto? Si save() no se llama, no se descarga nada. mockSave captura la llamada.
+    const user = userEvent.setup();
+    renderTable({ exportable: true });
+    await user.click(screen.getByRole("button", { name: /exportar a pdf/i }));
+
+    // ¿Qué? Verificar que save() fue llamado con el nombre de archivo correcto.
+    // ¿Para qué? Confirma que el flujo completo de exportación PDF se ejecutó.
+    expect(mockSave).toHaveBeenCalledTimes(1);
+    expect(mockSave).toHaveBeenCalledWith("tabla.pdf");
+  });
+
+  it("el PDF usa exportFilename si se provee", async () => {
+    // ¿Para qué? El nombre del archivo PDF también debe respetar la prop exportFilename.
+    const user = userEvent.setup();
+    renderTable({ exportable: true, exportFilename: "reporte_mensual" });
+    await user.click(screen.getByRole("button", { name: /exportar a pdf/i }));
+
+    expect(mockSave).toHaveBeenCalledWith("reporte_mensual.pdf");
   });
 });
