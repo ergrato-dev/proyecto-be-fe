@@ -13,7 +13,39 @@ import re
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+
+
+# ¿Qué? Función auxiliar con las reglas de fortaleza de contraseña.
+# ¿Para qué? Evitar duplicar el mismo bloque de validación en UserCreate,
+#           ChangePasswordRequest y ResetPasswordRequest (principio DRY).
+# ¿Impacto? Si las reglas cambian (ej: exigir símbolo especial), solo se
+#           modifica este único lugar y todos los schemas quedan actualizados.
+def _validate_password_strength(v: str) -> str:
+    """Valida que la contraseña cumpla los requisitos mínimos de seguridad.
+
+    ¿Qué? Verifica longitud mínima y presencia de mayúsculas, minúsculas y números.
+    ¿Para qué? Centralizar las reglas de fortaleza para no repetir código.
+    ¿Impacto? Usada en UserCreate, ChangePasswordRequest y ResetPasswordRequest.
+
+    Args:
+        v: Valor de la contraseña a validar.
+
+    Returns:
+        La contraseña si pasa todas las validaciones.
+
+    Raises:
+        ValueError: Si la contraseña no cumple los requisitos.
+    """
+    if len(v) < 8:
+        raise ValueError("La contraseña debe tener al menos 8 caracteres")
+    if not re.search(r"[A-Z]", v):
+        raise ValueError("La contraseña debe contener al menos una letra mayúscula")
+    if not re.search(r"[a-z]", v):
+        raise ValueError("La contraseña debe contener al menos una letra minúscula")
+    if not re.search(r"\d", v):
+        raise ValueError("La contraseña debe contener al menos un número")
+    return v
 
 
 # ════════════════════════════════════════
@@ -50,28 +82,11 @@ class UserCreate(BaseModel):
     def validate_password_strength(cls, v: str) -> str:
         """Valida que la contraseña cumpla requisitos mínimos de seguridad.
 
-        ¿Qué? Verifica longitud mínima y presencia de mayúsculas, minúsculas y números.
-        ¿Para qué? Prevenir contraseñas débiles que son fáciles de adivinar o crackear.
+        ¿Qué? Delega en la función auxiliar _validate_password_strength.
+        ¿Para qué? Mantener el validador declarativo en el schema sin duplicar lógica.
         ¿Impacto? Sin esta validación, un usuario podría registrarse con "a" como contraseña.
-
-        Args:
-            v: Valor de la contraseña a validar.
-
-        Returns:
-            La contraseña si pasa todas las validaciones.
-
-        Raises:
-            ValueError: Si la contraseña no cumple los requisitos.
         """
-        if len(v) < 8:
-            raise ValueError("La contraseña debe tener al menos 8 caracteres")
-        if not re.search(r"[A-Z]", v):
-            raise ValueError("La contraseña debe contener al menos una letra mayúscula")
-        if not re.search(r"[a-z]", v):
-            raise ValueError("La contraseña debe contener al menos una letra minúscula")
-        if not re.search(r"\d", v):
-            raise ValueError("La contraseña debe contener al menos un número")
-        return v
+        return _validate_password_strength(v)
 
     @field_validator("full_name")
     @classmethod
@@ -120,15 +135,7 @@ class ChangePasswordRequest(BaseModel):
     @classmethod
     def validate_new_password_strength(cls, v: str) -> str:
         """Aplica las mismas reglas de fortaleza que en el registro."""
-        if len(v) < 8:
-            raise ValueError("La contraseña debe tener al menos 8 caracteres")
-        if not re.search(r"[A-Z]", v):
-            raise ValueError("La contraseña debe contener al menos una letra mayúscula")
-        if not re.search(r"[a-z]", v):
-            raise ValueError("La contraseña debe contener al menos una letra minúscula")
-        if not re.search(r"\d", v):
-            raise ValueError("La contraseña debe contener al menos un número")
-        return v
+        return _validate_password_strength(v)
 
 
 class ForgotPasswordRequest(BaseModel):
@@ -152,22 +159,17 @@ class ResetPasswordRequest(BaseModel):
               evitando que se reutilice.
     """
 
-    token: str
+    # ¿Qué? Token UUID de reset (recibido por email tras forgot-password).
+    # ¿Para qué? El backend lo busca en password_reset_tokens para validar y actualizar.
+    # ¿Impacto? min_length=1 rechaza strings vacíos con 422 antes de consultar la BD.
+    token: str = Field(min_length=1)
     new_password: str
 
     @field_validator("new_password")
     @classmethod
     def validate_new_password_strength(cls, v: str) -> str:
         """Aplica las mismas reglas de fortaleza que en el registro."""
-        if len(v) < 8:
-            raise ValueError("La contraseña debe tener al menos 8 caracteres")
-        if not re.search(r"[A-Z]", v):
-            raise ValueError("La contraseña debe contener al menos una letra mayúscula")
-        if not re.search(r"[a-z]", v):
-            raise ValueError("La contraseña debe contener al menos una letra minúscula")
-        if not re.search(r"\d", v):
-            raise ValueError("La contraseña debe contener al menos un número")
-        return v
+        return _validate_password_strength(v)
 
 
 class RefreshTokenRequest(BaseModel):
@@ -194,8 +196,8 @@ class VerifyEmailRequest(BaseModel):
 
     # ¿Qué? Token UUID de verificación (viene como query param en la URL del email).
     # ¿Para qué? El backend lo busca en email_verification_tokens para validar y activar.
-    # ¿Impacto? Si el token es inválido, expirado o ya fue usado, se rechaza con 400.
-    token: str
+    # ¿Impacto? min_length=1 rechaza strings vacíos con 422 antes de consultar la BD.
+    token: str = Field(min_length=1)
 
 
 # ════════════════════════════════════════
