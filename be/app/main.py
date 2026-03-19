@@ -56,6 +56,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 #            endpoints correctos y devuelve las respuestas.
 # ¿Impacto? Los metadatos (title, description, version) aparecen automáticamente
 #           en la documentación interactiva de Swagger UI (/docs).
+#
+# OWASP A05 — Security Misconfiguration:
+# En producción, /docs y /redoc se deshabilitan para evitar exponer la superficie
+# de ataque de la API a cualquier visitante sin autenticación.
+# En desarrollo y testing se mantienen activos para facilitar el trabajo del equipo.
+_is_production = settings.ENVIRONMENT == "production"
 app = FastAPI(
     title="NN Auth System",
     description=(
@@ -64,8 +70,11 @@ app = FastAPI(
         "Proyecto educativo — SENA, Ficha 3171599."
     ),
     version="0.1.0",
-    docs_url="/docs",
-    redoc_url="/redoc",
+    # ¿Qué? docs_url/redoc_url = None desactiva esas rutas completamente.
+    # ¿Para qué? Nadie puede explorar la documentación interactiva en producción.
+    # ¿Impacto? El equipo de desarrollo sigue teniendo /docs localmente (ENVIRONMENT=development).
+    docs_url=None if _is_production else "/docs",
+    redoc_url=None if _is_production else "/redoc",
     lifespan=lifespan,
 )
 

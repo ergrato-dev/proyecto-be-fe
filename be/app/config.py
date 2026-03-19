@@ -113,6 +113,18 @@ class Settings(BaseSettings):
     #           y las peticiones del frontend serán bloqueadas por CORS.
     FRONTEND_URL: str = "http://localhost:5173"
 
+    # ────────────────────────────
+    # 🌍 Entorno de ejecución
+    # ────────────────────────────
+    # ¿Qué? Identifica el entorno en que corre la aplicación.
+    # ¿Para qué? Tomar decisiones de seguridad dependientes del entorno — por ejemplo,
+    #            deshabilitar Swagger UI (/docs) y ReDoc (/redoc) en producción.
+    # ¿Impacto? OWASP A05 — Security Misconfiguration: exponer la documentación interactiva
+    #           de la API en producción permite que cualquier persona explore todos los endpoints,
+    #           schemas y modelos sin autenticación, facilitando el reconocimiento previo a un ataque.
+    #           Valores válidos: "development" | "production" | "testing"
+    ENVIRONMENT: str = "development"
+
     # ¿Qué? Configuración del modelo Pydantic Settings.
     # ¿Para qué? Indicar que las variables se cargan desde el archivo .env en la carpeta be/.
     # ¿Impacto? Sin esto, Pydantic no lee el archivo .env y solo busca variables del sistema.
