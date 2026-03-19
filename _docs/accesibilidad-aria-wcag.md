@@ -28,22 +28,22 @@ independientemente de sus capacidades. Esto incluye personas que:
 
 ### Los 4 principios WCAG — POUR
 
-| Principio | Descripción | Ejemplo |
-|-----------|-------------|---------|
-| **P**erceptible | La info debe presentarse de forma que el usuario pueda percibirla | Alt text en imágenes, contraste de colores |
-| **O**perable | Los componentes deben ser operables por el usuario | Navegación por teclado, sin trampas de foco |
-| **U**nderstandable | La información y UI deben ser comprensibles | Labels en formularios, mensajes de error claros |
-| **R**obust | El contenido debe interpretarse por tecnologías asistivas | HTML semántico, ARIA roles |
+| Principio          | Descripción                                                       | Ejemplo                                         |
+| ------------------ | ----------------------------------------------------------------- | ----------------------------------------------- |
+| **P**erceptible    | La info debe presentarse de forma que el usuario pueda percibirla | Alt text en imágenes, contraste de colores      |
+| **O**perable       | Los componentes deben ser operables por el usuario                | Navegación por teclado, sin trampas de foco     |
+| **U**nderstandable | La información y UI deben ser comprensibles                       | Labels en formularios, mensajes de error claros |
+| **R**obust         | El contenido debe interpretarse por tecnologías asistivas         | HTML semántico, ARIA roles                      |
 
 ---
 
 ## Niveles de Conformidad WCAG
 
-| Nivel | Descripción | Ejemplos de criterios |
-|-------|-------------|----------------------|
-| **A** | Requisito mínimo — sin esto, el contenido es completamente inaccesible | Alternativas textuales (1.1.1), teclado (2.1.1) |
-| **AA** | Estándar recomendado para la mayoría de sitios | Contraste 4.5:1 (1.4.3), reflow (1.4.10) |
-| **AAA** | Máxima accesibilidad — difícil de cumplir en todos los contenidos | Contraste 7:1 (1.4.6), lenguaje de señas (1.2.6) |
+| Nivel   | Descripción                                                            | Ejemplos de criterios                            |
+| ------- | ---------------------------------------------------------------------- | ------------------------------------------------ |
+| **A**   | Requisito mínimo — sin esto, el contenido es completamente inaccesible | Alternativas textuales (1.1.1), teclado (2.1.1)  |
+| **AA**  | Estándar recomendado para la mayoría de sitios                         | Contraste 4.5:1 (1.4.3), reflow (1.4.10)         |
+| **AAA** | Máxima accesibilidad — difícil de cumplir en todos los contenidos      | Contraste 7:1 (1.4.6), lenguaje de señas (1.2.6) |
 
 > **Objetivo de este proyecto**: Conformidad **WCAG 2.1 AA** — el nivel exigido por
 > regulaciones gubernamentales en la mayoría de países y por las app stores.
@@ -80,19 +80,19 @@ HTML nativo no puede expresar por sí solo.
 
 ### Resumen por archivo
 
-| Componente / Página | Nivel | Criterios WCAG cumplidos |
-|---------------------|-------|--------------------------|
-| `InputField.tsx` | ✅ AA+ | 1.1.1, 1.3.1, 3.3.1, 3.3.2, 4.1.2 |
-| `Button.tsx` | ✅ AA | 4.1.2, 4.1.3 |
-| `Alert.tsx` | ✅ AA | 1.1.1, 4.1.3 |
-| `ThemeToggle.tsx` | ✅ AA | 1.1.1, 4.1.2 |
-| `DataTable.tsx` | ✅ AA+ | 1.3.1, 2.4.3, 2.4.6, 4.1.2 |
-| `AuthLayout.tsx` | ✅ AA | 1.3.1, 2.4.1, 2.4.6 |
-| `Navbar.tsx` | ✅ AA | 1.3.1, 2.4.1 |
-| `ProtectedRoute.tsx` | ✅ AA | 4.1.3 |
-| `DashboardPage.tsx` | ✅ AA | 1.4.1, 2.4.6 |
-| `DataTableDemoPage.tsx` | ✅ AA | 4.1.2 |
-| `index.html` | ✅ AA | 3.1.1, 2.4.2 |
+| Componente / Página     | Nivel  | Criterios WCAG cumplidos          |
+| ----------------------- | ------ | --------------------------------- |
+| `InputField.tsx`        | ✅ AA+ | 1.1.1, 1.3.1, 3.3.1, 3.3.2, 4.1.2 |
+| `Button.tsx`            | ✅ AA  | 4.1.2, 4.1.3                      |
+| `Alert.tsx`             | ✅ AA  | 1.1.1, 4.1.3                      |
+| `ThemeToggle.tsx`       | ✅ AA  | 1.1.1, 4.1.2                      |
+| `DataTable.tsx`         | ✅ AA+ | 1.3.1, 2.4.3, 2.4.6, 4.1.2        |
+| `AuthLayout.tsx`        | ✅ AA  | 1.3.1, 2.4.1, 2.4.6               |
+| `Navbar.tsx`            | ✅ AA  | 1.3.1, 2.4.1                      |
+| `ProtectedRoute.tsx`    | ✅ AA  | 4.1.3                             |
+| `DashboardPage.tsx`     | ✅ AA  | 1.4.1, 2.4.6                      |
+| `DataTableDemoPage.tsx` | ✅ AA  | 4.1.2                             |
+| `index.html`            | ✅ AA  | 3.1.1, 2.4.2                      |
 
 ---
 
@@ -108,6 +108,7 @@ HTML nativo no puede expresar por sí solo.
 (el path SVG completo como texto), interrumpiendo la experiencia del usuario.
 
 **Implementación en `Alert.tsx`**:
+
 ```tsx
 {/* ✅ aria-hidden="true" oculta el ícono decorativo del árbol de accesibilidad */}
 <span className="mt-0.5 flex-shrink-0" aria-hidden="true">
@@ -118,6 +119,7 @@ HTML nativo no puede expresar por sí solo.
 ```
 
 **Implementación en `InputField.tsx`**:
+
 ```tsx
 {/* ✅ Wrapper del ícono con aria-hidden — no añade información semántica */}
 {icon && (
@@ -140,16 +142,24 @@ Necesita `aria-hidden="true"`. Si el ícono es el ÚNICO contenido del botón, n
 **¿Qué?** La información, estructura y relaciones deben ser determinables programáticamente.
 
 **Implementación en `AuthLayout.tsx`** — Landmark `<main>`:
+
 ```tsx
-{/* ✅ <main> como landmark semántico — identifica el contenido principal */}
-{/* Un usuario de lector de pantalla puede saltar directamente aquí */}
-{/* con un atajo de teclado en lugar de escuchar toda la navegación */}
+{
+  /* ✅ <main> como landmark semántico — identifica el contenido principal */
+}
+{
+  /* Un usuario de lector de pantalla puede saltar directamente aquí */
+}
+{
+  /* con un atajo de teclado en lugar de escuchar toda la navegación */
+}
 <main className="flex flex-1 items-center justify-center px-4 pb-12">
   {/* contenido del formulario */}
-</main>
+</main>;
 ```
 
 **Jerarquía de landmarks en la app**:
+
 ```
 <html>
   <body>
@@ -173,21 +183,29 @@ desde el principio de la página.
 El texto ya es suficiente, pero se añadió `aria-label` para contexto completo.
 
 **Implementación en `DashboardPage.tsx`**:
+
 ```tsx
-{/* ✅ El texto "Activo"/"Inactivo" ya cumple 1.4.1 */}
-{/* aria-label añade el contexto "Estado de la cuenta:" para AT */}
+{
+  /* ✅ El texto "Activo"/"Inactivo" ya cumple 1.4.1 */
+}
+{
+  /* aria-label añade el contexto "Estado de la cuenta:" para AT */
+}
 <span
   className={`... ${user?.is_active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
   aria-label={`Estado de la cuenta: ${user?.is_active ? "Activo" : "Inactivo"}`}
 >
   {user?.is_active ? "Activo" : "Inactivo"}
-</span>
+</span>;
 ```
 
 **❌ Patrón inseguro** (no hagas esto):
+
 ```tsx
-{/* Solo color — inaccesible para daltónicos y lectores de pantalla */}
-<span className={user?.is_active ? "bg-green-500" : "bg-red-500"} />
+{
+  /* Solo color — inaccesible para daltónicos y lectores de pantalla */
+}
+<span className={user?.is_active ? "bg-green-500" : "bg-red-500"} />;
 ```
 
 ---
@@ -201,12 +219,11 @@ directamente al contenido principal.
 Los lectores de pantalla modernos usan los landmarks para navegación por saltos.
 
 **Implementación en `Navbar.tsx`**:
+
 ```tsx
 // ✅ aria-label diferencia esta <nav> de otras en la misma página
 // (la paginación del DataTable también usa <nav aria-label="Navegación de páginas">)
-<nav aria-label="Navegación principal">
-  {/* contenido */}
-</nav>
+<nav aria-label="Navegación principal">{/* contenido */}</nav>
 ```
 
 **Sin aria-label**, NVDA anunciaría solo "nav" para ambas instancias — el usuario no
@@ -220,6 +237,7 @@ sabría cuál es la barra de navegación principal y cuál es la paginación.
 programáticamente y los cambios de estado deben notificarse a tecnologías asistivas.
 
 **Implementación en `DataTableDemoPage.tsx`** — Toggle buttons:
+
 ```tsx
 {/* ✅ role="group" agrupa los botones semánticamente */}
 {/* ✅ aria-pressed comunica el estado activo/inactivo */}
@@ -240,8 +258,9 @@ programáticamente y los cambios de estado deben notificarse a tecnologías asis
 ```
 
 **¿Qué anuncia el lector de pantalla?**
-- Sin aria-pressed: *"botón Empleados"*
-- Con aria-pressed: *"botón activado Empleados"* / *"botón no activado Empleados"*
+
+- Sin aria-pressed: _"botón Empleados"_
+- Con aria-pressed: _"botón activado Empleados"_ / _"botón no activado Empleados"_
 
 ---
 
@@ -251,6 +270,7 @@ programáticamente y los cambios de estado deben notificarse a tecnologías asis
 a tecnologías asistivas sin necesidad de enfocar el elemento.
 
 **Implementación en `Button.tsx`** — Estado de carga:
+
 ```tsx
 // ✅ aria-busy notifica que el botón está procesando
 // ✅ aria-label dinámico describe el estado actual al usuario de AT
@@ -266,6 +286,7 @@ a tecnologías asistivas sin necesidad de enfocar el elemento.
 ```
 
 **Implementación en `ProtectedRoute.tsx`** — Spinner de sesión:
+
 ```tsx
 // ✅ role="status" implica aria-live="polite"
 // ✅ aria-label describe la acción en curso
@@ -312,7 +333,8 @@ a tecnologías asistivas sin necesidad de enfocar el elemento.
 ```
 
 **¿Qué anuncia el lector de pantalla al enfocar un input con error?**
-> *"Email inválido, editar texto, Correo electrónico, email inválido — el formato debe ser ejemplo@dominio.com"*
+
+> _"Email inválido, editar texto, Correo electrónico, email inválido — el formato debe ser ejemplo@dominio.com"_
 
 ---
 
@@ -322,11 +344,13 @@ a tecnologías asistivas sin necesidad de enfocar el elemento.
 
 ```tsx
 <table>
-  <caption>Descripción de la tabla</caption>  {/* WCAG 1.3.1 */}
+  <caption>Descripción de la tabla</caption> {/* WCAG 1.3.1 */}
   <thead>
     <tr>
-      <th scope="col">Nombre</th>             {/* identifica columna */}
-      <th scope="col" aria-sort="ascending">  {/* estado de ordenación */}
+      <th scope="col">Nombre</th> {/* identifica columna */}
+      <th scope="col" aria-sort="ascending">
+        {" "}
+        {/* estado de ordenación */}
         Fecha
       </th>
     </tr>
@@ -336,14 +360,18 @@ a tecnologías asistivas sin necesidad de enfocar el elemento.
       <td>...</td>
     </tr>
   </tbody>
-</table>
+</table>;
 
-{/* Paginación */}
-<nav aria-label="Navegación de páginas">       {/* landmark con nombre */}
+{
+  /* Paginación */
+}
+<nav aria-label="Navegación de páginas">
+  {" "}
+  {/* landmark con nombre */}
   <button aria-label="Página anterior">←</button>
-  <button aria-current="page">3</button>       {/* página activa */}
+  <button aria-current="page">3</button> {/* página activa */}
   <button aria-label="Ir a página 4">4</button>
-</nav>
+</nav>;
 ```
 
 ### Menús desplegables (en acciones de DataTable)
@@ -393,12 +421,12 @@ a tecnologías asistivas sin necesidad de enfocar el elemento.
 
 ### Automáticas
 
-| Herramienta | Tipo | Qué detecta |
-|-------------|------|-------------|
-| [axe DevTools](https://www.deque.com/axe/) | Extension navegador | ~57% de issues automáticamente |
-| [WAVE](https://wave.webaim.org/) | Extension / online | Errores, alertas, estructura |
-| [Lighthouse](https://developers.google.com/web/tools/lighthouse) | Chrome DevTools | Score de accesibilidad |
-| `@axe-core/react` | Librería | Detecta en dev mode |
+| Herramienta                                                      | Tipo                | Qué detecta                    |
+| ---------------------------------------------------------------- | ------------------- | ------------------------------ |
+| [axe DevTools](https://www.deque.com/axe/)                       | Extension navegador | ~57% de issues automáticamente |
+| [WAVE](https://wave.webaim.org/)                                 | Extension / online  | Errores, alertas, estructura   |
+| [Lighthouse](https://developers.google.com/web/tools/lighthouse) | Chrome DevTools     | Score de accesibilidad         |
+| `@axe-core/react`                                                | Librería            | Detecta en dev mode            |
 
 > **Importante**: Las herramientas automáticas solo detectan ~30-40% de los problemas
 > reales. El testing manual con lectores de pantalla reales es indispensable.
@@ -461,13 +489,13 @@ Antes de hacer merge de cualquier PR con cambios de UI:
 
 ## Recursos de Aprendizaje
 
-| Recurso | URL | Para qué |
-|---------|-----|---------|
-| WCAG 2.1 Quick Reference | https://www.w3.org/WAI/WCAG21/quickref/ | Criterios filtrables por nivel |
-| WAI-ARIA Authoring Practices | https://www.w3.org/WAI/ARIA/apg/ | Patrones de diseño accesible con ejemplos |
-| A11y Project Checklist | https://www.a11yproject.com/checklist/ | Checklist práctica |
-| MDN ARIA | https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA | Referencia completa |
-| Testing Library queries | https://testing-library.com/docs/queries/about | `getByRole`, `getByLabelText` |
+| Recurso                      | URL                                                             | Para qué                                  |
+| ---------------------------- | --------------------------------------------------------------- | ----------------------------------------- |
+| WCAG 2.1 Quick Reference     | https://www.w3.org/WAI/WCAG21/quickref/                         | Criterios filtrables por nivel            |
+| WAI-ARIA Authoring Practices | https://www.w3.org/WAI/ARIA/apg/                                | Patrones de diseño accesible con ejemplos |
+| A11y Project Checklist       | https://www.a11yproject.com/checklist/                          | Checklist práctica                        |
+| MDN ARIA                     | https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA | Referencia completa                       |
+| Testing Library queries      | https://testing-library.com/docs/queries/about                  | `getByRole`, `getByLabelText`             |
 
 ---
 
