@@ -32,7 +32,16 @@ export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
       </div>
 
       {/* ¿Qué? Contenedor centrado vertical y horizontalmente. */}
-      <div className="flex flex-1 items-center justify-center px-4 pb-12">
+      {/*
+        ¿Qué? <main> como landmark semántico principal del documento.
+        ¿Para qué? WCAG 2.1 — 1.3.6 Identify Purpose / 2.4.1 Bypass Blocks.
+                   Los lectores de pantalla (NVDA, VoiceOver) listan landmarks
+                   para que el usuario salte directamente al contenido principal.
+        ¿Impacto? Sin <main>, un usuario de lector de pantalla debe escuchar TODA
+                  la navegación antes de llegar al formulario. Con <main>, salta
+                  directamente con un atajo de teclado.
+      */}
+      <main className="flex flex-1 items-center justify-center px-4 pb-12">
         <div className="w-full max-w-md">
           {/* ¿Qué? Logo y título de la app centrados. */}
           <div className="mb-8 text-center">
@@ -57,7 +66,7 @@ export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
             {children}
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

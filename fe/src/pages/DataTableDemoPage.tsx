@@ -557,12 +557,26 @@ export function DataTableDemoPage() {
       {/* ── Selector de dataset ── */}
       <div className="mb-6 flex items-center gap-3">
         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Dataset:</span>
-        <div className="flex rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden">
+        {/*
+          ¿Qué? Selector de dataset con role="group" + aria-pressed en cada botón.
+          ¿Para qué? WCAG 4.1.2 Name, Role, Value: los botones de selección de dataset
+                     actúan como toggle buttons. aria-pressed comunica el estado
+                     seleccionado/no-seleccionado a lectores de pantalla.
+          ¿Impacto? Sin aria-pressed, el lector de pantalla solo diría "botón Empleados"
+                    sin indicar si está activo o no. Con aria-pressed="true", dirá
+                    "botón activado Empleados" — el usuario sabe cuál está seleccionado.
+        */}
+        <div
+          className="flex rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden"
+          role="group"
+          aria-label="Seleccionar conjunto de datos"
+        >
           <button
             onClick={() => {
               setActiveDataset("employees");
               setLastAction(null);
             }}
+            aria-pressed={isEmployees}
             className={`px-4 py-1.5 text-sm font-medium transition-colors ${
               isEmployees
                 ? "bg-blue-600 text-white dark:bg-blue-500"
@@ -576,6 +590,7 @@ export function DataTableDemoPage() {
               setActiveDataset("products");
               setLastAction(null);
             }}
+            aria-pressed={activeDataset === "products"}
             className={`px-4 py-1.5 text-sm font-medium transition-colors border-l border-gray-300 dark:border-gray-600 ${
               activeDataset === "products"
                 ? "bg-blue-600 text-white dark:bg-blue-500"

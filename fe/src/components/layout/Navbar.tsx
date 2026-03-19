@@ -30,7 +30,17 @@ export function Navbar() {
   };
 
   return (
-    <nav className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+    // ¿Qué? aria-label en <nav> para identificarla como "navegación principal".
+    // ¿Para qué? WCAG 2.4.1 — cuando una página tiene múltiples elementos <nav>
+    //            (ej: navbar + paginación en la tabla), el lector de pantalla no puede
+    //            distinguirlas sin un aria-label. Con él, el usuario escucha
+    //            "Navegación principal" y sabe exactamente dónde está.
+    // ¿Impacto? Sin aria-label, NVDA/VoiceOver anuncian solo "nav" para todas las
+    //           instancias, confundiendo al usuario al navegar por landmarks.
+    <nav
+      aria-label="Navegación principal"
+      className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900"
+    >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* ¿Qué? Logo/nombre de la app — enlace al dashboard o login. */}
         <Link

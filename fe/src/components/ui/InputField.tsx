@@ -65,11 +65,19 @@ export function InputField({
         {label}
       </label>
       <div className="relative">
-        {/* ¿Qué? Icono decorativo a la izquierda del input. */}
-        {/* ¿Para qué? Dar contexto visual inmediato del tipo de campo (email, password, etc.). */}
-        {/* ¿Impacto? Mejora significativa de UX — el usuario identifica el campo de un vistazo. */}
+        {/*
+          ¿Qué? Icono decorativo a la izquierda del input con aria-hidden="true".
+          ¿Para qué? WCAG 1.1.1: el ícono (sobre, candado...) es decorativo — la <label>
+                     ya describe el campo. aria-hidden oculta el wrapper del árbol de
+                     accesibilidad para que el lector de pantalla no lo anuncie.
+          ¿Impacto? Sin aria-hidden, el SVG podría ser leído como contenido adicional
+                    antes del valor del input, interrumpiendo la experiencia del usuario.
+        */}
         {icon && (
-          <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
+          <div
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
+            aria-hidden="true"
+          >
             {icon}
           </div>
         )}
@@ -111,7 +119,11 @@ export function InputField({
       {/* ¿Para qué? Informar al usuario qué está mal en el campo. */}
       {/* ¿Impacto? aria-describedby conecta el mensaje con el input para accesibilidad. */}
       {error && (
-        <p id={`${name}-error`} className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+        <p
+          id={`${name}-error`}
+          className="mt-1 text-sm text-red-600 dark:text-red-400"
+          role="alert"
+        >
           {error}
         </p>
       )}

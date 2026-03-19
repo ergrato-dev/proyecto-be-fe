@@ -39,30 +39,34 @@ export function DashboardPage() {
 
         <dl className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:gap-4">
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">
-              Nombre
-            </dt>
+            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Nombre</dt>
             <dd className="text-sm text-gray-900 dark:text-gray-100">{user?.full_name}</dd>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:gap-4">
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">
-              Correo
-            </dt>
+            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Correo</dt>
             <dd className="text-sm text-gray-900 dark:text-gray-100">{user?.email}</dd>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:gap-4">
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">
-              Estado
-            </dt>
+            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Estado</dt>
             <dd>
+              {/*
+                ¿Qué? Badge de estado con texto explícito y aria-label complementario.
+                ¿Para qué? WCAG 1.4.1 Use of Color: el color verde/rojo NO puede ser el ÚNICO
+                            medio para transmitir la información — el texto "Activo"/"Inactivo"
+                            es el portador semántico real. El aria-label provee contexto completo.
+                ¿Impacto? Un usuario daltónico o con lector de pantalla no puede interpretar
+                           color. El texto visible es suficiente por WCAG 1.4.1; el aria-label
+                           añade contexto completo ("Estado de la cuenta: Activo").
+              */}
               <span
                 className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                   user?.is_active
                     ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
                     : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
                 }`}
+                aria-label={`Estado de la cuenta: ${user?.is_active ? "Activo" : "Inactivo"}`}
               >
                 {user?.is_active ? "Activo" : "Inactivo"}
               </span>

@@ -31,14 +31,27 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   //           Mientras tanto, no sabemos si el usuario está logueado o no.
   // ¿Impacto? Sin este loading, la app redirigiría al login brevemente antes de cargar.
   if (isLoading) {
+    // ¿Qué? role="status" + aria-live="polite" para anunciar el estado de carga.
+    // ¿Para qué? WCAG 4.1.3 Status Messages: un mensaje de estado ("Cargando...")
+    //            debe ser programáticamente determinable. role="status" implica
+    //            aria-live="polite" — el lector de pantalla lo anuncia cuando termine
+    //            de leer el contenido actual, sin interrumpir.
+    // ¿Impacto? Sin esto, el spinner y el texto "Cargando..." son invisibles para
+    //           usuarios de lectores de pantalla — no sabrían que la app está trabajando.
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-950">
+      <div
+        className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-950"
+        role="status"
+        aria-live="polite"
+        aria-label="Verificando sesión, por favor espera"
+      >
         <div className="flex flex-col items-center gap-3">
           <svg
             className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <circle
               className="opacity-25"

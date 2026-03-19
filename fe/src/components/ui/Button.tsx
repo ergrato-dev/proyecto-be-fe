@@ -59,11 +59,18 @@ export function Button({
     lg: "px-6 py-3 text-base",
   };
 
+  // ¿Qué? aria-busy comunica a tecnologías asistivas que el botón está procesando.
+  // ¿Para qué? WCAG 4.1.3 Status Messages: cuando isLoading=true, un usuario de lector
+  //            de pantalla no puede ver el spinner visual. aria-busy="true" + aria-label
+  //            dinámico le informan que la acción está en progreso.
+  // ¿Impacto? Sin esto, un usuario ciego haría clic repetidamente al no recibir feedback.
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled || isLoading}
+      aria-busy={isLoading}
+      aria-label={isLoading ? "Procesando, por favor espera" : undefined}
       className={`inline-flex items-center justify-center rounded-lg font-medium transition-colors duration-200 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${variantClasses[variant]} ${sizeClasses[size]} ${fullWidth ? "w-full" : ""}`}
     >
       {/* ¿Qué? Spinner SVG animado que aparece durante la carga. */}
