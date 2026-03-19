@@ -37,7 +37,7 @@ bcrypt>=4.0.0,<4.1.0              # Backend de bcrypt — fijado <4.1 por compat
 # ────────────────────────────
 # 📧 Email
 # ────────────────────────────
-aiosmtplib>=3.0.0           # Cliente SMTP async para envío de emails
+resend>=2.25.0              # SDK oficial de Resend para envío de emails transaccionales
 
 # ────────────────────────────
 # 🧪 Testing
