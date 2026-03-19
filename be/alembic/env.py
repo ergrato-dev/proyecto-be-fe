@@ -19,7 +19,7 @@ from alembic import context
 # ¿Impacto? El import de app.models ejecuta models/__init__.py, que a su vez importa
 #           User y PasswordResetToken. Sin estos imports, autogenerate no detecta nada.
 from app.database import Base
-from app.models import User, PasswordResetToken  # noqa: F401 — necesarios para autogenerate
+from app.models import User, PasswordResetToken, EmailVerificationToken  # noqa: F401 — necesarios para autogenerate
 from app.config import settings
 
 # ¿Qué? Objeto de configuración de Alembic que lee alembic.ini.
