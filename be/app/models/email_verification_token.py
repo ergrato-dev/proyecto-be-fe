@@ -7,14 +7,23 @@ Descripción: Modelo ORM que representa la tabla `email_verification_tokens` en 
           cualquier persona podría registrarse con el email de otra persona sin validación.
 """
 
+from __future__ import annotations
+
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+# ¿Qué? Import condicional del modelo User solo para type hints.
+# ¿Para qué? Romper la importación circular User ↔ EmailVerificationToken.
+# ¿Impacto? Solo se importa durante análisis estático, no en runtime.
+if TYPE_CHECKING:
+    from app.models.user import User
 
 
 class EmailVerificationToken(Base):
@@ -91,11 +100,18 @@ class EmailVerificationToken(Base):
         nullable=False,
     )
 
-    # ¿Qué? Relación ORM con el modelo User.
-    # ¿Para qué? Acceder directamente al usuario desde el token (token_record.user)
-    #            sin necesidad de una consulta adicional.
-    # ¿Impacto? Conveniencia ORM — evita un SELECT extra en operaciones que necesiten el User.
-    user = relationship("User", backref="email_verification_tokens")
+    # ¿Qué? Relación ORM hacia el usuario propietario de este token de verificación.
+    # ¿Para qué? Acceder directamente al usuario: token_record.user.email
+    #            Sin esta relación habría que hacer query manual por user_id.
+    # ¿Impacto? back_populates="email_verification_tokens" conecta este atributo
+    #            con User.email_verification_tokens — SQLAlchemy mantiene ambos lados en sync.
+    #            Reemplaza el estilo antiguo `backref=` por la forma explícita moderna
+    #            (back_populates) recomendada en SQLAlchemy 2.0.
+    user: Mapped[User] = relationship(
+        "User",
+        back_populates="email_verification_tokens",
+        lazy="selectin",
+    )
 
     def __repr__(self) -> str:
         """Representación legible del token para debugging.

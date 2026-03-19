@@ -7,14 +7,25 @@ Descripción: Modelo ORM que representa la tabla `users` en PostgreSQL.
           representa un usuario del sistema. Sin este modelo, no hay usuarios.
 """
 
+from __future__ import annotations
+
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, DateTime, String, func
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+# ¿Qué? Imports condicionales que solo se ejecutan durante el análisis estático (mypy/pyright).
+# ¿Para qué? Romper la importación circular entre User ↔ PasswordResetToken ↔
+#            EmailVerificationToken sin afectar el runtime.
+# ¿Impacto? Sin TYPE_CHECKING los imports circulares causarían ImportError al arrancar.
+if TYPE_CHECKING:
+    from app.models.email_verification_token import EmailVerificationToken
+    from app.models.password_reset_token import PasswordResetToken
 
 
 class User(Base):
@@ -119,6 +130,36 @@ class User(Base):
         server_default=func.now(),
         onupdate=func.now(),
         nullable=False,
+    )
+
+    # ────────────────────────────
+    # 🔗 Relaciones (1:N — Un User tiene muchos tokens)
+    # ────────────────────────────
+
+    # ¿Qué? Lista de todos los tokens de reset de contraseña que pertenecen a este usuario.
+    # ¿Para qué? Navegar desde un User a sus tokens directamente: user.password_reset_tokens
+    #            SQLAlchemy ejecuta el JOIN por nosotros, sin SQL manual.
+    # ¿Impacto? back_populates="user" le dice a SQLAlchemy que el atributo opuesto en
+    #            PasswordResetToken se llama "user" — ambos lados deben declararse.
+    #            Relación 1:N → 1 usuario puede tener MUCHOS tokens de reset.
+    password_reset_tokens: Mapped[list[PasswordResetToken]] = relationship(
+        "PasswordResetToken",
+        back_populates="user",
+        lazy="selectin",
+        cascade="all, delete-orphan",
+    )
+
+    # ¿Qué? Lista de todos los tokens de verificación de email de este usuario.
+    # ¿Para qué? Navegar desde un User a sus tokens de verificación: user.email_verification_tokens
+    # ¿Impacto? cascade="all, delete-orphan" garantiza que si se elimina el usuario,
+    #            SQLAlchemy borra los tokens huérfanos automáticamente (sin depender solo del
+    #            ondelete=CASCADE de la FK a nivel de BD).
+    #            Relación 1:N → 1 usuario puede tener MUCHOS tokens de verificación.
+    email_verification_tokens: Mapped[list[EmailVerificationToken]] = relationship(
+        "EmailVerificationToken",
+        back_populates="user",
+        lazy="selectin",
+        cascade="all, delete-orphan",
     )
 
     def __repr__(self) -> str:

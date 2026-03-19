@@ -7,14 +7,23 @@ Descripción: Modelo ORM que representa la tabla `password_reset_tokens` en Post
           ya que no habría forma de verificar que el enlace de reset es legítimo y vigente.
 """
 
+from __future__ import annotations
+
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+# ¿Qué? Import condicional del modelo User solo para type hints.
+# ¿Para qué? Romper la importación circular User ↔ PasswordResetToken.
+# ¿Impacto? Solo se importa durante análisis estático, no en runtime.
+if TYPE_CHECKING:
+    from app.models.user import User
 
 
 class PasswordResetToken(Base):
@@ -99,12 +108,18 @@ class PasswordResetToken(Base):
     # 🔗 Relaciones
     # ────────────────────────────
 
-    # ¿Qué? Relación ORM que vincula el token con su usuario propietario.
-    # ¿Para qué? Acceder al objeto User directamente desde el token sin hacer
-    #            una query manual (ej: token.user.email en lugar de query por user_id).
-    # ¿Impacto? lazy="selectin" carga el usuario automáticamente al consultar el token,
-    #           evitando el problema de N+1 queries.
-    user = relationship("User", lazy="selectin")
+    # ¿Qué? Relación ORM hacia el usuario propietario de este token.
+    # ¿Para qué? Acceder al objeto User directamente: token.user.email
+    #            Sin esta relación habría que hacer una query manual por user_id.
+    # ¿Impacto? back_populates="password_reset_tokens" conecta este atributo con
+    #            User.password_reset_tokens — ambos lados se mantienen sincronizados.
+    #            lazy="selectin" carga el usuario automáticamente con el token
+    #            (evita el problema N+1 queries en listados).
+    user: Mapped[User] = relationship(
+        "User",
+        back_populates="password_reset_tokens",
+        lazy="selectin",
+    )
 
     def __repr__(self) -> str:
         """Representación legible del token para debugging.
