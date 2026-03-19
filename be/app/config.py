@@ -53,17 +53,25 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
     # ────────────────────────────
-    # 📧 Email
+    # 📧 Email — Resend
     # ────────────────────────────
-    # ¿Qué? Configuración del servidor SMTP para envío de emails.
-    # ¿Para qué? Enviar enlaces de recuperación de contraseña al email del usuario.
-    # ¿Impacto? Sin configuración SMTP válida, la funcionalidad de "forgot password" no funciona.
-    MAIL_SERVER: str = "smtp.example.com"
-    MAIL_PORT: int = 587
-    MAIL_USERNAME: str = ""
-    MAIL_PASSWORD: str = ""
-    MAIL_FROM: str = "noreply@nn-company.com"
-    MAIL_FROM_NAME: str = "NN Auth System"
+    # ¿Qué? API key de Resend para envío de emails transaccionales.
+    # ¿Para qué? Autenticar todas las llamadas a la API de Resend (verificación + recuperación).
+    # ¿Impacto? Si está vacía, los emails se simulan (se registran en los logs del servidor).
+    #           En producción DEBE tener un valor real: obtener en https://resend.com/api-keys
+    #           Capa gratuita: 3,000 emails/mes, 100 emails/día — suficiente para desarrollo.
+    RESEND_API_KEY: str = ""
+
+    # ¿Qué? Dirección de origen visible en los emails enviados.
+    # ¿Para qué? El receptor del email verá este remitente en su cliente de correo.
+    # ¿Impacto? Para producción, debe ser un dominio verificado en Resend.
+    #           Para desarrollo, "onboarding@resend.dev" funciona sin verificación de dominio.
+    RESEND_FROM_EMAIL: str = "onboarding@resend.dev"
+
+    # ¿Qué? Nombre visible del remitente en los emails.
+    # ¿Para qué? El usuario ve "NN Auth System <onboarding@resend.dev>" en su bandeja.
+    # ¿Impacto? Un nombre reconocible reduce las posibilidades de que el email sea marcado como spam.
+    RESEND_FROM_NAME: str = "NN Auth System"
 
     # ────────────────────────────
     # 🌐 URLs

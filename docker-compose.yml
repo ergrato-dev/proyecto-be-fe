@@ -101,13 +101,13 @@ services:
       # ¿Impacto? Si apunta a una URL incorrecta, el enlace en el email no funcionará.
       FRONTEND_URL: http://localhost:80
 
-      # ─── Configuración de email (para recuperación de contraseña) ───
-      # Ajustar con credenciales reales de un servidor SMTP para que funcione el email.
-      MAIL_SERVER: smtp.example.com
-      MAIL_PORT: 587
-      MAIL_USERNAME: noreply@nn-company.com
-      MAIL_PASSWORD: your-mail-password
-      MAIL_FROM: noreply@nn-company.com
+      # ─── Configuración de email — Resend ───
+      # ¿Qué? API key de Resend para envío de emails (verificación de cuenta + recuperación).
+      # ¿Para qué? Sin esto, los emails no se envían (solo se registran en logs del servidor).
+      # ¿Impacto? Para activar el envío real, reemplazar con tu API key de https://resend.com
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      RESEND_FROM_EMAIL: ${RESEND_FROM_EMAIL:-onboarding@resend.dev}
+      RESEND_FROM_NAME: "NN Auth System"
 
     ports:
       # ¿Qué? Mapea el puerto 8000 del contenedor al 8000 del host.
