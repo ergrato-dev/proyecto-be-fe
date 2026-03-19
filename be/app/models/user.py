@@ -89,6 +89,17 @@ class User(Base):
         nullable=False,
     )
 
+    # ¿Qué? Indicador de si el usuario verificó su dirección de email.
+    # ¿Para qué? Confirmar que el email ingresado en el registro pertenece realmente al usuario.
+    #            Sin verificación, cualquiera podría registrarse con el email de otra persona.
+    # ¿Impacto? Default False = al registrarse, el usuario NO puede iniciar sesión hasta
+    #           hacer clic en el enlace de verificación enviado a su email.
+    is_email_verified: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+    )
+
     # ¿Qué? Fecha y hora de creación del registro.
     # ¿Para qué? Trazabilidad — saber cuándo se registró cada usuario.
     # ¿Impacto? server_default=func.now() hace que PostgreSQL genere la fecha,

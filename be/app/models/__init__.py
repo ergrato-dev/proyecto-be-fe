@@ -14,5 +14,6 @@ Descripción: Paquete de modelos ORM — exporta todos los modelos para facilita
 #           y no generará la migración correspondiente.
 from app.models.user import User
 from app.models.password_reset_token import PasswordResetToken
+from app.models.email_verification_token import EmailVerificationToken
 
-__all__ = ["User", "PasswordResetToken"]
+__all__ = ["User", "PasswordResetToken", "EmailVerificationToken"]
