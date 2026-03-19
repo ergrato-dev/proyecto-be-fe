@@ -16,6 +16,7 @@ from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.models.email_verification_token import EmailVerificationToken
 from app.models.password_reset_token import PasswordResetToken
 from app.models.user import User
 from app.schemas.user import (
@@ -25,7 +26,7 @@ from app.schemas.user import (
     UserCreate,
     UserLogin,
 )
-from app.utils.email import send_password_reset_email
+from app.utils.email import send_password_reset_email, send_verification_email
 from app.utils.security import (
     create_access_token,
     create_refresh_token,
@@ -35,13 +36,16 @@ from app.utils.security import (
 )
 
 
-def register_user(db: Session, user_data: UserCreate) -> User:
-    """Registra un nuevo usuario en el sistema.
+async def register_user(db: Session, user_data: UserCreate) -> User:
+    """Registra un nuevo usuario y envía el email de verificación de cuenta.
 
-    ¿Qué? Crea una nueva cuenta de usuario con email, nombre y contraseña hasheada.
+    ¿Qué? Crea una nueva cuenta con email, nombre y contraseña hasheada,
+          genera un token de verificación y envía el email de activación.
     ¿Para qué? Permitir que nuevos usuarios se registren en NN Auth System.
-    ¿Impacto? Flujo crítico: verifica email duplicado → hashea password → crea en BD.
-              Si el email ya existe, retorna 400. Si el hash falla, la cuenta no se crea.
+    ¿Impacto? Flujo: verifica email duplicado → hashea password → crea en BD
+              → genera token de verificación → envía email.
+              El usuario queda con is_email_verified=False hasta hacer clic en el enlace.
+              Si el email falla, el usuario igual se registra (el error no es blocante).
 
     Args:
         db: Sesión de base de datos.
@@ -78,6 +82,29 @@ def register_user(db: Session, user_data: UserCreate) -> User:
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+
+    # ¿Qué? Genera un token UUID único para el enlace de verificación de email.
+    # ¿Para qué? Este token viaja en la URL del email y confirma la posesión del buzón.
+    # ¿Impacto? UUID4 tiene 122 bits de entropía — prácticamente imposible de adivinar.
+    verification_token = str(uuid.uuid4())
+
+    # ¿Qué? Crea el registro del token en la tabla email_verification_tokens.
+    # ¿Para qué? Almacenar el token con su expiración para validarlo cuando el usuario haga clic.
+    # ¿Impacto? Expiración de 24 horas — después, el usuario debe re-registrarse o solicitar reenvío.
+    token_record = EmailVerificationToken(
+        user_id=new_user.id,
+        token=verification_token,
+        expires_at=datetime.now(timezone.utc) + timedelta(hours=24),
+    )
+    db.add(token_record)
+    db.commit()
+
+    # ¿Qué? Envía el email de verificación al usuario recién registrado.
+    # ¿Para qué? El usuario debe hacer clic en el enlace para activar su cuenta.
+    # ¿Impacto? Si RESEND_API_KEY no está configurada, el enlace se imprime en los logs.
+    #           El fallo de envío NO revierte el registro — el error es no bloqueante.
+    await send_verification_email(email=new_user.email, token=verification_token)
+
     return new_user
 
 
@@ -121,6 +148,19 @@ def login_user(db: Session, login_data: UserLogin) -> TokenResponse:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Cuenta desactivada. Contacte al administrador.",
+        )
+
+    # ¿Qué? Verificar que el usuario haya confirmado su email antes de permitir el login.
+    # ¿Para qué? Asegurar que el email ingresado en el registro pertenece realmente al usuario.
+    # ¿Impacto? Sin esta verificación, alguien podría registrarse con el email de otra persona
+    #           y acceder al sistema antes de que el dueño real del email lo note.
+    if not user.is_email_verified:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=(
+                "Debes verificar tu email antes de iniciar sesión. "
+                "Revisa tu bandeja de entrada."
+            ),
         )
 
     # ¿Qué? Generar par de tokens JWT (access + refresh).
@@ -343,3 +383,69 @@ def reset_password(db: Session, reset_data: ResetPasswordRequest) -> None:
     user.hashed_password = hash_password(reset_data.new_password)
     token_record.used = True
     db.commit()
+
+
+def verify_email(db: Session, token: str) -> None:
+    """Verifica la dirección de email del usuario usando el token enviado al registrarse.
+
+    ¿Qué? Valida el token de verificación y activa la cuenta marcando is_email_verified=True.
+    ¿Para qué? Confirmar que el email ingresado en el registro pertenece realmente al usuario.
+    ¿Impacto? Tras este proceso, el usuario puede iniciar sesión. Sin él, el login retorna 403.
+              El token se marca como usado para evitar que el enlace sea reutilizado.
+
+    Args:
+        db: Sesión de base de datos.
+        token: UUID de verificación recibido por email.
+
+    Raises:
+        HTTPException 400: Si el token no existe, ya fue usado o ha expirado.
+    """
+    # ¿Qué? Buscar el token en la tabla email_verification_tokens.
+    # ¿Para qué? Verificar que el token existe y obtener el usuario asociado.
+    # ¿Impacto? Si no existe, el usuario envió un token inventado o ya fue procesado.
+    stmt = select(EmailVerificationToken).where(
+        EmailVerificationToken.token == token
+    )
+    token_record = db.execute(stmt).scalar_one_or_none()
+
+    if not token_record:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Token de verificación inválido",
+        )
+
+    # ¿Qué? Verificar que el token no haya sido usado previamente.
+    # ¿Para qué? Evitar activaciones duplicadas — un token solo sirve una vez.
+    # ¿Impacto? Sin esto, el mismo enlace podría re-activar cuentas ya activas o manipuladas.
+    if token_record.used:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Este token de verificación ya fue utilizado",
+        )
+
+    # ¿Qué? Verificar que el token no haya expirado.
+    # ¿Para qué? Los tokens de verificación tienen vigencia de 24 horas.
+    # ¿Impacto? Si expiró, el usuario debe re-registrarse o solicitar un nuevo enlace.
+    if token_record.expires_at < datetime.now(timezone.utc):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="El token de verificación ha expirado. Por favor, regístrate de nuevo.",
+        )
+
+    # ¿Qué? Obtener el usuario asociado al token y marcar su email como verificado.
+    # ¿Para qué? Activar la cuenta para que el usuario pueda iniciar sesión.
+    # ¿Impacto? is_email_verified=True desbloquea el login para este usuario.
+    #           El token se marca como usado para que el enlace no pueda reutilizarse.
+    stmt_user = select(User).where(User.id == token_record.user_id)
+    user = db.execute(stmt_user).scalar_one_or_none()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Usuario no encontrado",
+        )
+
+    user.is_email_verified = True
+    token_record.used = True
+    db.commit()
+

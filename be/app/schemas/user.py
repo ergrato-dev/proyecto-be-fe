@@ -182,6 +182,22 @@ class RefreshTokenRequest(BaseModel):
     refresh_token: str
 
 
+class VerifyEmailRequest(BaseModel):
+    """Schema para verificar la dirección de email con el token enviado al usuario.
+
+    ¿Qué? Contiene el token UUID que el usuario recibió en su email de verificación.
+    ¿Para qué? Confirmar que el email ingresado en el registro es real y accesible.
+    ¿Impacto? Sin verificar el email, is_email_verified permanece False y el usuario
+              no puede iniciar sesión. Este schema es lo que el frontend envía al
+              endpoint POST /api/v1/auth/verify-email al recibir el token de la URL.
+    """
+
+    # ¿Qué? Token UUID de verificación (viene como query param en la URL del email).
+    # ¿Para qué? El backend lo busca en email_verification_tokens para validar y activar.
+    # ¿Impacto? Si el token es inválido, expirado o ya fue usado, se rechaza con 400.
+    token: str
+
+
 # ════════════════════════════════════════
 # 📤 Schemas de RESPONSE (datos que retorna la API)
 # ════════════════════════════════════════
@@ -201,6 +217,10 @@ class UserResponse(BaseModel):
     email: str
     full_name: str
     is_active: bool
+    # ¿Qué? Campo que indica si el usuario verificó su email al registrarse.
+    # ¿Para qué? El frontend puede mostrar un aviso "verifica tu email" en el dashboard.
+    # ¿Impacto? False = el usuario no puede iniciar sesión hasta verificar.
+    is_email_verified: bool
     created_at: datetime
     updated_at: datetime
 

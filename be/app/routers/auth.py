@@ -24,6 +24,7 @@ from app.schemas.user import (
     UserCreate,
     UserLogin,
     UserResponse,
+    VerifyEmailRequest,
 )
 from app.services import auth_service
 
@@ -42,16 +43,18 @@ router = APIRouter(
     status_code=status.HTTP_201_CREATED,
     summary="Registrar nuevo usuario",
 )
-def register(
+async def register(
     user_data: UserCreate,
     db: Session = Depends(get_db),
 ) -> UserResponse:
     """Registra un nuevo usuario en el sistema.
 
-    ¿Qué? Endpoint que recibe email, nombre y contraseña, y crea una nueva cuenta.
+    ¿Qué? Endpoint que recibe email, nombre y contraseña, crea la cuenta y
+          envía un email de verificación al usuario.
     ¿Para qué? Permitir que nuevos usuarios se registren en NN Auth System.
-    ¿Impacto? status_code=201 indica "recurso creado". response_model=UserResponse
-              garantiza que NUNCA se retorne el hash de la contraseña.
+    ¿Impacto? El usuario queda con is_email_verified=False hasta confirmar su email.
+              Sin verificar, el login retorna 403. status_code=201 indica creación exitosa.
+              response_model=UserResponse garantiza que NUNCA se retorne el hash de la contraseña.
 
     Args:
         user_data: Datos del nuevo usuario (validados por Pydantic).
@@ -60,7 +63,7 @@ def register(
     Returns:
         Datos del usuario creado (sin contraseña).
     """
-    user = auth_service.register_user(db=db, user_data=user_data)
+    user = await auth_service.register_user(db=db, user_data=user_data)
     return UserResponse.model_validate(user)
 
 
@@ -211,3 +214,31 @@ def reset_password(
     """
     auth_service.reset_password(db=db, reset_data=reset_data)
     return MessageResponse(message="Contraseña restablecida exitosamente")
+
+
+@router.post(
+    "/verify-email",
+    response_model=MessageResponse,
+    summary="Verificar dirección de email",
+)
+def verify_email(
+    request_data: VerifyEmailRequest,
+    db: Session = Depends(get_db),
+) -> MessageResponse:
+    """Verifica la dirección de email del usuario usando el token enviado al registrarse.
+
+    ¿Qué? Endpoint que recibe el token del email de verificación y activa la cuenta.
+    ¿Para qué? Confirmar que el email ingresado en el registro le pertenece al usuario.
+    ¿Impacto? Tras una verificación exitosa, is_email_verified=True y el usuario puede
+              iniciar sesión. Sin este paso, el login retornaría 403 con mensaje de
+              "debes verificar tu email".
+
+    Args:
+        request_data: Token UUID recibido en el email de verificación.
+        db: Sesión de BD (inyectada por FastAPI).
+
+    Returns:
+        Mensaje de confirmación.
+    """
+    auth_service.verify_email(db=db, token=request_data.token)
+    return MessageResponse(message="Email verificado exitosamente. Ya puedes iniciar sesión.")
