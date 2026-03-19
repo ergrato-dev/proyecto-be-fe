@@ -1,0 +1,98 @@
+<svg width="740" height="560" viewBox="0 0 740 560" xmlns="http://www.w3.org/2000/svg"
+     font-family="Inter, system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="ab" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#3b82f6"/>
+    </marker>
+    <marker id="ag" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#22c55e"/>
+    </marker>
+    <marker id="as" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="740" height="560" fill="#0f172a"/>
+
+  <!-- Titulo -->
+  <text x="370" y="30" text-anchor="middle" fill="#f1f5f9" font-size="15" font-weight="700">Flujo de Autenticacion JWT — Stateless</text>
+  <text x="370" y="50" text-anchor="middle" fill="#475569" font-size="11">Access Token: 15 min · Refresh Token: 7 dias · bcrypt hashing · sin estado en servidor</text>
+
+  <!-- ── Headers de actores ── -->
+  <rect x="40" y="64" width="148" height="40" rx="6" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="114" y="83" text-anchor="middle" fill="#93c5fd" font-size="12" font-weight="700">Cliente</text>
+  <text x="114" y="97" text-anchor="middle" fill="#64748b" font-size="9">React + Axios</text>
+
+  <rect x="552" y="64" width="148" height="40" rx="6" fill="#2d1b69" stroke="#a855f7" stroke-width="1.5"/>
+  <text x="626" y="83" text-anchor="middle" fill="#d8b4fe" font-size="12" font-weight="700">Backend</text>
+  <text x="626" y="97" text-anchor="middle" fill="#64748b" font-size="9">FastAPI + PostgreSQL</text>
+
+  <!-- Lineas de vida (lifelines) -->
+  <line x1="114" y1="104" x2="114" y2="530" stroke="#1e3a5f" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <line x1="626" y1="104" x2="626" y2="530" stroke="#2d1b69" stroke-width="1.5" stroke-dasharray="6,4"/>
+
+  <!-- ════ PASO 1 — LOGIN ════ -->
+  <text x="16" y="138" fill="#475569" font-size="9" font-weight="700">1</text>
+  <line x1="120" y1="134" x2="618" y2="134" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ab)"/>
+  <text x="370" y="126" text-anchor="middle" fill="#3b82f6" font-size="10" font-weight="600">POST /api/v1/auth/login</text>
+  <text x="370" y="143" text-anchor="middle" fill="#60a5fa" font-size="9">{ email: "user@nn.com", password: "Pass123" }</text>
+
+  <!-- Proceso backend -->
+  <rect x="580" y="154" width="100" height="34" rx="4" fill="#1a0a36" stroke="#7c3aed" stroke-width="1"/>
+  <text x="630" y="169" text-anchor="middle" fill="#a78bfa" font-size="9">verify_password()</text>
+  <text x="630" y="181" text-anchor="middle" fill="#64748b" font-size="8">bcrypt.verify</text>
+
+  <!-- ════ PASO 2 — TOKENS ════ -->
+  <text x="16" y="210" fill="#475569" font-size="9" font-weight="700">2</text>
+  <line x1="618" y1="206" x2="120" y2="206" stroke="#22c55e" stroke-width="2" marker-end="url(#ag)"/>
+  <text x="370" y="198" text-anchor="middle" fill="#22c55e" font-size="10" font-weight="600">200 OK — Tokens emitidos</text>
+  <text x="370" y="215" text-anchor="middle" fill="#4ade80" font-size="9">{ access_token, refresh_token, token_type: "bearer" }</text>
+
+  <!-- Cajas de tokens en el cliente -->
+  <rect x="30" y="224" width="170" height="38" rx="5" fill="#1e293b" stroke="#3b82f6" stroke-width="1"/>
+  <text x="42" y="239" fill="#60a5fa" font-size="9" font-weight="600">access_token (JWT)</text>
+  <text x="42" y="252" fill="#475569" font-size="8">exp: 15 min · sub: email  →  sessionStorage</text>
+
+  <rect x="30" y="267" width="170" height="38" rx="5" fill="#1e293b" stroke="#a855f7" stroke-width="1"/>
+  <text x="42" y="282" fill="#c084fc" font-size="9" font-weight="600">refresh_token (JWT)</text>
+  <text x="42" y="295" fill="#475569" font-size="8">exp: 7 dias · type: "refresh"  →  sessionStorage</text>
+
+  <!-- ════ PASO 3 — REQUEST PROTEGIDO ════ -->
+  <text x="16" y="326" fill="#475569" font-size="9" font-weight="700">3</text>
+  <line x1="120" y1="322" x2="618" y2="322" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ab)"/>
+  <text x="370" y="314" text-anchor="middle" fill="#3b82f6" font-size="10" font-weight="600">GET /api/v1/users/me</text>
+  <text x="370" y="331" text-anchor="middle" fill="#60a5fa" font-size="9">Authorization: Bearer &lt;access_token&gt;</text>
+
+  <!-- Proceso backend -->
+  <rect x="580" y="340" width="100" height="34" rx="4" fill="#1a0a36" stroke="#7c3aed" stroke-width="1"/>
+  <text x="630" y="355" text-anchor="middle" fill="#a78bfa" font-size="9">decode_token()</text>
+  <text x="630" y="367" text-anchor="middle" fill="#64748b" font-size="8">valida firma + exp</text>
+
+  <!-- ════ PASO 4 — USER DATA ════ -->
+  <text x="16" y="396" fill="#475569" font-size="9" font-weight="700">4</text>
+  <line x1="618" y1="392" x2="120" y2="392" stroke="#22c55e" stroke-width="1.5" marker-end="url(#ag)"/>
+  <text x="370" y="384" text-anchor="middle" fill="#22c55e" font-size="10" font-weight="600">200 OK</text>
+  <text x="370" y="401" text-anchor="middle" fill="#4ade80" font-size="9">{ id, email, full_name, is_active, created_at }</text>
+
+  <!-- ════ PASO 5 — TOKEN EXPIRADO ════ -->
+  <rect x="240" y="412" width="260" height="22" rx="4" fill="#291524" stroke="#ef4444" stroke-width="1"/>
+  <text x="370" y="427" text-anchor="middle" fill="#fca5a5" font-size="9">access_token expira (15 min) → 401 Unauthorized</text>
+
+  <!-- ════ PASO 6 — REFRESH ════ -->
+  <text x="16" y="460" fill="#475569" font-size="9" font-weight="700">5</text>
+  <line x1="120" y1="456" x2="618" y2="456" stroke="#f97316" stroke-width="1.5" marker-end="url(#ab)"/>
+  <text x="370" y="448" text-anchor="middle" fill="#f97316" font-size="10" font-weight="600">POST /api/v1/auth/refresh</text>
+  <text x="370" y="465" text-anchor="middle" fill="#fb923c" font-size="9">{ refresh_token: "&lt;token de 7 dias&gt;" }</text>
+
+  <!-- ════ PASO 7 — NUEVO PAR ════ -->
+  <text x="16" y="500" fill="#475569" font-size="9" font-weight="700">6</text>
+  <line x1="618" y1="496" x2="120" y2="496" stroke="#22c55e" stroke-width="2" marker-end="url(#ag)"/>
+  <text x="370" y="488" text-anchor="middle" fill="#22c55e" font-size="10" font-weight="600">200 OK — Nuevos tokens</text>
+  <text x="370" y="505" text-anchor="middle" fill="#4ade80" font-size="9">{ new access_token, new refresh_token } — rotacion de tokens</text>
+
+  <!-- Nota marginal -->
+  <rect x="16" y="518" width="708" height="30" rx="5" fill="#1e293b"/>
+  <text x="370" y="531" text-anchor="middle" fill="#475569" font-size="9">Stateless: el servidor NO guarda sesiones. Toda la info de identidad viaja dentro del JWT firmado con SECRET_KEY.</text>
+  <text x="370" y="543" text-anchor="middle" fill="#334155" font-size="9">Si el refresh_token expira (7 dias): el usuario debe hacer login nuevamente con su contraseña.</text>
+</svg>

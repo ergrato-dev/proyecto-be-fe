@@ -1,0 +1,132 @@
+<svg width="800" height="430" viewBox="0 0 800 430" xmlns="http://www.w3.org/2000/svg"
+     font-family="Inter, system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="ab" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#3b82f6"/>
+    </marker>
+    <marker id="ag" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#22c55e"/>
+    </marker>
+    <marker id="ao" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#f97316"/>
+    </marker>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="800" height="430" fill="#0f172a"/>
+
+  <!-- Titulo -->
+  <text x="400" y="30" text-anchor="middle" fill="#f1f5f9" font-size="15" font-weight="700">Arquitectura General — NN Auth System</text>
+  <text x="400" y="50" text-anchor="middle" fill="#475569" font-size="11">Patron Cliente-Servidor · REST API · JWT Stateless · Monorepo</text>
+
+  <!-- ═══ COLUMNA FRONTEND ═══ -->
+  <rect x="16" y="64" width="184" height="318" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+  <rect x="16" y="64" width="184" height="40" rx="8" fill="#1e3a5f"/>
+  <rect x="16"  y="94" width="184" height="10" fill="#1e3a5f"/>
+  <text x="108" y="88" text-anchor="middle" fill="#93c5fd" font-size="13" font-weight="700">Frontend</text>
+  <text x="108" y="103" text-anchor="middle" fill="#64748b" font-size="10">React 18 + TypeScript + Vite</text>
+
+  <text x="28" y="122" fill="#64748b" font-size="9" font-weight="600" letter-spacing="0.5">COMPONENTES</text>
+  <rect x="24" y="127" width="168" height="20" rx="3" fill="#0f172a"/>
+  <text x="34" y="141" fill="#94a3b8" font-size="10">Pages — Login · Register · Dashboard</text>
+  <rect x="24" y="152" width="168" height="20" rx="3" fill="#0f172a"/>
+  <text x="34" y="166" fill="#94a3b8" font-size="10">AuthProvider + AuthContext</text>
+  <rect x="24" y="177" width="168" height="20" rx="3" fill="#0f172a"/>
+  <text x="34" y="191" fill="#94a3b8" font-size="10">useAuth() — custom hook</text>
+  <rect x="24" y="202" width="168" height="20" rx="3" fill="#0f172a"/>
+  <text x="34" y="216" fill="#94a3b8" font-size="10">ProtectedRoute — route guard</text>
+  <rect x="24" y="227" width="168" height="20" rx="3" fill="#0f172a"/>
+  <text x="34" y="241" fill="#94a3b8" font-size="10">Axios + interceptores JWT</text>
+  <text x="28" y="264" fill="#64748b" font-size="9" font-weight="600" letter-spacing="0.5">HERRAMIENTAS</text>
+  <rect x="24" y="269" width="168" height="20" rx="3" fill="#0f172a"/>
+  <text x="34" y="283" fill="#64748b" font-size="10">TailwindCSS 4 · dark mode</text>
+  <rect x="24" y="294" width="168" height="20" rx="3" fill="#0f172a"/>
+  <text x="34" y="308" fill="#64748b" font-size="10">Vitest + Testing Library</text>
+  <rect x="24" y="319" width="168" height="20" rx="3" fill="#0f172a"/>
+  <text x="34" y="333" fill="#64748b" font-size="10">React Router 7 · TypeScript strict</text>
+  <rect x="24" y="349" width="168" height="24" rx="3" fill="#0f1929"/>
+  <text x="34" y="360" fill="#334155" font-size="9">sessionStorage: access_token</text>
+  <text x="34" y="371" fill="#334155" font-size="9">port :5173</text>
+
+  <!-- ═══ FLECHAS FE ↔ BE ═══ -->
+  <line x1="202" y1="190" x2="290" y2="190" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ab)"/>
+  <text x="246" y="181" text-anchor="middle" fill="#3b82f6" font-size="9" font-weight="600">HTTP Request</text>
+  <text x="246" y="195" text-anchor="middle" fill="#60a5fa" font-size="8">POST /api/v1/auth/...</text>
+
+  <line x1="290" y1="214" x2="202" y2="214" stroke="#22c55e" stroke-width="1.5" marker-end="url(#ag)"/>
+  <text x="246" y="244" text-anchor="middle" fill="#22c55e" font-size="9" font-weight="600">HTTP Response</text>
+  <text x="246" y="256" text-anchor="middle" fill="#4ade80" font-size="8">JSON · Tokens JWT</text>
+
+  <rect x="208" y="264" width="76" height="18" rx="3" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+  <text x="246" y="277" text-anchor="middle" fill="#93c5fd" font-size="8">Bearer token →</text>
+
+  <!-- ═══ COLUMNA BACKEND ═══ -->
+  <rect x="296" y="64" width="200" height="318" rx="8" fill="#1e293b" stroke="#a855f7" stroke-width="2"/>
+  <rect x="296" y="64" width="200" height="40" rx="8" fill="#2d1b69"/>
+  <rect x="296" y="94" width="200" height="10" fill="#2d1b69"/>
+  <text x="396" y="88" text-anchor="middle" fill="#d8b4fe" font-size="13" font-weight="700">Backend</text>
+  <text x="396" y="103" text-anchor="middle" fill="#64748b" font-size="10">FastAPI 0.115 · Python 3.12 · Uvicorn</text>
+
+  <text x="310" y="122" fill="#64748b" font-size="9" font-weight="600" letter-spacing="0.5">CAPAS</text>
+  <rect x="306" y="127" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="316" y="141" fill="#a78bfa" font-size="10">routers/ — endpoints HTTP</text>
+  <rect x="306" y="152" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="316" y="166" fill="#94a3b8" font-size="10">services/ — logica de negocio</text>
+  <rect x="306" y="177" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="316" y="191" fill="#94a3b8" font-size="10">schemas/ — Pydantic DTOs</text>
+  <rect x="306" y="202" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="316" y="216" fill="#94a3b8" font-size="10">models/ — SQLAlchemy ORM</text>
+  <rect x="306" y="227" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="316" y="241" fill="#94a3b8" font-size="10">utils/ — bcrypt + JWT</text>
+  <rect x="306" y="252" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="316" y="266" fill="#94a3b8" font-size="10">dependencies/ — DI (get_db · auth)</text>
+  <text x="310" y="289" fill="#64748b" font-size="9" font-weight="600" letter-spacing="0.5">HERRAMIENTAS</text>
+  <rect x="306" y="294" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="316" y="308" fill="#64748b" font-size="10">pydantic-settings · Alembic</text>
+  <rect x="306" y="319" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="316" y="333" fill="#64748b" font-size="10">pytest — 96% cobertura</text>
+  <rect x="306" y="349" width="176" height="24" rx="3" fill="#0f1929"/>
+  <text x="316" y="360" fill="#334155" font-size="9">ruff · CORS configurado</text>
+  <text x="316" y="371" fill="#334155" font-size="9">port :8000 · ASGI</text>
+
+  <!-- ═══ FLECHAS BE ↔ DB ═══ -->
+  <line x1="500" y1="204" x2="584" y2="204" stroke="#f97316" stroke-width="1.5" marker-end="url(#ao)"/>
+  <text x="542" y="196" text-anchor="middle" fill="#f97316" font-size="9" font-weight="600">SQLAlchemy</text>
+  <text x="542" y="208" text-anchor="middle" fill="#fb923c" font-size="8">INSERT · SELECT · UPDATE</text>
+
+  <line x1="584" y1="226" x2="500" y2="226" stroke="#f97316" stroke-width="1.5" marker-end="url(#ao)"/>
+  <text x="542" y="244" text-anchor="middle" fill="#fb923c" font-size="8">Row → Python Object</text>
+
+  <!-- ═══ COLUMNA BASE DE DATOS ═══ -->
+  <rect x="590" y="64" width="194" height="318" rx="8" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
+  <rect x="590" y="64" width="194" height="40" rx="8" fill="#0f2d1a"/>
+  <rect x="590" y="94" width="194" height="10" fill="#0f2d1a"/>
+  <text x="687" y="88" text-anchor="middle" fill="#86efac" font-size="13" font-weight="700">Base de Datos</text>
+  <text x="687" y="103" text-anchor="middle" fill="#64748b" font-size="10">PostgreSQL 17 · Docker Compose</text>
+
+  <text x="604" y="122" fill="#64748b" font-size="9" font-weight="600" letter-spacing="0.5">TABLAS</text>
+  <rect x="600" y="127" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="610" y="141" fill="#4ade80" font-size="10">users — UUID PK · email UNIQUE</text>
+  <rect x="600" y="152" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="610" y="166" fill="#94a3b8" font-size="10">password_reset_tokens</text>
+  <text x="604" y="189" fill="#64748b" font-size="9" font-weight="600" letter-spacing="0.5">INFRAESTRUCTURA</text>
+  <rect x="600" y="194" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="610" y="208" fill="#94a3b8" font-size="10">Alembic — migraciones versionadas</text>
+  <rect x="600" y="219" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="610" y="233" fill="#94a3b8" font-size="10">INDEX: email · token</text>
+  <rect x="600" y="244" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="610" y="258" fill="#94a3b8" font-size="10">UUID primary keys</text>
+  <rect x="600" y="269" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="610" y="283" fill="#94a3b8" font-size="10">Timestamps UTC (server_default)</text>
+  <rect x="600" y="294" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="610" y="308" fill="#94a3b8" font-size="10">FK CASCADE en borrado</text>
+  <rect x="600" y="319" width="176" height="20" rx="3" fill="#0f172a"/>
+  <text x="610" y="333" fill="#64748b" font-size="10">pool_pre_ping=True</text>
+  <rect x="600" y="349" width="176" height="24" rx="3" fill="#0f1929"/>
+  <text x="610" y="360" fill="#334155" font-size="9">port :5432 · volumen persistente</text>
+  <text x="610" y="371" fill="#334155" font-size="9">nn_auth_data</text>
+
+  <!-- Barra inferior -->
+  <rect x="16" y="396" width="768" height="22" rx="5" fill="#1e293b"/>
+  <text x="400" y="411" text-anchor="middle" fill="#475569" font-size="10">Monorepo: be/ + fe/ · Docker Compose: db + be + fe · CORS: localhost:5173 · HTTPS en produccion</text>
+</svg>

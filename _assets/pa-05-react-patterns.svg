@@ -1,0 +1,143 @@
+<svg width="760" height="540" viewBox="0 0 760 540" xmlns="http://www.w3.org/2000/svg"
+     font-family="Inter, system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="ab" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#3b82f6"/>
+    </marker>
+    <marker id="at" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#14b8a6"/>
+    </marker>
+    <marker id="ao" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#f97316"/>
+    </marker>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="760" height="540" fill="#0f172a"/>
+
+  <!-- Titulo -->
+  <text x="380" y="30" text-anchor="middle" fill="#f1f5f9" font-size="15" font-weight="700">Patrones Frontend — React Auth Patterns</text>
+  <text x="380" y="50" text-anchor="middle" fill="#475569" font-size="11">Context/Provider · Custom Hook · Route Guard · Interceptor</text>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- ARBOL DE COMPONENTES (izquierda, 2/3 del ancho) -->
+  <!-- ══════════════════════════════════════════════ -->
+
+  <!-- AuthProvider — caja exterior -->
+  <rect x="16" y="64" width="468" height="450" rx="10" fill="#1e293b" stroke="#a855f7" stroke-width="2"/>
+  <rect x="16" y="64" width="468" height="36" rx="10" fill="#2d1b69"/>
+  <rect x="16" y="88" width="468" height="12" fill="#2d1b69"/>
+  <text x="250" y="86" text-anchor="middle" fill="#d8b4fe" font-size="12" font-weight="700">AuthProvider</text>
+  <text x="250" y="100" text-anchor="middle" fill="#64748b" font-size="9">Context/Provider Pattern — Patron 5</text>
+
+  <!-- Estado y acciones del context -->
+  <rect x="28" y="110" width="444" height="54" rx="6" fill="#1a0f36" stroke="#7c3aed" stroke-width="1"/>
+  <text x="40" y="127" fill="#a78bfa" font-size="10" font-weight="600">Estado:</text>
+  <text x="40" y="142" fill="#64748b" font-size="10">user: UserResponse | null  ·  accessToken: string | null  ·  isLoading: boolean  ·  isAuthenticated: boolean</text>
+  <text x="40" y="156" fill="#64748b" font-size="10">Acciones: login()  ·  logout()  ·  register()  ·  changePassword()  ·  forgotPassword()</text>
+
+  <!-- BrowserRouter -->
+  <rect x="28" y="174" width="444" height="322" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="50" y="192" fill="#475569" font-size="10">BrowserRouter + Routes (React Router 7)</text>
+
+  <!-- Rutas publicas -->
+  <rect x="40" y="200" width="196" height="138" rx="7" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+  <text x="138" y="217" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="600">Rutas Publicas</text>
+  <text x="138" y="230" text-anchor="middle" fill="#475569" font-size="9">(sin autenticacion)</text>
+
+  <rect x="52" y="236" width="172" height="20" rx="3" fill="#0f172a"/>
+  <text x="62" y="250" fill="#64748b" font-size="10">/login → LoginPage</text>
+  <rect x="52" y="261" width="172" height="20" rx="3" fill="#0f172a"/>
+  <text x="62" y="275" fill="#64748b" font-size="10">/register → RegisterPage</text>
+  <rect x="52" y="286" width="172" height="20" rx="3" fill="#0f172a"/>
+  <text x="62" y="300" fill="#64748b" font-size="10">/forgot-password → ForgotPasswordPage</text>
+  <rect x="52" y="311" width="172" height="20" rx="3" fill="#0f172a"/>
+  <text x="62" y="325" fill="#64748b" font-size="10">/reset-password → ResetPasswordPage</text>
+
+  <!-- ProtectedRoute -->
+  <rect x="248" y="200" width="212" height="278" rx="7" fill="#1e293b" stroke="#22c55e" stroke-width="1.5"/>
+  <rect x="248" y="200" width="212" height="34" rx="7" fill="#0f2d1a"/>
+  <rect x="248" y="224" width="212" height="10" fill="#0f2d1a"/>
+  <text x="354" y="218" text-anchor="middle" fill="#4ade80" font-size="11" font-weight="700">ProtectedRoute</text>
+  <text x="354" y="231" text-anchor="middle" fill="#475569" font-size="9">Route Guard — Patron 7</text>
+
+  <!-- Logica del ProtectedRoute -->
+  <rect x="260" y="242" width="188" height="52" rx="4" fill="#0a1f0a" stroke="#166534" stroke-width="1"/>
+  <text x="268" y="258" fill="#64748b" font-size="9">if isLoading → Spinner</text>
+  <text x="268" y="272" fill="#64748b" font-size="9">if !isAuthenticated</text>
+  <text x="268" y="284" fill="#ef4444" font-size="9">  → Navigate to="/login"</text>
+
+  <text x="268" y="310" fill="#475569" font-size="9">Rutas protegidas:</text>
+  <rect x="260" y="314" width="188" height="20" rx="3" fill="#0f172a"/>
+  <text x="270" y="328" fill="#94a3b8" font-size="10">/dashboard → DashboardPage</text>
+  <rect x="260" y="339" width="188" height="20" rx="3" fill="#0f172a"/>
+  <text x="270" y="353" fill="#94a3b8" font-size="10">/change-password → ChangePwdPage</text>
+
+  <line x1="354" y1="362" x2="354" y2="374" stroke="#22c55e" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="268" y="390" fill="#4ade80" font-size="9">Envuelve con AppLayout</text>
+  <text x="268" y="403" fill="#64748b" font-size="9">(Navbar + Outlet)</text>
+
+  <!-- Flecha de redirect -->
+  <line x1="248" y1="270" x2="236" y2="270" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="230" y="270" text-anchor="end" fill="#ef4444" font-size="8">401</text>
+
+  <!-- useAuth badge -->
+  <rect x="40" y="352" width="196" height="44" rx="6" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5"/>
+  <text x="138" y="369" text-anchor="middle" fill="#2dd4bf" font-size="11" font-weight="700">useAuth()</text>
+  <text x="138" y="383" text-anchor="middle" fill="#64748b" font-size="9">Custom Hook — Patron 6</text>
+  <text x="138" y="393" text-anchor="middle" fill="#475569" font-size="8">useContext(AuthContext)</text>
+
+  <!-- Flecha de useAuth al context -->
+  <line x1="138" y1="352" x2="138" y2="164" stroke="#14b8a6" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#at)"/>
+  <text x="88" y="260" fill="#14b8a6" font-size="9" transform="rotate(-90,88,260)">consume contexto</text>
+
+  <!-- Footer del componente tree -->
+  <text x="250" y="476" text-anchor="middle" fill="#334155" font-size="10">/ → Navigate to="/login"   · *→ Navigate to="/login"</text>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- INTERCEPTOR PATTERN (derecha, 1/3 del ancho) -->
+  <!-- ══════════════════════════════════════════════ -->
+  <rect x="500" y="64" width="244" height="450" rx="10" fill="#1e293b" stroke="#f97316" stroke-width="2"/>
+  <rect x="500" y="64" width="244" height="36" rx="10" fill="#431407"/>
+  <rect x="500" y="88" width="244" height="12" fill="#431407"/>
+  <text x="622" y="86" text-anchor="middle" fill="#fb923c" font-size="12" font-weight="700">Interceptor Pattern</text>
+  <text x="622" y="100" text-anchor="middle" fill="#64748b" font-size="9">api/axios.ts — Patron 7</text>
+
+  <!-- Request interceptor -->
+  <rect x="512" y="112" width="220" height="124" rx="6" fill="#0f172a" stroke="#f97316" stroke-width="1"/>
+  <text x="622" y="128" text-anchor="middle" fill="#f97316" font-size="10" font-weight="700">Request Interceptor</text>
+  <line x1="520" y1="132" x2="724" y2="132" stroke="#334155" stroke-width="1"/>
+  <text x="524" y="148" fill="#64748b" font-size="9">Antes de cada peticion HTTP:</text>
+  <rect x="520" y="152" width="204" height="38" rx="3" fill="#0d0d0d"/>
+  <text x="530" y="165" fill="#94a3b8" font-size="9">const token = sessionStorage</text>
+  <text x="530" y="179" fill="#94a3b8" font-size="9">  .getItem("access_token")</text>
+  <text x="524" y="204" fill="#64748b" font-size="9">Adjunta automaticamente:</text>
+  <text x="524" y="218" fill="#60a5fa" font-size="9">Authorization: Bearer &lt;token&gt;</text>
+  <text x="524" y="228" fill="#475569" font-size="8">Sin esto, cada llamada seria manual.</text>
+
+  <!-- Response interceptor -->
+  <rect x="512" y="248" width="220" height="140" rx="6" fill="#0f172a" stroke="#f97316" stroke-width="1"/>
+  <text x="622" y="264" text-anchor="middle" fill="#f97316" font-size="10" font-weight="700">Response Interceptor</text>
+  <line x1="520" y1="268" x2="724" y2="268" stroke="#334155" stroke-width="1"/>
+  <text x="524" y="284" fill="#64748b" font-size="9">Ante error HTTP del servidor:</text>
+  <rect x="520" y="288" width="204" height="60" rx="3" fill="#0d0d0d"/>
+  <text x="530" y="301" fill="#94a3b8" font-size="9">if (error.response?.status === 401)</text>
+  <text x="530" y="315" fill="#94a3b8" font-size="9">  → limpiar sesion</text>
+  <text x="530" y="329" fill="#94a3b8" font-size="9">  → redirigir a /login</text>
+  <text x="524" y="364" fill="#64748b" font-size="9">Maneja errores consistentemente</text>
+  <text x="524" y="378" fill="#475569" font-size="8">sin repetir logica en cada componente.</text>
+
+  <!-- Flujo del interceptor -->
+  <rect x="512" y="400" width="220" height="76" rx="6" fill="#1a0a00" stroke="#92400e" stroke-width="1"/>
+  <text x="622" y="416" text-anchor="middle" fill="#fb923c" font-size="10" font-weight="600">Flujo de peticion</text>
+  <line x1="520" y1="420" x2="724" y2="420" stroke="#334155" stroke-width="1"/>
+  <text x="524" y="435" fill="#64748b" font-size="9">Componente → api.post()</text>
+  <line x1="524" y1="440" x2="724" y2="440" stroke="#2d1b00" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="524" y="452" fill="#475569" font-size="9">↓ req interceptor: add token</text>
+  <text x="524" y="464" fill="#475569" font-size="9">↓ FastAPI backend</text>
+  <text x="524" y="476" fill="#475569" font-size="9">↑ res interceptor: handle error</text>
+
+  <!-- Nota inferior -->
+  <rect x="16" y="524" width="728" height="10" rx="3" fill="#1e293b"/>
+  <text x="380" y="533" text-anchor="middle" fill="#334155" font-size="9">Todos los patrones trabajan en conjunto: el Provider provee estado, el Hook lo expone, el Route Guard protege, el Interceptor automatiza la autenticacion HTTP.</text>
+</svg>

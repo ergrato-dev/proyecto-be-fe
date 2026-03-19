@@ -1,0 +1,95 @@
+<svg width="720" height="530" viewBox="0 0 720 530" xmlns="http://www.w3.org/2000/svg"
+     font-family="Inter, system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#475569"/>
+    </marker>
+    <marker id="ar" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#22c55e"/>
+    </marker>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="720" height="530" fill="#0f172a"/>
+
+  <!-- Titulo -->
+  <text x="360" y="30" text-anchor="middle" fill="#f1f5f9" font-size="15" font-weight="700">Arquitectura en Capas — Backend FastAPI</text>
+  <text x="360" y="50" text-anchor="middle" fill="#475569" font-size="11">Separation of Concerns — cada capa tiene una sola responsabilidad</text>
+
+  <!-- Etiqueta HTTP IN -->
+  <line x1="360" y1="58" x2="360" y2="72" stroke="#3b82f6" stroke-width="2" marker-end="url(#a)"/>
+  <text x="270" y="65" fill="#3b82f6" font-size="11" font-weight="600">HTTP Request →</text>
+
+  <!-- ── CAPA 1: routers ── -->
+  <rect x="40" y="78" width="640" height="72" rx="8" fill="#172554" stroke="#3b82f6" stroke-width="2"/>
+  <rect x="40" y="78" width="6" height="72" rx="3" fill="#3b82f6"/>
+  <text x="60" y="100" fill="#93c5fd" font-size="13" font-weight="700">routers/</text>
+  <text x="60" y="118" fill="#94a3b8" font-size="10">Capa HTTP · Recibe el request · Valida schema con Pydantic · Delega al service</text>
+  <text x="60" y="136" fill="#475569" font-size="10">auth.py · users.py · POST /register · POST /login · POST /refresh · GET /me</text>
+  <rect x="600" y="88" width="68" height="52" rx="4" fill="#0f172a"/>
+  <text x="634" y="110" text-anchor="middle" fill="#3b82f6" font-size="9" font-weight="600">HTTP</text>
+  <text x="634" y="124" text-anchor="middle" fill="#3b82f6" font-size="9">Layer</text>
+  <text x="634" y="137" text-anchor="middle" fill="#475569" font-size="8">@router</text>
+
+  <!-- Flecha baja -->
+  <line x1="360" y1="150" x2="360" y2="164" stroke="#475569" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- ── CAPA 2: services ── -->
+  <rect x="40" y="170" width="640" height="72" rx="8" fill="#1e1045" stroke="#a855f7" stroke-width="2"/>
+  <rect x="40" y="170" width="6" height="72" rx="3" fill="#a855f7"/>
+  <text x="60" y="192" fill="#d8b4fe" font-size="13" font-weight="700">services/</text>
+  <text x="60" y="210" fill="#94a3b8" font-size="10">Logica de negocio · Reglas del dominio · Decisiones · Validaciones complejas</text>
+  <text x="60" y="228" fill="#475569" font-size="10">auth_service.py · register · login · change_password · forgot_password · reset_password</text>
+  <rect x="600" y="180" width="68" height="52" rx="4" fill="#0f172a"/>
+  <text x="634" y="202" text-anchor="middle" fill="#a855f7" font-size="9" font-weight="600">Business</text>
+  <text x="634" y="216" text-anchor="middle" fill="#a855f7" font-size="9">Logic</text>
+  <text x="634" y="229" text-anchor="middle" fill="#475569" font-size="8">service()</text>
+
+  <!-- Flechas bifurcadas -->
+  <line x1="220" y1="242" x2="220" y2="256" stroke="#475569" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="500" y1="242" x2="500" y2="256" stroke="#475569" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- ── CAPA 3a: models ── -->
+  <rect x="40" y="262" width="300" height="72" rx="8" fill="#052e16" stroke="#22c55e" stroke-width="2"/>
+  <rect x="40" y="262" width="6" height="72" rx="3" fill="#22c55e"/>
+  <text x="60" y="284" fill="#4ade80" font-size="13" font-weight="700">models/</text>
+  <text x="60" y="302" fill="#94a3b8" font-size="10">ORM SQLAlchemy 2.0</text>
+  <text x="60" y="320" fill="#475569" font-size="10">User · PasswordResetToken → tablas BD</text>
+
+  <!-- ── CAPA 3b: schemas ── -->
+  <rect x="380" y="262" width="300" height="72" rx="8" fill="#431407" stroke="#f97316" stroke-width="2"/>
+  <rect x="380" y="262" width="6" height="72" rx="3" fill="#f97316"/>
+  <text x="400" y="284" fill="#fb923c" font-size="13" font-weight="700">schemas/</text>
+  <text x="400" y="302" fill="#94a3b8" font-size="10">Pydantic BaseModel (DTOs)</text>
+  <text x="400" y="320" fill="#475569" font-size="10">UserCreate · TokenResponse · UserResponse</text>
+
+  <!-- Conector horizontal entre models y schemas -->
+  <line x1="340" y1="298" x2="376" y2="298" stroke="#334155" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Flecha desde models hacia utils -->
+  <line x1="220" y1="334" x2="220" y2="348" stroke="#475569" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- ── CAPA 4: utils ── -->
+  <rect x="40" y="354" width="640" height="72" rx="8" fill="#042f2e" stroke="#14b8a6" stroke-width="2"/>
+  <rect x="40" y="354" width="6" height="72" rx="3" fill="#14b8a6"/>
+  <text x="60" y="376" fill="#2dd4bf" font-size="13" font-weight="700">utils/</text>
+  <text x="60" y="394" fill="#94a3b8" font-size="10">Utilidades transversales · Reutilizables desde cualquier capa</text>
+  <text x="60" y="412" fill="#475569" font-size="10">security.py — hash_password · verify_password · create_access_token · decode_token</text>
+  <rect x="600" y="364" width="68" height="52" rx="4" fill="#0f172a"/>
+  <text x="634" y="386" text-anchor="middle" fill="#14b8a6" font-size="9" font-weight="600">bcrypt</text>
+  <text x="634" y="400" text-anchor="middle" fill="#14b8a6" font-size="9">+ JWT</text>
+  <text x="634" y="413" text-anchor="middle" fill="#475569" font-size="8">passlib</text>
+
+  <!-- Flecha hacia BD -->
+  <line x1="360" y1="426" x2="360" y2="440" stroke="#475569" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- ── PostgreSQL ── -->
+  <rect x="40" y="446" width="640" height="48" rx="8" fill="#0a1f0a" stroke="#334155" stroke-width="1.5"/>
+  <rect x="40" y="446" width="6" height="48" rx="3" fill="#166534"/>
+  <text x="60" y="467" fill="#4ade80" font-size="12" font-weight="700">PostgreSQL 17</text>
+  <text x="60" y="482" fill="#475569" font-size="10">Docker · puerto 5432 · Alembic migraciones · pool_pre_ping=True · volumen persistente</text>
+
+  <!-- Flecha respuesta hacia arriba (lado derecho) -->
+  <line x1="698" y1="446" x2="698" y2="84" stroke="#22c55e" stroke-width="1.5" marker-end="url(#ar)"/>
+  <text x="712" y="268" text-anchor="middle" fill="#22c55e" font-size="10" transform="rotate(90,712,268)">HTTP Response</text>
+</svg>
