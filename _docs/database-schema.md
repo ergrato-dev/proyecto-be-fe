@@ -49,6 +49,7 @@
 ```
 
 **Relaciones**:
+
 - Un `User` puede tener **muchos** `PasswordResetToken` (uno por cada solicitud de recuperación)
 - Un `User` puede tener **muchos** `EmailVerificationToken` (uno por cada registro/reenvío)
 - Ambas tablas de tokens tienen `ondelete="CASCADE"` — si se elimina el usuario, sus tokens se borran automáticamente
@@ -76,23 +77,23 @@ CREATE INDEX ix_users_email ON users (email);
 
 ### Columnas
 
-| Columna              | Tipo          | Nulo | Default | Descripción                                          |
-| -------------------- | ------------- | ---- | ------- | ---------------------------------------------------- |
-| `id`                 | UUID          | No   | uuid4() | Identificador único — UUID evita predicción secuencial |
-| `email`              | VARCHAR(255)  | No   | —       | Credencial de login. UNIQUE + INDEX para búsquedas rápidas |
-| `full_name`          | VARCHAR(255)  | No   | —       | Nombre completo para mostrar en la interfaz          |
-| `hashed_password`    | VARCHAR(255)  | No   | —       | Hash bcrypt de la contraseña. **Nunca texto plano**  |
-| `is_active`          | BOOLEAN       | No   | `true`  | Permite desactivar cuentas sin borrar datos (soft delete) |
-| `is_email_verified`  | BOOLEAN       | No   | `false` | `false` al registrarse → no puede hacer login hasta verificar |
-| `created_at`         | TIMESTAMPTZ   | No   | `now()` | Fecha de registro del usuario (generada por PostgreSQL) |
-| `updated_at`         | TIMESTAMPTZ   | No   | `now()` | Fecha de última modificación — se actualiza en cada UPDATE |
+| Columna             | Tipo         | Nulo | Default | Descripción                                                   |
+| ------------------- | ------------ | ---- | ------- | ------------------------------------------------------------- |
+| `id`                | UUID         | No   | uuid4() | Identificador único — UUID evita predicción secuencial        |
+| `email`             | VARCHAR(255) | No   | —       | Credencial de login. UNIQUE + INDEX para búsquedas rápidas    |
+| `full_name`         | VARCHAR(255) | No   | —       | Nombre completo para mostrar en la interfaz                   |
+| `hashed_password`   | VARCHAR(255) | No   | —       | Hash bcrypt de la contraseña. **Nunca texto plano**           |
+| `is_active`         | BOOLEAN      | No   | `true`  | Permite desactivar cuentas sin borrar datos (soft delete)     |
+| `is_email_verified` | BOOLEAN      | No   | `false` | `false` al registrarse → no puede hacer login hasta verificar |
+| `created_at`        | TIMESTAMPTZ  | No   | `now()` | Fecha de registro del usuario (generada por PostgreSQL)       |
+| `updated_at`        | TIMESTAMPTZ  | No   | `now()` | Fecha de última modificación — se actualiza en cada UPDATE    |
 
 ### Índices
 
-| Índice            | Columna | Tipo   | Razón                                                   |
-| ----------------- | ------- | ------ | ------------------------------------------------------- |
-| `pk_users`        | `id`    | PK     | Búsquedas por ID (relaciones con tokens)                |
-| `ix_users_email`  | `email` | UNIQUE | Login frecuente por email — O(log n) con índice B-tree  |
+| Índice           | Columna | Tipo   | Razón                                                  |
+| ---------------- | ------- | ------ | ------------------------------------------------------ |
+| `pk_users`       | `id`    | PK     | Búsquedas por ID (relaciones con tokens)               |
+| `ix_users_email` | `email` | UNIQUE | Login frecuente por email — O(log n) con índice B-tree |
 
 ### Notas de seguridad
 
@@ -121,21 +122,21 @@ CREATE INDEX ix_password_reset_tokens_token ON password_reset_tokens (token);
 
 ### Columnas
 
-| Columna      | Tipo         | Nulo | Default | Descripción                                           |
-| ------------ | ------------ | ---- | ------- | ----------------------------------------------------- |
-| `id`         | UUID         | No   | uuid4() | Identificador único del registro de token             |
+| Columna      | Tipo         | Nulo | Default | Descripción                                                |
+| ------------ | ------------ | ---- | ------- | ---------------------------------------------------------- |
+| `id`         | UUID         | No   | uuid4() | Identificador único del registro de token                  |
 | `user_id`    | UUID         | No   | —       | FK → `users.id`. CASCADE: si borra el user, borra el token |
-| `token`      | VARCHAR(255) | No   | —       | UUID aleatorio enviado en el email de recuperación    |
-| `expires_at` | TIMESTAMPTZ  | No   | —       | Expiración: **1 hora** desde la creación              |
-| `used`       | BOOLEAN      | No   | `false` | `true` una vez utilizado — previene reúso del enlace  |
-| `created_at` | TIMESTAMPTZ  | No   | `now()` | Fecha de emisión del token                            |
+| `token`      | VARCHAR(255) | No   | —       | UUID aleatorio enviado en el email de recuperación         |
+| `expires_at` | TIMESTAMPTZ  | No   | —       | Expiración: **1 hora** desde la creación                   |
+| `used`       | BOOLEAN      | No   | `false` | `true` una vez utilizado — previene reúso del enlace       |
+| `created_at` | TIMESTAMPTZ  | No   | `now()` | Fecha de emisión del token                                 |
 
 ### Índices
 
-| Índice                                | Columna   | Tipo   | Razón                                      |
-| ------------------------------------- | --------- | ------ | ------------------------------------------ |
-| `pk_password_reset_tokens`            | `id`      | PK     | —                                          |
-| `ix_password_reset_tokens_token`      | `token`   | UNIQUE | Reset password busca por token — requiere INDEX |
+| Índice                           | Columna | Tipo   | Razón                                           |
+| -------------------------------- | ------- | ------ | ----------------------------------------------- |
+| `pk_password_reset_tokens`       | `id`    | PK     | —                                               |
+| `ix_password_reset_tokens_token` | `token` | UNIQUE | Reset password busca por token — requiere INDEX |
 
 ### Ciclo de vida de un token de reset
 
@@ -170,14 +171,14 @@ CREATE INDEX ix_email_verification_tokens_token ON email_verification_tokens (to
 
 ### Columnas
 
-| Columna      | Tipo         | Nulo | Default | Descripción                                               |
-| ------------ | ------------ | ---- | ------- | --------------------------------------------------------- |
-| `id`         | UUID         | No   | uuid4() | Identificador único del registro de token                 |
+| Columna      | Tipo         | Nulo | Default | Descripción                                                |
+| ------------ | ------------ | ---- | ------- | ---------------------------------------------------------- |
+| `id`         | UUID         | No   | uuid4() | Identificador único del registro de token                  |
 | `user_id`    | UUID         | No   | —       | FK → `users.id`. CASCADE: si borra el user, borra el token |
-| `token`      | VARCHAR(255) | No   | —       | UUID aleatorio enviado en el email de verificación        |
-| `expires_at` | TIMESTAMPTZ  | No   | —       | Expiración: **24 horas** desde la creación                |
-| `used`       | BOOLEAN      | No   | `false` | `true` una vez utilizado — previene reúso del enlace      |
-| `created_at` | TIMESTAMPTZ  | No   | `now()` | Fecha de emisión del token                                |
+| `token`      | VARCHAR(255) | No   | —       | UUID aleatorio enviado en el email de verificación         |
+| `expires_at` | TIMESTAMPTZ  | No   | —       | Expiración: **24 horas** desde la creación                 |
+| `used`       | BOOLEAN      | No   | `false` | `true` una vez utilizado — previene reúso del enlace       |
+| `created_at` | TIMESTAMPTZ  | No   | `now()` | Fecha de emisión del token                                 |
 
 ### Ciclo de vida de un token de verificación
 
@@ -217,10 +218,10 @@ alembic revision --autogenerate -m "descripcion del cambio"
 
 ### Migraciones existentes
 
-| Revisión      | Descripción                                 |
-| ------------- | ------------------------------------------- |
-| `a7c03fd8`    | Create users and password_reset_tokens tables |
-| `c3d5e7f9` ¹  | Add email_verification_tokens table          |
+| Revisión     | Descripción                                   |
+| ------------ | --------------------------------------------- |
+| `a7c03fd8`   | Create users and password_reset_tokens tables |
+| `c3d5e7f9` ¹ | Add email_verification_tokens table           |
 
 > ¹ El hash exacto puede variar según la instalación — verificar con `alembic history`.
 
@@ -228,15 +229,15 @@ alembic revision --autogenerate -m "descripcion del cambio"
 
 ## Convenciones de Nomenclatura en la BD
 
-| Aspecto          | Convención                        | Ejemplo                               |
-| ---------------- | --------------------------------- | ------------------------------------- |
-| Tablas           | `snake_case`, plural              | `users`, `password_reset_tokens`      |
-| Columnas         | `snake_case`                      | `hashed_password`, `created_at`       |
-| Primary Keys     | `id` con tipo UUID                | `id UUID PK`                          |
-| Foreign Keys     | `<tabla_singular>_id`             | `user_id` → `users.id`                |
-| Timestamps       | `created_at` / `updated_at`       | Todas las tablas tienen `created_at`  |
-| Índices          | `ix_<tabla>_<columna>`            | `ix_users_email`                      |
-| Primary Key Name | `pk_<tabla>`                      | PostgreSQL los genera automáticamente |
+| Aspecto          | Convención                  | Ejemplo                               |
+| ---------------- | --------------------------- | ------------------------------------- |
+| Tablas           | `snake_case`, plural        | `users`, `password_reset_tokens`      |
+| Columnas         | `snake_case`                | `hashed_password`, `created_at`       |
+| Primary Keys     | `id` con tipo UUID          | `id UUID PK`                          |
+| Foreign Keys     | `<tabla_singular>_id`       | `user_id` → `users.id`                |
+| Timestamps       | `created_at` / `updated_at` | Todas las tablas tienen `created_at`  |
+| Índices          | `ix_<tabla>_<columna>`      | `ix_users_email`                      |
+| Primary Key Name | `pk_<tabla>`                | PostgreSQL los genera automáticamente |
 
 ---
 
@@ -253,6 +254,7 @@ En lugar de integers autoincrementales (1, 2, 3...), este proyecto usa **UUID v4
 ```
 
 **Ventajas del UUID:**
+
 - **Seguridad**: No revela cuántos usuarios hay (`/users/1000` expone que hay al menos 1000 usuarios)
 - **No predecible**: No se pueden adivinar IDs de otros usuarios para intentar accesos
 - **Distribuido**: Permite generar IDs sin coordinación central (útil en arquitecturas multi-servicio)

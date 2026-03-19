@@ -18,16 +18,16 @@
 
 ## Resumen de Endpoints
 
-| Método | Ruta                              | Descripción                              | Auth  | Rate Limit  |
-| ------ | --------------------------------- | ---------------------------------------- | ----- | ----------- |
-| POST   | `/api/v1/auth/register`           | Registrar nuevo usuario                  | No    | 5/min       |
-| POST   | `/api/v1/auth/login`              | Iniciar sesión, obtener tokens JWT       | No    | 10/min      |
-| POST   | `/api/v1/auth/refresh`            | Renovar access token con refresh token   | No †  | —           |
-| POST   | `/api/v1/auth/change-password`    | Cambiar contraseña (usuario autenticado) | Sí    | —           |
-| POST   | `/api/v1/auth/forgot-password`    | Solicitar email de recuperación          | No    | 5/min       |
-| POST   | `/api/v1/auth/reset-password`     | Restablecer contraseña con token         | No †  | —           |
-| POST   | `/api/v1/auth/verify-email`       | Verificar dirección de email             | No †  | —           |
-| GET    | `/api/v1/users/me`                | Obtener perfil del usuario actual        | Sí    | —           |
+| Método | Ruta                           | Descripción                              | Auth | Rate Limit |
+| ------ | ------------------------------ | ---------------------------------------- | ---- | ---------- |
+| POST   | `/api/v1/auth/register`        | Registrar nuevo usuario                  | No   | 5/min      |
+| POST   | `/api/v1/auth/login`           | Iniciar sesión, obtener tokens JWT       | No   | 10/min     |
+| POST   | `/api/v1/auth/refresh`         | Renovar access token con refresh token   | No † | —          |
+| POST   | `/api/v1/auth/change-password` | Cambiar contraseña (usuario autenticado) | Sí   | —          |
+| POST   | `/api/v1/auth/forgot-password` | Solicitar email de recuperación          | No   | 5/min      |
+| POST   | `/api/v1/auth/reset-password`  | Restablecer contraseña con token         | No † | —          |
+| POST   | `/api/v1/auth/verify-email`    | Verificar dirección de email             | No † | —          |
+| GET    | `/api/v1/users/me`             | Obtener perfil del usuario actual        | Sí   | —          |
 
 > **†** No requiere `Authorization` header, pero sí un token específico en el body (refresh token, reset token o verification token).
 
@@ -35,16 +35,16 @@
 
 ## Códigos de Estado HTTP Comunes
 
-| Código | Significado                                                       |
-| ------ | ----------------------------------------------------------------- |
-| 200    | OK — Operación exitosa                                            |
-| 201    | Created — Recurso creado exitosamente (registro de usuario)       |
-| 400    | Bad Request — Datos inválidos (email duplicado, lógica de negocio)|
-| 401    | Unauthorized — Token inválido, expirado o ausente                 |
-| 403    | Forbidden — Autenticado pero sin permiso (email no verificado)    |
-| 422    | Unprocessable Entity — Validación Pydantic fallida (tipos, formato)|
-| 429    | Too Many Requests — Rate limit superado                           |
-| 500    | Internal Server Error — Error no controlado del servidor          |
+| Código | Significado                                                         |
+| ------ | ------------------------------------------------------------------- |
+| 200    | OK — Operación exitosa                                              |
+| 201    | Created — Recurso creado exitosamente (registro de usuario)         |
+| 400    | Bad Request — Datos inválidos (email duplicado, lógica de negocio)  |
+| 401    | Unauthorized — Token inválido, expirado o ausente                   |
+| 403    | Forbidden — Autenticado pero sin permiso (email no verificado)      |
+| 422    | Unprocessable Entity — Validación Pydantic fallida (tipos, formato) |
+| 429    | Too Many Requests — Rate limit superado                             |
+| 500    | Internal Server Error — Error no controlado del servidor            |
 
 ---
 
@@ -66,11 +66,11 @@ Registra un nuevo usuario en el sistema y envía un email de verificación.
 }
 ```
 
-| Campo       | Tipo   | Requerido | Validación                                               |
-| ----------- | ------ | --------- | -------------------------------------------------------- |
-| `email`     | string | Sí        | Formato email válido (`EmailStr`)                        |
-| `full_name` | string | Sí        | Mínimo 1 caracter (sin espacios en blanco)               |
-| `password`  | string | Sí        | ≥8 chars, 1 mayúscula, 1 minúscula, 1 número             |
+| Campo       | Tipo   | Requerido | Validación                                   |
+| ----------- | ------ | --------- | -------------------------------------------- |
+| `email`     | string | Sí        | Formato email válido (`EmailStr`)            |
+| `full_name` | string | Sí        | Mínimo 1 caracter (sin espacios en blanco)   |
+| `password`  | string | Sí        | ≥8 chars, 1 mayúscula, 1 minúscula, 1 número |
 
 **Respuesta exitosa (201 Created):**
 
@@ -128,11 +128,11 @@ Autentica al usuario y retorna un par de tokens JWT.
 }
 ```
 
-| Campo           | Tipo   | Descripción                    |
-| --------------- | ------ | ------------------------------ |
-| `access_token`  | string | JWT de acceso — duración 15 min|
-| `refresh_token` | string | JWT de renovación — duración 7 días|
-| `token_type`    | string | Siempre `"bearer"`             |
+| Campo           | Tipo   | Descripción                         |
+| --------------- | ------ | ----------------------------------- |
+| `access_token`  | string | JWT de acceso — duración 15 min     |
+| `refresh_token` | string | JWT de renovación — duración 7 días |
+| `token_type`    | string | Siempre `"bearer"`                  |
 
 **Cómo usar los tokens:**
 
@@ -144,11 +144,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 **Errores posibles:**
 
-| Código | Condición                                              |
-| ------ | ------------------------------------------------------ |
-| 401    | Email no registrado o contraseña incorrecta            |
-| 403    | Cuenta creada pero email no verificado aún             |
-| 429    | Rate limit superado (10/min)                           |
+| Código | Condición                                   |
+| ------ | ------------------------------------------- |
+| 401    | Email no registrado o contraseña incorrecta |
+| 403    | Cuenta creada pero email no verificado aún  |
+| 429    | Rate limit superado (10/min)                |
 
 > **Nota de seguridad**: La API devuelve el mismo `401` tanto si el email no existe como si la contraseña es incorrecta. Esto evita la **enumeración de usuarios** — un atacante no puede saber si un email está registrado.
 
@@ -189,9 +189,9 @@ Genera un nuevo par de tokens usando un refresh token válido (rotación de toke
 
 **Errores posibles:**
 
-| Código | Condición                                  |
-| ------ | ------------------------------------------ |
-| 401    | Refresh token inválido, expirado o ya usado|
+| Código | Condición                                   |
+| ------ | ------------------------------------------- |
+| 401    | Refresh token inválido, expirado o ya usado |
 
 ---
 
@@ -225,11 +225,11 @@ Cambia la contraseña del usuario autenticado, verificando primero la contraseñ
 
 **Errores posibles:**
 
-| Código | Condición                                                    |
-| ------ | ------------------------------------------------------------ |
-| 400    | La contraseña actual no es correcta                          |
-| 401    | Token ausente, inválido o expirado                           |
-| 422    | Nueva contraseña no cumple requisitos de fortaleza           |
+| Código | Condición                                          |
+| ------ | -------------------------------------------------- |
+| 400    | La contraseña actual no es correcta                |
+| 401    | Token ausente, inválido o expirado                 |
+| 422    | Nueva contraseña no cumple requisitos de fortaleza |
 
 ---
 
@@ -258,17 +258,19 @@ Solicita el envío de un email con enlace de recuperación de contraseña.
 > **Nota de seguridad**: La respuesta es **siempre idéntica**, sin importar si el email está registrado o no. Esto previene la **enumeración de usuarios** — un atacante no puede saber si un email existe consultando la respuesta.
 
 El enlace enviado al email tiene este formato:
+
 ```
 {FRONTEND_URL}/reset-password?token=<uuid-token>
 ```
+
 El token expira en **1 hora**.
 
 **Errores posibles:**
 
-| Código | Condición           |
-| ------ | ------------------- |
-| 422    | Email con formato inválido |
-| 429    | Rate limit superado (5/min)|
+| Código | Condición                   |
+| ------ | --------------------------- |
+| 422    | Email con formato inválido  |
+| 429    | Rate limit superado (5/min) |
 
 ---
 
@@ -285,9 +287,9 @@ Restablece la contraseña usando el token recibido por email.
 }
 ```
 
-| Campo          | Tipo   | Descripción                            |
-| -------------- | ------ | -------------------------------------- |
-| `token`        | string | Token UUID del email de recuperación   |
+| Campo          | Tipo   | Descripción                           |
+| -------------- | ------ | ------------------------------------- |
+| `token`        | string | Token UUID del email de recuperación  |
 | `new_password` | string | ≥8 chars, 1 mayúscula, 1 min., 1 núm. |
 
 **Respuesta exitosa (200 OK):**
@@ -300,10 +302,10 @@ Restablece la contraseña usando el token recibido por email.
 
 **Errores posibles:**
 
-| Código | Condición                                           |
-| ------ | --------------------------------------------------- |
-| 400    | Token inválido, expirado o ya usado                 |
-| 422    | Nueva contraseña no cumple requisitos de fortaleza  |
+| Código | Condición                                          |
+| ------ | -------------------------------------------------- |
+| 400    | Token inválido, expirado o ya usado                |
+| 422    | Nueva contraseña no cumple requisitos de fortaleza |
 
 ---
 
@@ -330,16 +332,18 @@ Verifica la dirección de email del usuario usando el token enviado al registrar
 > Tras la verificación exitosa, el campo `is_email_verified` del usuario pasa a `true` y puede hacer login.
 
 El enlace del email de verificación tiene este formato:
+
 ```
 {FRONTEND_URL}/verify-email?token=<uuid-token>
 ```
+
 El token expira en **24 horas**.
 
 **Errores posibles:**
 
-| Código | Condición                                      |
-| ------ | ---------------------------------------------- |
-| 400    | Token inválido, expirado (>24h) o ya usado     |
+| Código | Condición                                  |
+| ------ | ------------------------------------------ |
+| 400    | Token inválido, expirado (>24h) o ya usado |
 
 ---
 
@@ -365,23 +369,23 @@ Retorna el perfil del usuario autenticado actualmente.
 }
 ```
 
-| Campo               | Tipo            | Descripción                            |
-| ------------------- | --------------- | -------------------------------------- |
-| `id`                | string (UUID)   | Identificador único del usuario        |
-| `email`             | string          | Email del usuario                      |
-| `full_name`         | string          | Nombre completo                        |
-| `is_active`         | boolean         | Si la cuenta está activa               |
-| `is_email_verified` | boolean         | Si el email fue verificado             |
-| `created_at`        | string (ISO8601)| Fecha de registro                      |
-| `updated_at`        | string (ISO8601)| Fecha de última actualización          |
+| Campo               | Tipo             | Descripción                     |
+| ------------------- | ---------------- | ------------------------------- |
+| `id`                | string (UUID)    | Identificador único del usuario |
+| `email`             | string           | Email del usuario               |
+| `full_name`         | string           | Nombre completo                 |
+| `is_active`         | boolean          | Si la cuenta está activa        |
+| `is_email_verified` | boolean          | Si el email fue verificado      |
+| `created_at`        | string (ISO8601) | Fecha de registro               |
+| `updated_at`        | string (ISO8601) | Fecha de última actualización   |
 
 > **Nota**: El campo `hashed_password` **nunca** aparece en ninguna respuesta de la API. El schema `UserResponse` lo excluye explícitamente mediante el response model de FastAPI.
 
 **Errores posibles:**
 
-| Código | Condición                             |
-| ------ | ------------------------------------- |
-| 401    | Token ausente, inválido o expirado    |
+| Código | Condición                          |
+| ------ | ---------------------------------- |
+| 401    | Token ausente, inválido o expirado |
 
 ---
 
@@ -389,11 +393,11 @@ Retorna el perfil del usuario autenticado actualmente.
 
 El rate limiting está implementado con [slowapi](https://github.com/laurentS/slowapi) (puerto de Flask-Limiter para FastAPI), usando la IP del cliente como identificador.
 
-| Endpoint                  | Límite    | Razón                                              |
-| ------------------------- | --------- | -------------------------------------------------- |
-| `POST /auth/register`     | 5/min     | Prevenir creación masiva de cuentas falsas         |
-| `POST /auth/login`        | 10/min    | Prevenir brute force de contraseñas                |
-| `POST /auth/forgot-password` | 5/min  | Prevenir spam de emails de recuperación            |
+| Endpoint                     | Límite | Razón                                      |
+| ---------------------------- | ------ | ------------------------------------------ |
+| `POST /auth/register`        | 5/min  | Prevenir creación masiva de cuentas falsas |
+| `POST /auth/login`           | 10/min | Prevenir brute force de contraseñas        |
+| `POST /auth/forgot-password` | 5/min  | Prevenir spam de emails de recuperación    |
 
 **Respuesta cuando se supera el límite (429):**
 
@@ -410,6 +414,7 @@ El rate limiting está implementado con [slowapi](https://github.com/laurentS/sl
 En **producción** (`ENVIRONMENT=production`), las rutas `/docs` y `/redoc` están **deshabilitadas** — devuelven 404. Esta es una medida de seguridad (OWASP A05) para evitar exponer la superficie de ataque de la API públicamente.
 
 En **desarrollo** (`ENVIRONMENT=development`, valor por defecto), Swagger UI está disponible en:
+
 - `http://localhost:8000/docs` — Swagger UI (interactivo)
 - `http://localhost:8000/redoc` — ReDoc (solo lectura)
 

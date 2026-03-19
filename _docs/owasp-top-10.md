@@ -300,10 +300,10 @@ app = FastAPI(
 )
 ```
 
-| ENVIRONMENT      | /docs      | /redoc     | Recomendado para         |
-| ---------------- | ---------- | ---------- | ------------------------ |
-| `development`    | ✅ 200 OK  | ✅ 200 OK  | Desarrollo local         |
-| `production`     | ❌ 404     | ❌ 404     | Servidor de producción   |
+| ENVIRONMENT   | /docs     | /redoc    | Recomendado para       |
+| ------------- | --------- | --------- | ---------------------- |
+| `development` | ✅ 200 OK | ✅ 200 OK | Desarrollo local       |
+| `production`  | ❌ 404    | ❌ 404    | Servidor de producción |
 
 > La documentación estática de la API está disponible en [`_docs/api-endpoints.md`](./api-endpoints.md) como alternativa segura a Swagger UI en producción.
 

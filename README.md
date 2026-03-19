@@ -29,13 +29,13 @@ Incluye registro de usuarios, login, cambio de contraseña y recuperación por e
 
 ## 🛠️ Stack Tecnológico
 
-| Capa        | Tecnologías                                         |
-| ----------- | --------------------------------------------------- |
-| **Backend** | Python 3.12+, FastAPI, SQLAlchemy 2.0, Alembic, JWT |
-| **Frontend**| React 18+, Vite, TypeScript, TailwindCSS 4+         |
-| **Base de datos** | PostgreSQL 17+ (Docker Compose)                |
-| **Testing** | pytest + httpx (BE), Vitest + Testing Library (FE)  |
-| **Linting** | ruff (Python), ESLint + Prettier (TypeScript)       |
+| Capa              | Tecnologías                                         |
+| ----------------- | --------------------------------------------------- |
+| **Backend**       | Python 3.12+, FastAPI, SQLAlchemy 2.0, Alembic, JWT |
+| **Frontend**      | React 18+, Vite, TypeScript, TailwindCSS 4+         |
+| **Base de datos** | PostgreSQL 17+ (Docker Compose)                     |
+| **Testing**       | pytest + httpx (BE), Vitest + Testing Library (FE)  |
+| **Linting**       | ruff (Python), ESLint + Prettier (TypeScript)       |
 
 ---
 
@@ -43,14 +43,14 @@ Incluye registro de usuarios, login, cambio de contraseña y recuperación por e
 
 Antes de comenzar, asegúrate de tener instalado:
 
-| Herramienta     | Versión mínima | Verificar con              |
-| --------------- | -------------- | -------------------------- |
-| **Python**      | 3.12+          | `python3 --version`        |
-| **Node.js**     | 20 LTS+        | `node --version`           |
-| **pnpm**        | 9+             | `pnpm --version`           |
-| **Docker**      | 24+            | `docker --version`         |
-| **Docker Compose** | 2.20+       | `docker compose version`   |
-| **Git**         | 2.40+          | `git --version`            |
+| Herramienta        | Versión mínima | Verificar con            |
+| ------------------ | -------------- | ------------------------ |
+| **Python**         | 3.12+          | `python3 --version`      |
+| **Node.js**        | 20 LTS+        | `node --version`         |
+| **pnpm**           | 9+             | `pnpm --version`         |
+| **Docker**         | 24+            | `docker --version`       |
+| **Docker Compose** | 2.20+          | `docker compose version` |
+| **Git**            | 2.40+          | `git --version`          |
 
 > ⚠️ **Importante**: Usar **pnpm** como gestor de paquetes de Node.js. **Nunca usar npm ni yarn.**
 
@@ -228,15 +228,15 @@ proyecto/
 
 ## 📏 Convenciones
 
-| Aspecto                | Regla                                              |
-| ---------------------- | -------------------------------------------------- |
-| Nomenclatura técnica   | Inglés (variables, funciones, clases, endpoints)   |
-| Comentarios/docs       | Español (con ¿Qué? ¿Para qué? ¿Impacto?)         |
-| Commits                | Conventional Commits en inglés + What/For/Impact   |
-| Python                 | PEP 8 + type hints obligatorios + ruff             |
-| TypeScript             | strict mode + ESLint + Prettier                    |
-| Gestor de paquetes     | `venv` (Python), `pnpm` (Node.js)                  |
-| Testing                | Código generado = código probado                   |
+| Aspecto              | Regla                                            |
+| -------------------- | ------------------------------------------------ |
+| Nomenclatura técnica | Inglés (variables, funciones, clases, endpoints) |
+| Comentarios/docs     | Español (con ¿Qué? ¿Para qué? ¿Impacto?)         |
+| Commits              | Conventional Commits en inglés + What/For/Impact |
+| Python               | PEP 8 + type hints obligatorios + ruff           |
+| TypeScript           | strict mode + ESLint + Prettier                  |
+| Gestor de paquetes   | `venv` (Python), `pnpm` (Node.js)                |
+| Testing              | Código generado = código probado                 |
 
 Para las reglas completas, ver [`.github/copilot-instructions.md`](.github/copilot-instructions.md).
 
@@ -244,14 +244,14 @@ Para las reglas completas, ver [`.github/copilot-instructions.md`](.github/copil
 
 ## 📚 Documentación Adicional
 
-| Documento                        | Descripción                              |
-| -------------------------------- | ---------------------------------------- |
-| [`_docs/architecture.md`](_docs/architecture.md)         | Arquitectura general, flujos y decisiones técnicas |
-| [`_docs/api-endpoints.md`](_docs/api-endpoints.md)        | Todos los endpoints con parámetros, respuestas y errores |
-| [`_docs/database-schema.md`](_docs/database-schema.md)      | Esquema ER, tablas, columnas y migraciones |
-| [`_docs/owasp-top-10.md`](_docs/owasp-top-10.md)          | Implementación del OWASP Top 10 2021     |
-| [`_docs/accesibilidad-aria-wcag.md`](_docs/accesibilidad-aria-wcag.md) | Estándares ARIA/WCAG 2.1 AA aplicados |
-| [`.github/copilot-instructions.md`](.github/copilot-instructions.md)| Reglas y convenciones del proyecto |
+| Documento                                                              | Descripción                                              |
+| ---------------------------------------------------------------------- | -------------------------------------------------------- |
+| [`_docs/architecture.md`](_docs/architecture.md)                       | Arquitectura general, flujos y decisiones técnicas       |
+| [`_docs/api-endpoints.md`](_docs/api-endpoints.md)                     | Todos los endpoints con parámetros, respuestas y errores |
+| [`_docs/database-schema.md`](_docs/database-schema.md)                 | Esquema ER, tablas, columnas y migraciones               |
+| [`_docs/owasp-top-10.md`](_docs/owasp-top-10.md)                       | Implementación del OWASP Top 10 2021                     |
+| [`_docs/accesibilidad-aria-wcag.md`](_docs/accesibilidad-aria-wcag.md) | Estándares ARIA/WCAG 2.1 AA aplicados                    |
+| [`.github/copilot-instructions.md`](.github/copilot-instructions.md)   | Reglas y convenciones del proyecto                       |
 
 ---
 
@@ -263,7 +263,7 @@ Este proyecto está diseñado para **aprender haciendo**. Cada archivo, función
 - **¿Para qué?** — Por qué existe y cuál es su propósito
 - **¿Impacto?** — Qué pasa si no existiera o si se implementa mal
 
-> *"La calidad no es una opción, es una obligación."*
+> _"La calidad no es una opción, es una obligación."_
 
 ---
 

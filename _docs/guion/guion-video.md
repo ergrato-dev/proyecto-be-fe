@@ -36,20 +36,22 @@
 | 18  | Frontend — Páginas de autenticación        | ~20 min           |
 | 19  | Demostración del flujo completo            | ~15 min           |
 | 20  | Cierre y recapitulación                    | ~5 min            |
+| 21  | Actualizaciones recientes (OWASP + docs)   | ~8 min            |
 
-**Duración total estimada: ~3 horas** (recomendado dividir en 4-5 videos de 30-45 min)
+**Duración total estimada: ~3 horas 10 min** (recomendado dividir en 5-6 videos de 30-40 min)
 
 ---
 
 ## ✂️ División sugerida en videos
 
-| Video   | Secciones    | Enfoque                                   |
-| ------- | ------------ | ----------------------------------------- |
-| Video 1 | 1, 2, 3, 4   | Intro + Docker + estructura del proyecto  |
-| Video 2 | 5, 6, 7      | Backend: configuración, modelos y schemas |
-| Video 3 | 8, 9, 10, 11 | Backend: seguridad, servicios y endpoints |
-| Video 4 | 12           | Backend: testing completo con pytest      |
-| Video 5 | 13–19, 20    | Frontend completo + demo integrada        |
+| Video   | Secciones    | Enfoque                                        |
+| ------- | ------------ | ---------------------------------------------- |
+| Video 1 | 1, 2, 3, 4   | Intro + Docker + estructura del proyecto       |
+| Video 2 | 5, 6, 7      | Backend: configuración, modelos y schemas      |
+| Video 3 | 8, 9, 10, 11 | Backend: seguridad, servicios y endpoints      |
+| Video 4 | 12           | Backend: testing completo con pytest           |
+| Video 5 | 13–19, 20    | Frontend completo + demo integrada             |
+| Video 6 | 21           | Cierre técnico: OWASP, Swagger y documentación |
 
 ---
 
@@ -101,7 +103,7 @@ node --version
 # 3. pnpm — el gestor de paquetes que usamos para el frontend
 pnpm --version
 # Esperamos: 9.x.x o superior
-# Si no lo tienen: npm install -g pnpm
+# Si no lo tienen: corepack enable && corepack prepare pnpm@latest --activate
 
 # 4. Docker y Docker Compose
 docker --version
@@ -331,29 +333,39 @@ class Base(DeclarativeBase):
 > "El punto de entrada de la aplicación. Aquí creamos la instancia de FastAPI, configuramos CORS y registramos los routers."
 
 ```python
+_is_production = settings.ENVIRONMENT == "production"
+
 app = FastAPI(
     title="NN Auth System",
     description="...",
     version="0.1.0",
-    docs_url="/docs",
+  docs_url=None if _is_production else "/docs",
+  redoc_url=None if _is_production else "/redoc",
 )
 ```
 
-> "Los metadatos del constructor se muestran automáticamente en la documentación de Swagger UI que FastAPI genera en `/docs`. Es documentación gratis."
+> "Los metadatos del constructor se muestran en Swagger UI, pero ahora con control por entorno. En desarrollo (`ENVIRONMENT=development`) tenemos `/docs` y `/redoc`; en producción se deshabilitan para no exponer la superficie de la API."
 
 ```python
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.FRONTEND_URL],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+  allow_methods=["GET", "POST"],
+  allow_headers=["Content-Type", "Authorization"],
 )
 ```
 
 > "CORS — Cross-Origin Resource Sharing. Los navegadores tienen una política de seguridad que bloquea peticiones a dominios distintos del que sirve la página. Nuestro frontend está en `localhost:5173` y el backend en `localhost:8000` — dominios diferentes. Sin este middleware, el navegador bloquearía todas las peticiones del frontend.
 >
-> Fijense que solo permitimos el origen de nuestro frontend — no `*`. En producción, `allow_origins=['*']` sería una vulnerabilidad de seguridad."
+> Fijense que solo permitimos el origen de nuestro frontend y además limitamos métodos y headers al mínimo necesario. Esta configuración reduce exposición y sigue OWASP A05 (Security Misconfiguration)."
+
+```python
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+```
+
+> "También registramos `slowapi` para rate limiting y su handler de error 429. Esto protege endpoints críticos de autenticación contra fuerza bruta y evita responder con 500 cuando se excede el límite."
 
 **[Terminal: arrancar el backend]**
 
@@ -365,7 +377,7 @@ uvicorn app.main:app --reload
 
 > "El flag `--reload` hace que Uvicorn reinicie automáticamente el servidor cuando detecta cambios en el código. Perfecto para desarrollo.
 >
-> Ahora abrimos el navegador en `http://localhost:8000/docs` y vemos la documentación interactiva de Swagger UI."
+> Ahora abrimos el navegador en `http://localhost:8000/docs` y vemos la documentación interactiva. Nota importante: si `ENVIRONMENT=production`, `/docs` y `/redoc` estarán deshabilitados."
 
 ---
 
@@ -501,7 +513,7 @@ class UserCreate(BaseModel):
         if len(v) < 8:
             raise ValueError("La contraseña debe tener al menos 8 caracteres")
         if not re.search(r"[A-Z]", v):
-            raise ValueError("¿Por qué menos una letra mayúscula")
+          raise ValueError("La contraseña debe tener al menos una letra mayúscula")
         ...
         return v
 ```
@@ -794,14 +806,36 @@ def change_password(
 
 > "El parámetro `current_user: User = Depends(get_current_user)` es lo que hace este endpoint protegido. Si el request no tiene un `Authorization: Bearer <token>` válido, FastAPI retorna 401 automáticamente antes de ejecutar el cuerpo de la función."
 
+```python
+@router.post("/verify-email", response_model=MessageResponse)
+def verify_email(request_data: VerifyEmailRequest, db: Session = Depends(get_db)) -> MessageResponse:
+  auth_service.verify_email(db=db, token=request_data.token)
+  return MessageResponse(message="Email verificado exitosamente")
+```
+
+> "Este endpoint completa el flujo de activación de cuenta. Después del registro, el usuario recibe un token por correo y debe verificar su email antes de iniciar sesión."
+
+```python
+@limiter.limit("5/minute")
+@router.post("/register", ...)
+...
+
+@limiter.limit("10/minute")
+@router.post("/login", ...)
+...
+```
+
+> "Los límites por minuto en registro/login/forgot-password reducen ataques automatizados y son parte de las mitigaciones OWASP aplicadas al backend."
+
 **[Terminal: probar endpoints en Swagger UI]**
 
 ```bash
 # Con el servidor corriendo: http://localhost:8000/docs
 # 1. Registrar usuario
-# 2. Hacer login → copiar access_token
-# 3. Usar "Authorize" en Swagger con el token
-# 4. Probar GET /api/v1/users/me
+# 2. Verificar email con POST /api/v1/auth/verify-email
+# 3. Hacer login → copiar access_token
+# 4. Usar "Authorize" en Swagger con el token
+# 5. Probar GET /api/v1/users/me
 ```
 
 ---
@@ -911,7 +945,7 @@ pytest app/tests/test_auth.py::TestRegister -v
 
 > "La cobertura de código nos dice qué porcentaje del código fue ejecutado durante los tests. Buscamos mínimo 80% en los módulos de lógica de negocio.
 >
-> Veremos que 32 tests pasan, con cobertura cercana al 96%."
+> Veremos que 38 tests pasan en backend y se mantiene cobertura alta en los módulos críticos de autenticación."
 
 ---
 
@@ -1178,7 +1212,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
 **[Navegar por las páginas en el navegador mientras se explica]**
 
-> "Tenemos seis páginas principales:
+> "Tenemos seis páginas principales en el frontend:
 >
 > - `LoginPage` — formulario de inicio de sesión
 > - `RegisterPage` — formulario de registro
@@ -1186,6 +1220,8 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 > - `ChangePasswordPage` — cambio de contraseña (ruta protegida)
 > - `ForgotPasswordPage` — solicitar recuperación por email
 > - `ResetPasswordPage` — establecer nueva contraseña con el token del email
+>
+> Además, en backend existe el endpoint `POST /api/v1/auth/verify-email` que activa la cuenta tras el registro.
 
 **[Mostrar `LoginPage.tsx` brevemente]**
 
@@ -1224,9 +1260,17 @@ cd fe && pnpm dev
 
 > "Rellenamos el formulario con email, nombre y contraseña fuerte. Al enviar, el frontend llama a `POST /api/v1/auth/register`.
 >
-> En la terminal del backend vemos el request llegar. En la BD, si miramos la tabla `users`, vemos el nuevo registro — con la contraseña como hash bcrypt, nunca en texto plano."
+> En la terminal del backend vemos el request llegar. En la BD, si miramos la tabla `users`, vemos el nuevo registro — con la contraseña como hash bcrypt, nunca en texto plano.
+>
+> Importante: inicialmente queda con `is_email_verified=false` hasta completar la verificación."
 
-### Paso 3: Login y tokens
+### Paso 3: Verificación de email
+
+> "Después del registro, simulamos la recepción del enlace de verificación y ejecutamos `POST /api/v1/auth/verify-email` con el token.
+>
+> En base de datos se marca el token como usado y el usuario pasa a `is_email_verified=true`."
+
+### Paso 4: Login y tokens
 
 **[Ir a /login]**
 
@@ -1234,23 +1278,23 @@ cd fe && pnpm dev
 >
 > En las DevTools del navegador (Application → Session Storage), vemos los tokens almacenados."
 
-### Paso 4: Acceder al dashboard
+### Paso 5: Acceder al dashboard
 
 > "Redireccionamos al dashboard. El `ProtectedRoute` verifica la autenticación — hay token válido, deja pasar.
 >
 > En el dashboard vemos los datos del usuario, que el frontend obtuvo de `GET /api/v1/users/me`."
 
-### Paso 5: Token expirado — refresh automático
+### Paso 6: Token expirado — refresh automático
 
 > "El access token expira cada 15 minutos. Si el frontend intenta hacer una petición con un token expirado, recibe 401. El interceptor de Axios captura ese 401 y automáticamente llama a `POST /api/v1/auth/refresh` con el refresh token para obtener uno nuevo. El usuario no nota nada."
 
-### Paso 6: Cambio de contraseña
+### Paso 7: Cambio de contraseña
 
 **[Ir a /change-password]**
 
 > "Cambiamos la contraseña. El endpoint requiere la contraseña actual — capa extra de seguridad. En los logs del backend vemos el proceso: verificar contraseña actual, hashear la nueva, actualizar en BD."
 
-### Paso 7: Recuperación de contraseña
+### Paso 8: Recuperación de contraseña
 
 **[Ir a /forgot-password]**
 
@@ -1258,7 +1302,7 @@ cd fe && pnpm dev
 >
 > Copiamos el enlace, vamos a `/reset-password?token=...`, y establecemos una nueva contraseña. El token se marca como `used=True` en la BD y no puede usarse de nuevo."
 
-### Paso 8: Logout
+### Paso 9: Logout
 
 > "Al cerrar sesión, se borran los tokens de `sessionStorage` y el estado del contexto se limpia. Intentar acceder a `/dashboard` redirige al login."
 
@@ -1272,9 +1316,9 @@ cd fe && pnpm dev
 
 > "Hemos construido un sistema de autenticación completo con:
 >
-> **Backend:** FastAPI con Python, utilizando arquitectura en capas — routers, services, models y schemas. Autenticación con JWT, contraseñas hasheadas con bcrypt, y 32 tests de integración con 96% de cobertura.
+> **Backend:** FastAPI con Python, utilizando arquitectura en capas — routers, services, models y schemas. Autenticación con JWT, contraseñas hasheadas con bcrypt, verificación de email previa al login, mitigaciones OWASP Top 10 (rate limiting, audit logging, hardening de headers y Swagger condicionado por entorno) y 38 tests de integración en verde.
 >
-> **Frontend:** React con TypeScript, Context API para el estado global de auth, interceptores de Axios para tokens automáticos y protección de rutas.
+> **Frontend:** React con TypeScript, Context API para el estado global de auth, interceptores de Axios para tokens automáticos, protección de rutas y mejoras de accesibilidad ARIA/WCAG con tests frontend en verde.
 >
 > **Infraestructura:** PostgreSQL en Docker, migraciones con Alembic, variables de entorno para toda la configuración sensible.
 >
@@ -1290,6 +1334,29 @@ cd fe && pnpm dev
 > El código completo está disponible en el repositorio. Recuerden revisar el `README.md` para las instrucciones de arranque rápido.
 >
 > ¡Hasta el próximo video!"
+
+---
+
+## SECCIÓN 21 — Actualizaciones recientes (OWASP + docs)
+
+### 🎙️ Guión
+
+**[Pantalla: carpeta `_docs/` abierta + `be/app/main.py`]**
+
+> "Antes de cerrar, mostramos las mejoras más recientes para dejar trazabilidad técnica:
+>
+> 1. Seguridad OWASP Top 10 reforzada en backend.
+> 2. Endpoint de verificación de email integrado al flujo.
+> 3. Documentación de Fase 8 completada y enlazada.
+> 4. Guía de accesibilidad ARIA/WCAG consolidada para frontend.
+>
+> En seguridad, ya tenemos rate limiting con `slowapi`, logging de auditoría para eventos sensibles y headers HTTP de hardening.
+>
+> En configuración, `ENVIRONMENT` controla Swagger/Redoc: habilitados en desarrollo, deshabilitados en producción.
+>
+> Y en documentación, se consolidaron arquitectura, catálogo de endpoints y esquema de base de datos para que cualquier persona del equipo pueda entender el sistema sin leer todo el código."
+
+> "Esta sección es ideal para una evidencia final de calidad: mostramos código, controles de seguridad y documentación alineada con los últimos desarrollos."
 
 ---
 
@@ -1341,31 +1408,39 @@ cd be && source .venv/bin/activate && alembic upgrade head
 
 ### Orden de archivos a mostrar (resumen)
 
-| Orden | Archivo                                 | Concepto principal                  |
-| ----- | --------------------------------------- | ----------------------------------- |
-| 01    | `docker-compose.yml`                    | Infraestructura y servicios         |
-| 02    | `be/.env.example`                       | Variables de entorno                |
-| 03    | `be/requirements.txt`                   | Dependencias Python                 |
-| 04    | `be/app/config.py`                      | Configuración con Pydantic Settings |
-| 05    | `be/app/database.py`                    | Engine, Session, Base de SQLAlchemy |
-| 06    | `be/app/main.py`                        | FastAPI app, CORS, lifespan         |
-| 07    | `be/app/models/user.py`                 | Modelo ORM User                     |
-| 08    | `be/app/models/password_reset_token.py` | Modelo ORM PasswordResetToken       |
-| 09    | `alembic/versions/*.py`                 | Migraciones Alembic                 |
-| 10    | `be/app/schemas/user.py`                | Schemas Pydantic                    |
-| 11    | `be/app/utils/security.py`              | Hashing bcrypt + JWT                |
-| 12    | `be/app/dependencies.py`                | get_db + get_current_user           |
-| 13    | `be/app/services/auth_service.py`       | Lógica de negocio                   |
-| 14    | `be/app/utils/email.py`                 | Envío de emails                     |
-| 15    | `be/app/routers/auth.py`                | Endpoints de auth                   |
-| 16    | `be/app/routers/users.py`               | Endpoint GET /me                    |
-| 17    | `be/app/tests/conftest.py`              | Fixtures de testing                 |
-| 18    | `be/app/tests/test_auth.py`             | Tests de integración                |
-| 19    | `fe/src/types/auth.ts`                  | Tipos TypeScript                    |
-| 20    | `fe/src/api/axios.ts`                   | Axios + interceptores               |
-| 21    | `fe/src/api/auth.ts`                    | Cliente HTTP de auth                |
-| 22    | `fe/src/context/AuthContext.tsx`        | Context API de auth                 |
-| 23    | `fe/src/hooks/useAuth.ts`               | Hook personalizado                  |
-| 24    | `fe/src/components/ProtectedRoute.tsx`  | Rutas protegidas                    |
-| 25    | `fe/src/App.tsx`                        | Enrutamiento principal              |
-| 26    | `fe/src/pages/*.tsx`                    | Páginas de la app                   |
+| Orden | Archivo                                     | Concepto principal                        |
+| ----- | ------------------------------------------- | ----------------------------------------- |
+| 01    | `docker-compose.yml`                        | Infraestructura y servicios               |
+| 02    | `be/.env.example`                           | Variables de entorno                      |
+| 03    | `be/requirements.txt`                       | Dependencias Python                       |
+| 04    | `be/app/config.py`                          | Settings + `ENVIRONMENT`                  |
+| 05    | `be/app/database.py`                        | Engine, Session, Base de SQLAlchemy       |
+| 06    | `be/app/main.py`                            | FastAPI app, CORS, security headers, docs |
+| 07    | `be/app/models/user.py`                     | Modelo ORM User                           |
+| 08    | `be/app/models/password_reset_token.py`     | Modelo ORM PasswordResetToken             |
+| 09    | `be/app/models/email_verification_token.py` | Modelo ORM EmailVerificationToken         |
+| 10    | `alembic/versions/*.py`                     | Migraciones Alembic                       |
+| 11    | `be/app/schemas/user.py`                    | Schemas Pydantic                          |
+| 12    | `be/app/utils/security.py`                  | Hashing bcrypt + JWT                      |
+| 13    | `be/app/utils/limiter.py`                   | Rate limiting (OWASP A04)                 |
+| 14    | `be/app/utils/audit_log.py`                 | Auditoría de seguridad (OWASP A09)        |
+| 15    | `be/app/dependencies.py`                    | get_db + get_current_user                 |
+| 16    | `be/app/services/auth_service.py`           | Lógica de negocio                         |
+| 17    | `be/app/utils/email.py`                     | Envío de emails                           |
+| 18    | `be/app/routers/auth.py`                    | Endpoints de auth (+ verify-email)        |
+| 19    | `be/app/routers/users.py`                   | Endpoint GET /me                          |
+| 20    | `be/app/tests/conftest.py`                  | Fixtures de testing                       |
+| 21    | `be/app/tests/test_auth.py`                 | Tests de integración (38 casos)           |
+| 22    | `fe/src/types/auth.ts`                      | Tipos TypeScript                          |
+| 23    | `fe/src/api/axios.ts`                       | Axios + interceptores                     |
+| 24    | `fe/src/api/auth.ts`                        | Cliente HTTP de auth                      |
+| 25    | `fe/src/context/AuthContext.tsx`            | Context API de auth                       |
+| 26    | `fe/src/hooks/useAuth.ts`                   | Hook personalizado                        |
+| 27    | `fe/src/components/ProtectedRoute.tsx`      | Rutas protegidas                          |
+| 28    | `fe/src/App.tsx`                            | Enrutamiento principal                    |
+| 29    | `fe/src/pages/*.tsx`                        | Páginas de la app                         |
+| 30    | `_docs/architecture.md`                     | Arquitectura actualizada                  |
+| 31    | `_docs/api-endpoints.md`                    | Catálogo completo de endpoints            |
+| 32    | `_docs/database-schema.md`                  | Esquema y relaciones de BD                |
+| 33    | `_docs/owasp-top-10.md`                     | Mitigaciones de seguridad OWASP           |
+| 34    | `_docs/accesibilidad-aria-wcag.md`          | Evidencia de accesibilidad frontend       |

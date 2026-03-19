@@ -342,24 +342,24 @@ Usuario           Frontend                Backend               PostgreSQL    Em
 
 ### ¿Por qué FastAPI y no Django o Flask?
 
-| Criterio         | FastAPI             | Flask               | Django              |
-| ---------------- | ------------------- | ------------------- | ------------------- |
-| Velocidad        | ⚡ Ultra rápido (ASGI)| Medio (WSGI)        | Medio (WSGI)        |
-| Tipado           | ✅ Nativo (Pydantic) | ❌ Manual            | ⚠️ Parcial          |
-| Validación       | ✅ Automática        | ❌ Manual            | ✅ Forms/Serializers |
-| Documentación    | ✅ Swagger auto      | ❌ Manual            | ❌ Manual (o DRF)   |
-| Curva de aprendizaje | Baja            | Muy baja            | Alta                |
+| Criterio             | FastAPI                | Flask        | Django               |
+| -------------------- | ---------------------- | ------------ | -------------------- |
+| Velocidad            | ⚡ Ultra rápido (ASGI) | Medio (WSGI) | Medio (WSGI)         |
+| Tipado               | ✅ Nativo (Pydantic)   | ❌ Manual    | ⚠️ Parcial           |
+| Validación           | ✅ Automática          | ❌ Manual    | ✅ Forms/Serializers |
+| Documentación        | ✅ Swagger auto        | ❌ Manual    | ❌ Manual (o DRF)    |
+| Curva de aprendizaje | Baja                   | Muy baja     | Alta                 |
 
 FastAPI fue elegido por su soporte nativo de tipos Python, validación automática con Pydantic y documentación Swagger auto-generada.
 
 ### ¿Por qué JWT stateless y no sesiones en servidor?
 
-| Criterio              | JWT Stateless         | Sesiones en servidor     |
-| --------------------- | --------------------- | ------------------------ |
-| Escalabilidad         | ✅ Horizontal fácil   | ❌ Requiere sticky sessions o Redis |
-| Estado en servidor    | ✅ Ninguno             | ❌ Almacenamiento de sesiones |
-| Revocación            | ❌ Requiere blacklist  | ✅ Borrar sesión          |
-| Apropiado para SPA    | ✅ Diseñado para esto  | ⚠️ Problemas con CORS    |
+| Criterio           | JWT Stateless         | Sesiones en servidor                |
+| ------------------ | --------------------- | ----------------------------------- |
+| Escalabilidad      | ✅ Horizontal fácil   | ❌ Requiere sticky sessions o Redis |
+| Estado en servidor | ✅ Ninguno            | ❌ Almacenamiento de sesiones       |
+| Revocación         | ❌ Requiere blacklist | ✅ Borrar sesión                    |
+| Apropiado para SPA | ✅ Diseñado para esto | ⚠️ Problemas con CORS               |
 
 Para este proyecto educativo, la arquitectura stateless con JWT es la más apropiada — permite escalar horizontalmente sin coordinación entre servidores.
 
@@ -378,13 +378,13 @@ Este es un proyecto de **SPA (Single Page Application)** — toda la navegación
 
 ## Configuración de Entornos
 
-| Variable            | Desarrollo                   | Producción                       |
-| ------------------- | ---------------------------- | -------------------------------- |
-| `ENVIRONMENT`       | `development`                | `production`                     |
-| `/docs` (Swagger)   | ✅ Disponible                 | ❌ Deshabilitado (404)            |
-| `DATABASE_URL`      | `localhost:5432`             | Servidor de BD en cloud          |
-| `FRONTEND_URL`      | `http://localhost:5173`      | `https://tu-dominio.com`         |
-| `SECRET_KEY`        | Clave de desarrollo (≥32 ch) | Clave aleatoria larga (`openssl rand -hex 64`) |
-| `RESEND_API_KEY`    | Vacío (logs en consola)      | API key de Resend.com            |
+| Variable          | Desarrollo                   | Producción                                     |
+| ----------------- | ---------------------------- | ---------------------------------------------- |
+| `ENVIRONMENT`     | `development`                | `production`                                   |
+| `/docs` (Swagger) | ✅ Disponible                | ❌ Deshabilitado (404)                         |
+| `DATABASE_URL`    | `localhost:5432`             | Servidor de BD en cloud                        |
+| `FRONTEND_URL`    | `http://localhost:5173`      | `https://tu-dominio.com`                       |
+| `SECRET_KEY`      | Clave de desarrollo (≥32 ch) | Clave aleatoria larga (`openssl rand -hex 64`) |
+| `RESEND_API_KEY`  | Vacío (logs en consola)      | API key de Resend.com                          |
 
 > Ver [be/.env.example](../be/.env.example) para la lista completa de variables.
