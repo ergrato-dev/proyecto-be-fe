@@ -23,6 +23,7 @@ from app.database import Base
 from app.dependencies import get_db
 from app.main import app
 from app.models.password_reset_token import PasswordResetToken
+from app.models.email_verification_token import EmailVerificationToken
 from app.models.user import User
 from app.utils.security import create_access_token, hash_password
 
@@ -143,6 +144,7 @@ def client(db: Session) -> Generator[TestClient, None, None]:
 TEST_USER_EMAIL = "test@nn-company.com"
 TEST_USER_FULL_NAME = "Test User"
 TEST_USER_PASSWORD = "TestPass123"
+UNVERIFIED_USER_EMAIL = "unverified@nn-company.com"
 
 
 @pytest.fixture()
@@ -159,6 +161,10 @@ def test_user(db: Session) -> User:
         email=TEST_USER_EMAIL,
         full_name=TEST_USER_FULL_NAME,
         hashed_password=hash_password(TEST_USER_PASSWORD),
+        # ¿Qué? El usuario de prueba se crea con email ya verificado.
+        # ¿Para qué? Los tests de login, change-password, etc. asumen un usuario activo y verificado.
+        # ¿Impacto? Sin esto, todos los tests de login fallarían con 403 "debes verificar tu email".
+        is_email_verified=True,
     )
     db.add(user)
     db.commit()
@@ -230,6 +236,89 @@ def valid_reset_token(db: Session, test_user: User) -> str:
         user_id=test_user.id,
         token=token,
         expires_at=datetime.now(timezone.utc) + timedelta(hours=1),
+    )
+    db.add(token_record)
+    db.commit()
+    return token
+
+
+# ────────────────────────────
+# 📧 Fixtures de verificación de email
+# ────────────────────────────
+
+
+@pytest.fixture()
+def unverified_user(db: Session) -> User:
+    """Crea un usuario sin verificar email (is_email_verified=False).
+
+    ¿Qué? Fixture que inserta un usuario que aún no hizo clic en el enlace de verificación.
+    ¿Para qué? Probar que el login rechaza usuarios no verificados.
+    ¿Impacto? Simula el estado inmediatamente después del registro, antes de verificar.
+    """
+    user = User(
+        email=UNVERIFIED_USER_EMAIL,
+        full_name="Unverified User",
+        hashed_password=hash_password(TEST_USER_PASSWORD),
+        is_email_verified=False,
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+@pytest.fixture()
+def valid_verification_token(db: Session, unverified_user: User) -> str:
+    """Crea un token de verificación de email válido para el usuario no verificado.
+
+    ¿Qué? Fixture que inserta un EmailVerificationToken activo (no expirado, no usado).
+    ¿Para qué? Probar el flujo exitoso de verify-email.
+    ¿Impacto? Simula el token que se envía al email al registrarse.
+    """
+    token = str(uuid.uuid4())
+    token_record = EmailVerificationToken(
+        user_id=unverified_user.id,
+        token=token,
+        expires_at=datetime.now(timezone.utc) + timedelta(hours=24),
+    )
+    db.add(token_record)
+    db.commit()
+    return token
+
+
+@pytest.fixture()
+def expired_verification_token(db: Session, unverified_user: User) -> str:
+    """Crea un token de verificación de email ya expirado.
+
+    ¿Qué? Fixture que inserta un EmailVerificationToken con expiración en el pasado.
+    ¿Para qué? Probar que el endpoint verify-email rechaza tokens expirados.
+    ¿Impacto? Verifica la seguridad: enlaces viejos no pueden activar cuentas.
+    """
+    token = str(uuid.uuid4())
+    token_record = EmailVerificationToken(
+        user_id=unverified_user.id,
+        token=token,
+        expires_at=datetime.now(timezone.utc) - timedelta(hours=1),
+    )
+    db.add(token_record)
+    db.commit()
+    return token
+
+
+@pytest.fixture()
+def used_verification_token(db: Session, unverified_user: User) -> str:
+    """Crea un token de verificación de email ya utilizado.
+
+    ¿Qué? Fixture que inserta un EmailVerificationToken marcado como used=True.
+    ¿Para qué? Probar que el endpoint verify-email rechaza tokens ya consumidos.
+    ¿Impacto? Verifica que un enlace no puede reutilizarse para activar la cuenta dos veces.
+    """
+    token = str(uuid.uuid4())
+    token_record = EmailVerificationToken(
+        user_id=unverified_user.id,
+        token=token,
+        expires_at=datetime.now(timezone.utc) + timedelta(hours=24),
+        used=True,
     )
     db.add(token_record)
     db.commit()

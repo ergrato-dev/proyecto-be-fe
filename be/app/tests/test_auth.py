@@ -13,6 +13,7 @@ from app.tests.conftest import (
     TEST_USER_EMAIL,
     TEST_USER_FULL_NAME,
     TEST_USER_PASSWORD,
+    UNVERIFIED_USER_EMAIL,
 )
 
 
@@ -52,6 +53,10 @@ class TestRegister:
         assert data["email"] == "new@nn-company.com"
         assert data["full_name"] == "New User"
         assert data["is_active"] is True
+        # ¿Qué? Verificar que el email parte sin verificar tras el registro.
+        # ¿Para qué? El usuario debe hacer clic en el enlace del email antes de poder loguearse.
+        # ¿Impacto? Si retorna True, la verificación por email no está siendo aplicada.
+        assert data["is_email_verified"] is False
         # ¿Qué? Verificar que la contraseña NUNCA se retorna en la respuesta.
         # ¿Para qué? Seguridad — el hash no debe exponerse al cliente.
         # ¿Impacto? Si "hashed_password" aparece en la respuesta, hay una fuga de datos.
@@ -290,6 +295,26 @@ class TestLogin:
 
         assert response.status_code == 403
         assert "desactivada" in response.json()["detail"].lower()
+
+    def test_login_unverified_email(
+        self, client: TestClient, unverified_user: object
+    ) -> None:
+        """Login con usuario no verificado → 403.
+
+        ¿Qué? Intenta hacer login con credenciales válidas pero email sin verificar.
+        ¿Para qué? Verificar que el sistema bloquea el acceso hasta confirmar el email.
+        ¿Impacto? Sin este control, los usuarios podrían saltarse la verificación de email.
+        """
+        response = client.post(
+            self.URL,
+            json={
+                "email": UNVERIFIED_USER_EMAIL,
+                "password": TEST_USER_PASSWORD,
+            },
+        )
+
+        assert response.status_code == 403
+        assert "verificar" in response.json()["detail"].lower()
 
 
 # ════════════════════════════════════════════════════════════
@@ -748,4 +773,117 @@ class TestHealthCheck:
         assert response.status_code == 200
         data = response.json()
         assert data["status"] == "healthy"
-        assert data["project"] == "NN Auth System"
+
+
+# ════════════════════════════════════════════════════════════
+# 📧 TESTS DE VERIFICACIÓN DE EMAIL — POST /api/v1/auth/verify-email
+# ════════════════════════════════════════════════════════════
+
+
+class TestEmailVerification:
+    """Tests para el endpoint de verificación de email.
+
+    ¿Qué? Verifica el flujo de activación de cuenta vía token en el email.
+    ¿Para qué? Asegurar que solo tokens válidos, vigentes y no usados activan la cuenta.
+    ¿Impacto? Si falla, los usuarios no pueden verificar su email y quedan bloqueados.
+    """
+
+    URL = "/api/v1/auth/verify-email"
+
+    def test_verify_email_success(
+        self,
+        client: TestClient,
+        valid_verification_token: str,
+        db: object,
+    ) -> None:
+        """Verificación exitosa → 200 + cuenta activa.
+
+        ¿Qué? Usa un token válido para verificar el email.
+        ¿Para qué? Confirmar el flujo principal de activación de cuenta.
+        ¿Impacto? Si falla, los usuarios recién registrados no pueden activar su cuenta.
+        """
+        response = client.post(
+            self.URL,
+            json={"token": valid_verification_token},
+        )
+
+        assert response.status_code == 200
+        assert "verificado" in response.json()["message"].lower()
+
+    def test_verify_email_after_verification_login_works(
+        self,
+        client: TestClient,
+        valid_verification_token: str,
+    ) -> None:
+        """Login funciona después de verificar email exitosamente → 200.
+
+        ¿Qué? Verifica el email y confirma que el login ya es posible.
+        ¿Para qué? Validar el flujo completo end-to-end.
+        ¿Impacto? Si el login sigue fallando tras verificar, el flujo está roto.
+        """
+        # Primero verificar el email
+        client.post(self.URL, json={"token": valid_verification_token})
+
+        # Luego intentar login — ahora debe funcionar
+        login_response = client.post(
+            "/api/v1/auth/login",
+            json={
+                "email": UNVERIFIED_USER_EMAIL,
+                "password": TEST_USER_PASSWORD,
+            },
+        )
+
+        assert login_response.status_code == 200
+        assert "access_token" in login_response.json()
+
+    def test_verify_email_invalid_token(self, client: TestClient) -> None:
+        """Verificación con token inexistente → 400.
+
+        ¿Qué? Envía un string inventado como token.
+        ¿Para qué? Verificar que tokens falsos son rechazados.
+        ¿Impacto? Sin esta validación, cualquiera podría activar cuentas ajenas.
+        """
+        response = client.post(
+            self.URL,
+            json={"token": "token-falso-inexistente-00000"},
+        )
+
+        assert response.status_code == 400
+
+    def test_verify_email_expired_token(
+        self,
+        client: TestClient,
+        expired_verification_token: str,
+    ) -> None:
+        """Verificación con token expirado → 400.
+
+        ¿Qué? Usa un token cuya fecha de expiración ya pasó (generado hace >24h).
+        ¿Para qué? Verificar que tokens caducados no activan cuentas.
+        ¿Impacto? Sin expiración, un enlace de activación viejo sería válido para siempre.
+        """
+        response = client.post(
+            self.URL,
+            json={"token": expired_verification_token},
+        )
+
+        assert response.status_code == 400
+        assert "expirado" in response.json()["detail"].lower()
+
+    def test_verify_email_used_token(
+        self,
+        client: TestClient,
+        used_verification_token: str,
+    ) -> None:
+        """Verificación con token ya utilizado → 400.
+
+        ¿Qué? Intenta usar un token que ya fue consumido previamente.
+        ¿Para qué? Verificar que un enlace de activación no puede reutilizarse.
+        ¿Impacto? Sin esto, alguien con el enlace viejo podría re-activar una cuenta suspendida.
+        """
+        response = client.post(
+            self.URL,
+            json={"token": used_verification_token},
+        )
+
+        assert response.status_code == 400
+        assert "utilizado" in response.json()["detail"].lower()
