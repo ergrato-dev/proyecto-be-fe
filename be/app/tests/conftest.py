@@ -134,6 +134,29 @@ def client(db: Session) -> Generator[TestClient, None, None]:
     app.dependency_overrides.clear()
 
 
+@pytest.fixture(autouse=True)
+def reset_rate_limiter() -> Generator[None, None, None]:
+    """Resetea el almacenamiento del rate limiter entre tests.
+
+    ¿Qué? Fixture autouse que limpia los contadores del rate limiter después de cada test.
+    ¿Para qué? El TestClient usa siempre la misma IP (testclient). Sin reset, los hits de
+               un test se acumulan y los tests posteriores que usen el mismo endpoint
+               recibirían 429 Too Many Requests inesperadamente, rompiendo el aislamiento.
+    ¿Impacto? OWASP A04 — Rate Limiting es crítico en producción para prevenir fuerza bruta.
+               En tests, el reset garantiza que cada prueba sea independiente y reproducible
+               sin importar el orden de ejecución.
+    """
+    yield
+    # ¿Qué? Accede al storage interno del rate limiter y llama reset().
+    # ¿Para qué? MemoryStorage.reset() borra todos los contadores acumulados.
+    # ¿Impacto? Sin esto, el 6to test que llame a /login obtendría 429 porque el
+    #           contador acumulado superaría el límite de 10/minute.
+    try:
+        app.state.limiter._storage.reset()
+    except AttributeError:
+        pass  # Si el storage no implementa reset(), los límites son suficientemente altos
+
+
 # ────────────────────────────
 # 👤 Fixtures de datos de prueba
 # ────────────────────────────

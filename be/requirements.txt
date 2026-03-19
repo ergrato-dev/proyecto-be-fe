@@ -51,3 +51,4 @@ pytest-cov>=6.0.0           # Medir cobertura de código
 # 🔍 Linting y formateo
 # ────────────────────────────
 ruff>=0.8.0                 # Linter + formatter ultrarrápido para Python
+slowapi>=0.1.9              # Rate limiting para FastAPI — previene ataques de fuerza bruta (OWASP A04)

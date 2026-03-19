@@ -26,6 +26,13 @@ from app.schemas.user import (
     UserCreate,
     UserLogin,
 )
+from app.utils.audit_log import (
+    log_email_verified,
+    log_login_failed,
+    log_login_success,
+    log_password_changed,
+    log_password_reset_requested,
+)
 from app.utils.email import send_password_reset_email, send_verification_email
 from app.utils.security import (
     create_access_token,
@@ -135,6 +142,10 @@ def login_user(db: Session, login_data: UserLogin) -> TokenResponse:
     user = db.execute(stmt).scalar_one_or_none()
 
     if not user or not verify_password(login_data.password, user.hashed_password):
+        # ¿Qué? Registrar el intento fallido antes de lanzar la excepción.
+        # ¿Para qué? Detectar patrones de fuerza bruta — múltiples fallos en poco tiempo son alarma.
+        # ¿Impacto? OWASP A09: sin este log, un ataque de 10,000 intentos pasa desapercibido.
+        log_login_failed(email=login_data.email, reason="invalid_credentials")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Credenciales inválidas",
@@ -145,6 +156,7 @@ def login_user(db: Session, login_data: UserLogin) -> TokenResponse:
     # ¿Para qué? Impedir login de cuentas desactivadas (ej: suspendidas por admin).
     # ¿Impacto? Sin esta verificación, usuarios desactivados podrían seguir accediendo.
     if not user.is_active:
+        log_login_failed(email=login_data.email, reason="account_inactive")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Cuenta desactivada. Contacte al administrador.",
@@ -155,6 +167,7 @@ def login_user(db: Session, login_data: UserLogin) -> TokenResponse:
     # ¿Impacto? Sin esta verificación, alguien podría registrarse con el email de otra persona
     #           y acceder al sistema antes de que el dueño real del email lo note.
     if not user.is_email_verified:
+        log_login_failed(email=login_data.email, reason="email_not_verified")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail=(
@@ -168,6 +181,13 @@ def login_user(db: Session, login_data: UserLogin) -> TokenResponse:
     # ¿Impacto? "sub" (subject) contiene el email — es lo que identifica al usuario en el token.
     access_token = create_access_token(data={"sub": user.email})
     refresh_token = create_refresh_token(data={"sub": user.email})
+
+    # ¿Qué? Registrar el login exitoso para auditoría.
+    # ¿Para qué? Los logins exitosos también son relevantes — permiten detectar accesos
+    #            desde IPs o zonas horarias inusuales que el usuario legítimo no reconoce.
+    # ¿Impacto? OWASP A09: la ausencia de este log impide detectar accesos no autorizados
+    #            que usaron credenciales robadas.
+    log_login_success(email=user.email)
 
     return TokenResponse(
         access_token=access_token,
@@ -271,6 +291,12 @@ def change_password(db: Session, user: User, password_data: ChangePasswordReques
     user.hashed_password = hash_password(password_data.new_password)
     db.commit()
 
+    # ¿Qué? Registrar el cambio de contraseña para auditoría.
+    # ¿Para qué? Si el usuario legítimo recibe una notificación de cambio que no reconoce,
+    #            el log confirma qué ocurrió y cuándo (posible cuenta comprometida).
+    # ¿Impacto? OWASP A09: esencial para investigación post-incidente.
+    log_password_changed(user_id=str(user.id))
+
 
 async def request_password_reset(db: Session, email: str) -> None:
     """Solicita un email de recuperación de contraseña.
@@ -311,6 +337,14 @@ async def request_password_reset(db: Session, email: str) -> None:
 
     db.add(token_record)
     db.commit()
+
+    # ¿Qué? Registrar la solicitud de recuperación para auditoría.
+    # ¿Para qué? Detectar abuso del endpoint — muchas solicitudes desde la misma IP
+    #            indican intento de spam de emails o detección de cuentas válidas.
+    # ¿Impacto? NO se loguea el email — previene que el log mismo revele qué emails existen.
+    #            El rate limiter es la primera defensa; este log permite detectar
+    #            patrones que el rate limiter no cubre (ej: ataques distribuidos).
+    log_password_reset_requested()
 
     # ¿Qué? Enviar el email con el enlace de recuperación.
     # ¿Para qué? El usuario hace clic en el enlace, que lo lleva al frontend con el token.
@@ -448,4 +482,10 @@ def verify_email(db: Session, token: str) -> None:
     user.is_email_verified = True
     token_record.used = True
     db.commit()
+
+    # ¿Qué? Registrar la verificación de email para auditoría.
+    # ¿Para qué? Trazar el ciclo de vida de activación de cuentas.
+    #            Una verificación mucho tiempo después del registro puede ser sospechosa.
+    # ¿Impacto? OWASP A09: información útil para investigar activaciones auténticas vs fraudulentas.
+    log_email_verified(user_id=str(user.id))
 

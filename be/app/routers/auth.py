@@ -9,10 +9,11 @@ Descripción: Endpoints de autenticación — registro, login, refresh, cambio y
           la lógica de negocio al auth_service.
 """
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Request, status
 from sqlalchemy.orm import Session
 
 from app.dependencies import get_current_user, get_db
+from app.utils.limiter import limiter
 from app.models.user import User
 from app.schemas.user import (
     ChangePasswordRequest,
@@ -37,13 +38,19 @@ router = APIRouter(
 )
 
 
+# ¿Qué? Límite de 5 registros por minuto por IP.
+# ¿Para qué? Prevenir la creación masiva de cuentas falsas (OWASP A04 — Insecure Design).
+# ¿Impacto? Ralentiza ataques de registro automatizado. En producción podría ajustarse
+#           a 3/minute o añadir CAPTCHA como segunda capa de defensa.
 @router.post(
     "/register",
     response_model=UserResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Registrar nuevo usuario",
 )
+@limiter.limit("5/minute")
 async def register(
+    request: Request,
     user_data: UserCreate,
     db: Session = Depends(get_db),
 ) -> UserResponse:
@@ -67,12 +74,23 @@ async def register(
     return UserResponse.model_validate(user)
 
 
+# ¿Qué? Límite de 10 intentos de login por minuto por IP.
+# ¿Para qué? Es LA protección más crítica de toda la API (OWASP A04 y A07).
+#            Sin rate limiting, un atacante puede probar miles de contraseñas
+#            por segundo hasta encontrar la correcta (ataque de fuerza bruta).
+# ¿Impacto? Con 10/minute, un ataque de fuerza bruta tomaría años en lugar de horas.
+#           En producción se pueden añadir capas adicionales:
+#           - Account lockout temporal después de N intentos fallidos
+#           - CAPTCHA tras el 3er intento fallido
+#           - Notificación por email al detectar intentos sospechosos
 @router.post(
     "/login",
     response_model=TokenResponse,
     summary="Iniciar sesión",
 )
+@limiter.limit("10/minute")
 def login(
+    request: Request,
     login_data: UserLogin,
     db: Session = Depends(get_db),
 ) -> TokenResponse:
@@ -159,12 +177,22 @@ def change_password(
     return MessageResponse(message="Contraseña actualizada exitosamente")
 
 
+# ¿Qué? Límite de 5 solicitudes de recuperación por minuto por IP.
+# ¿Para qué? El endpoint forgot-password envía emails — sin límite se convierte
+#            en un vector de spam masivo (OWASP A04 — Insecure Design).
+#            También previene la enumeración de usuarios por timing (aunque el
+#            endpoint retorna respuesta genérica, la diferencia de velocidad podría
+#            revelar si el email existe o no — el rate limit reduce este riesgo).
+# ¿Impacto? 5/minute es un límite razonable — un usuario legítimo raramente
+#           necesita más de 1 solicitud de recuperación por hora.
 @router.post(
     "/forgot-password",
     response_model=MessageResponse,
     summary="Solicitar recuperación de contraseña",
 )
+@limiter.limit("5/minute")
 async def forgot_password(
+    request: Request,
     request_data: ForgotPasswordRequest,
     db: Session = Depends(get_db),
 ) -> MessageResponse:

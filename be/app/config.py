@@ -8,6 +8,7 @@ Descripción: Configuración centralizada del backend usando Pydantic Settings.
           lo que podría causar errores silenciosos o difíciles de depurar en tiempo de ejecución.
 """
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -34,7 +35,37 @@ class Settings(BaseSettings):
     # ¿Qué? Clave secreta para firmar y verificar tokens JWT.
     # ¿Para qué? Garantizar que solo nuestro backend puede generar tokens válidos.
     # ¿Impacto? Si se filtra, un atacante podría generar tokens falsos y suplantar usuarios.
+    #           OWASP A02 — Cryptographic Failures: usar una clave corta o predecible
+    #           facilita ataques de fuerza bruta contra la firma del JWT.
     SECRET_KEY: str
+
+    @field_validator("SECRET_KEY")
+    @classmethod
+    def validate_secret_key_strength(cls, v: str) -> str:
+        """Valida que SECRET_KEY tenga longitud mínima aceptable.
+
+        ¿Qué? Verifica que la clave secreta tenga al menos 32 caracteres.
+        ¿Para qué? Una SECRET_KEY corta puede romperse por fuerza bruta, permitiendo
+                   al atacante forjar tokens JWT para cualquier usuario.
+        ¿Impacto? OWASP A02 — Cryptographic Failures: 32 caracteres es el mínimo
+                   recomendado para HMAC-SHA256 (la base de HS256). En producción
+                   usar `openssl rand -hex 32` para generar una clave aleatoria segura.
+
+        Args:
+            v: Valor de SECRET_KEY de la variable de entorno.
+
+        Returns:
+            El valor válido si supera la validación.
+
+        Raises:
+            ValueError: Si la clave tiene menos de 32 caracteres.
+        """
+        if len(v) < 32:  # noqa: PLR2004
+            raise ValueError(
+                "SECRET_KEY debe tener al menos 32 caracteres. "
+                "Genera una con: openssl rand -hex 32"
+            )
+        return v
 
     # ¿Qué? Algoritmo criptográfico para firmar JWT (HS256 = HMAC con SHA-256).
     # ¿Para qué? Definir cómo se firma el token — HS256 es simétrico (misma clave firma y verifica).

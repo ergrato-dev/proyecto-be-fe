@@ -10,12 +10,23 @@ Descripción: Punto de entrada de la aplicación FastAPI — configura y arranca
 from contextlib import asynccontextmanager
 from collections.abc import AsyncGenerator
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 from app.config import settings
 from app.routers.auth import router as auth_router
 from app.routers.users import router as users_router
+from app.utils.audit_log import log_rate_limit_hit
+
+# ¿Qué? Importación del limiter desde su módulo dedicado.
+# ¿Para qué? Evitar una importación circular — si el limiter se definiera aquí,
+#            auth.py (que importa limiter) sería importado desde main.py,
+#            creando un ciclo: main → auth → main.
+# ¿Impacto? Al definirlo en utils/limiter.py (módulo sin dependencias internas),
+#           tanto main.py como los routers pueden importarlo sin ciclos.
+from app.utils.limiter import limiter
 
 
 # ¿Qué? Función de ciclo de vida (lifespan) que se ejecuta al iniciar y al cerrar la app.
@@ -58,21 +69,92 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# ¿Qué? Registra el limiter en el estado de la app y el handler de error 429.
+# ¿Para qué? SlowAPIMiddleware necesita encontrar el limiter en app.state.limiter.
+#            El handler convierte RateLimitExceeded en una respuesta HTTP 429 estándar.
+# ¿Impacto? Sin el handler, un rate limit superado causaría un 500 Internal Server Error
+#           en lugar del semánticamente correcto 429 Too Many Requests.
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 # ¿Qué? Middleware CORS (Cross-Origin Resource Sharing).
 # ¿Para qué? Permitir que el frontend (http://localhost:5173) haga peticiones HTTP al backend
 #            (http://localhost:8000), que técnicamente está en un "origen" diferente.
 # ¿Impacto? Sin CORS, el navegador BLOQUEA todas las peticiones del frontend al backend
 #           por política de seguridad del mismo origen (Same-Origin Policy).
-#           allow_credentials=True permite enviar cookies/headers de autenticación.
+#
+# OWASP A05 — Security Misconfiguration:
+# ❌ INCORRECTO: allow_methods=["*"] y allow_headers=["*"] son excesivamente permisivos.
+#    Un XSS podría explotar métodos como DELETE o PUT con headers arbitrarios.
+# ✅ CORRECTO: Especificar exactamente qué métodos y headers necesita la app.
+#    Esta API solo usa GET y POST; los headers son Content-Type y Authorization.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        settings.FRONTEND_URL,  # Frontend de desarrollo (http://localhost:5173)
+        settings.FRONTEND_URL,  # Único origen permitido — el frontend de desarrollo
     ],
     allow_credentials=True,
-    allow_methods=["*"],  # Permitir todos los métodos HTTP (GET, POST, PUT, DELETE, etc.)
-    allow_headers=["*"],  # Permitir todos los headers (incluyendo Authorization)
+    # ¿Qué? Solo los métodos HTTP que realmente usa la API.
+    # ¿Para qué? Prevenir que un XSS cause peticiones DELETE/PUT desde el origen permitido.
+    # ¿Impacto? Si un endpoint necesita PUT o DELETE en el futuro, se agrega aquí explícitamente.
+    allow_methods=["GET", "POST"],
+    # ¿Qué? Solo los headers que la API necesita recibir del frontend.
+    # ¿Para qué? Limitar la superficie de ataque — headers arbitrarios no deben aceptarse.
+    # ¿Impacto? Content-Type para JSON, Authorization para JWT. Nada más es necesario.
+    allow_headers=["Content-Type", "Authorization"],
 )
+
+
+# ¿Qué? Middleware de cabeceras de seguridad HTTP.
+# ¿Para qué? Instruir al navegador a activar protecciones adicionales contra ataques
+#            comunes como XSS, clickjacking e inyección de MIME type.
+# ¿Impacto? Corresponde a OWASP A05 (Security Misconfiguration). La ausencia de estas
+#           cabeceras no causa ataques directamente, pero permite que los ataques sean
+#           más efectivos. Son baratas de implementar y muy valiosas como defensa en profundidad.
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next: object) -> Response:
+    """Añade cabeceras de seguridad HTTP a todas las respuestas.
+
+    ¿Qué? Middleware que intercepta todas las respuestas y les agrega headers de seguridad.
+    ¿Para qué? Activar protecciones del navegador que reducen el impacto de vulnerabilidades
+               como XSS, clickjacking y sniffing de contenido.
+    ¿Impacto? Cada header hace una cosa específica — ver comentarios inline.
+    """
+    response: Response = await call_next(request)  # type: ignore[operator]
+
+    # ¿Qué? Evita que el navegador detecte el MIME type del contenido (sniffing).
+    # ¿Para qué? Prevenir que un archivo .txt con código JS sea ejecutado como script.
+    # ¿Impacto? Si se omite, un atacante puede subir un archivo con MIME incorrecto
+    #           y causar su ejecución como script malicioso.
+    response.headers["X-Content-Type-Options"] = "nosniff"
+
+    # ¿Qué? Impide que la app se embeba en un <iframe> de otro sitio.
+    # ¿Para qué? Prevenir ataques de clickjacking — el atacante sobrepone un iframe
+    #            invisible de la app sobre un botón atractivo para capturar clicks.
+    # ¿Impacto? Con DENY, ningún iframe puede embeber esta app, sin importar el origen.
+    response.headers["X-Frame-Options"] = "DENY"
+
+    # ¿Qué? Controla cuánta información de referencia se envía al navegar a otro sitio.
+    # ¿Para qué? Evitar filtrar la URL completa (con tokens en query string) como Referer.
+    # ¿Impacto? Con strict-origin-when-cross-origin, solo se envía el origen (no la ruta)
+    #           al navegar a otro dominio — protege tokens o IDs en URLs.
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+
+    # ¿Qué? Política de permisos para APIs del navegador (cámara, micrófono, geolocalización).
+    # ¿Para qué? Una API de autenticación no necesita acceder a ningún hardware del dispositivo.
+    #            Restringir estas APIs reduce la superficie de ataque si hay XSS.
+    # ¿Impacto? Si la app embebiera contenido de terceros, este header limita lo que pueden hacer.
+    response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+
+    # ¿Qué? Elimina el header Server que Uvicorn/Starlette agrega por defecto.
+    # ¿Para qué? Prevenir que atacantes sepan qué tecnología usa el servidor (fingerprinting).
+    # ¿Impacto? Conocer que el servidor es "uvicorn" ayuda a atacantes a buscar exploits
+    #           específicos de esa versión. "Seguridad por oscuridad" no es suficiente,
+    #           pero eliminar información gratuita siempre es buena práctica.
+    if "server" in response.headers:
+        del response.headers["server"]
+
+    return response
 
 
 # ────────────────────────────
