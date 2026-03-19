@@ -136,7 +136,7 @@ docker compose up -d
 cd be && source .venv/bin/activate
 uvicorn app.main:app --reload
 # → API disponible en http://localhost:8000
-# → Swagger UI en http://localhost:8000/docs
+# → Swagger UI en http://localhost:8000/docs  (solo si ENVIRONMENT=development, que es el default)
 
 # Terminal 3 — Frontend (React + Vite)
 cd fe && pnpm dev
@@ -204,7 +204,7 @@ proyecto/
 │   │   ├── main.py                   # Punto de entrada FastAPI
 │   │   ├── config.py                 # Configuración (Pydantic Settings)
 │   │   ├── database.py               # Conexión a PostgreSQL
-│   │   ├── models/                   # Modelos ORM (User, PasswordResetToken)
+│   │   ├── models/                   # Modelos ORM (User, PasswordResetToken, EmailVerificationToken)
 │   │   ├── schemas/                  # Schemas Pydantic (request/response)
 │   │   ├── routers/                  # Endpoints (auth, users)
 │   │   ├── services/                 # Lógica de negocio
@@ -246,10 +246,12 @@ Para las reglas completas, ver [`.github/copilot-instructions.md`](.github/copil
 
 | Documento                        | Descripción                              |
 | -------------------------------- | ---------------------------------------- |
-| `_docs/architecture.md`         | Arquitectura general y diagramas          |
-| `_docs/api-endpoints.md`        | Documentación detallada de la API         |
-| `_docs/database-schema.md`      | Esquema de base de datos y diagrama ER    |
-| `.github/copilot-instructions.md`| Reglas y convenciones del proyecto       |
+| [`_docs/architecture.md`](_docs/architecture.md)         | Arquitectura general, flujos y decisiones técnicas |
+| [`_docs/api-endpoints.md`](_docs/api-endpoints.md)        | Todos los endpoints con parámetros, respuestas y errores |
+| [`_docs/database-schema.md`](_docs/database-schema.md)      | Esquema ER, tablas, columnas y migraciones |
+| [`_docs/owasp-top-10.md`](_docs/owasp-top-10.md)          | Implementación del OWASP Top 10 2021     |
+| [`_docs/accesibilidad-aria-wcag.md`](_docs/accesibilidad-aria-wcag.md) | Estándares ARIA/WCAG 2.1 AA aplicados |
+| [`.github/copilot-instructions.md`](.github/copilot-instructions.md)| Reglas y convenciones del proyecto |
 
 ---
 

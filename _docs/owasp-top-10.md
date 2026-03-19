@@ -285,12 +285,35 @@ app.add_middleware(CORSMiddleware,
 | `Permissions-Policy: camera=(), microphone=()`     | Deniega acceso a hardware del dispositivo |
 | Sin header `Server`                                | Oculta la tecnología del servidor         |
 
-**3. Configuración desde variables de entorno**:
+**3. Documentación de API deshabilitada en producción** ([be/app/main.py](../be/app/main.py) + [be/app/config.py](../be/app/config.py)):
+
+El endpoint `/docs` (Swagger UI) y `/redoc` exponen toda la superficie de ataque de la API —
+endpoints, parámetros, schemas — sin requerir autenticación. En producción, esto facilita el
+reconocimiento previo a un ataque.
+
+```python
+# Variable ENVIRONMENT controla la visibilidad de la documentación:
+_is_production = settings.ENVIRONMENT == "production"
+app = FastAPI(
+    docs_url=None if _is_production else "/docs",   # Deshabilitado en producción
+    redoc_url=None if _is_production else "/redoc",  # Deshabilitado en producción
+)
+```
+
+| ENVIRONMENT      | /docs      | /redoc     | Recomendado para         |
+| ---------------- | ---------- | ---------- | ------------------------ |
+| `development`    | ✅ 200 OK  | ✅ 200 OK  | Desarrollo local         |
+| `production`     | ❌ 404     | ❌ 404     | Servidor de producción   |
+
+> La documentación estática de la API está disponible en [`_docs/api-endpoints.md`](./api-endpoints.md) como alternativa segura a Swagger UI en producción.
+
+**4. Configuración desde variables de entorno**:
 Credenciales, URLs y secrets nunca en el código — siempre en `.env`:
 
 ```bash
 SECRET_KEY=<generado con openssl rand -hex 32>
 DATABASE_URL=postgresql://user:pass@host:5432/db
+ENVIRONMENT=production   # Deshabilita /docs y /redoc
 ```
 
 ---
