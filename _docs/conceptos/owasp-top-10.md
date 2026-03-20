@@ -305,7 +305,7 @@ app = FastAPI(
 | `development` | ✅ 200 OK | ✅ 200 OK | Desarrollo local       |
 | `production`  | ❌ 404    | ❌ 404    | Servidor de producción |
 
-> La documentación estática de la API está disponible en [`_docs/api-endpoints.md`](./api-endpoints.md) como alternativa segura a Swagger UI en producción.
+> La documentación estática de la API está disponible en [`_docs/referencia-tecnica/api-endpoints.md`](../referencia-tecnica/api-endpoints.md) como alternativa segura a Swagger UI en producción.
 
 **4. Configuración desde variables de entorno**:
 Credenciales, URLs y secrets nunca en el código — siempre en `.env`:

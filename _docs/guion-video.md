@@ -1408,39 +1408,39 @@ cd be && source .venv/bin/activate && alembic upgrade head
 
 ### Orden de archivos a mostrar (resumen)
 
-| Orden | Archivo                                     | Concepto principal                        |
-| ----- | ------------------------------------------- | ----------------------------------------- |
-| 01    | `docker-compose.yml`                        | Infraestructura y servicios               |
-| 02    | `be/.env.example`                           | Variables de entorno                      |
-| 03    | `be/requirements.txt`                       | Dependencias Python                       |
-| 04    | `be/app/config.py`                          | Settings + `ENVIRONMENT`                  |
-| 05    | `be/app/database.py`                        | Engine, Session, Base de SQLAlchemy       |
-| 06    | `be/app/main.py`                            | FastAPI app, CORS, security headers, docs |
-| 07    | `be/app/models/user.py`                     | Modelo ORM User                           |
-| 08    | `be/app/models/password_reset_token.py`     | Modelo ORM PasswordResetToken             |
-| 09    | `be/app/models/email_verification_token.py` | Modelo ORM EmailVerificationToken         |
-| 10    | `alembic/versions/*.py`                     | Migraciones Alembic                       |
-| 11    | `be/app/schemas/user.py`                    | Schemas Pydantic                          |
-| 12    | `be/app/utils/security.py`                  | Hashing bcrypt + JWT                      |
-| 13    | `be/app/utils/limiter.py`                   | Rate limiting (OWASP A04)                 |
-| 14    | `be/app/utils/audit_log.py`                 | Auditoría de seguridad (OWASP A09)        |
-| 15    | `be/app/dependencies.py`                    | get_db + get_current_user                 |
-| 16    | `be/app/services/auth_service.py`           | Lógica de negocio                         |
-| 17    | `be/app/utils/email.py`                     | Envío de emails                           |
-| 18    | `be/app/routers/auth.py`                    | Endpoints de auth (+ verify-email)        |
-| 19    | `be/app/routers/users.py`                   | Endpoint GET /me                          |
-| 20    | `be/app/tests/conftest.py`                  | Fixtures de testing                       |
-| 21    | `be/app/tests/test_auth.py`                 | Tests de integración (38 casos)           |
-| 22    | `fe/src/types/auth.ts`                      | Tipos TypeScript                          |
-| 23    | `fe/src/api/axios.ts`                       | Axios + interceptores                     |
-| 24    | `fe/src/api/auth.ts`                        | Cliente HTTP de auth                      |
-| 25    | `fe/src/context/AuthContext.tsx`            | Context API de auth                       |
-| 26    | `fe/src/hooks/useAuth.ts`                   | Hook personalizado                        |
-| 27    | `fe/src/components/ProtectedRoute.tsx`      | Rutas protegidas                          |
-| 28    | `fe/src/App.tsx`                            | Enrutamiento principal                    |
-| 29    | `fe/src/pages/*.tsx`                        | Páginas de la app                         |
-| 30    | `_docs/architecture.md`                     | Arquitectura actualizada                  |
-| 31    | `_docs/api-endpoints.md`                    | Catálogo completo de endpoints            |
-| 32    | `_docs/database-schema.md`                  | Esquema y relaciones de BD                |
-| 33    | `_docs/owasp-top-10.md`                     | Mitigaciones de seguridad OWASP           |
-| 34    | `_docs/accesibilidad-aria-wcag.md`          | Evidencia de accesibilidad frontend       |
+| Orden | Archivo                                       | Concepto principal                        |
+| ----- | --------------------------------------------- | ----------------------------------------- |
+| 01    | `docker-compose.yml`                          | Infraestructura y servicios               |
+| 02    | `be/.env.example`                             | Variables de entorno                      |
+| 03    | `be/requirements.txt`                         | Dependencias Python                       |
+| 04    | `be/app/config.py`                            | Settings + `ENVIRONMENT`                  |
+| 05    | `be/app/database.py`                          | Engine, Session, Base de SQLAlchemy       |
+| 06    | `be/app/main.py`                              | FastAPI app, CORS, security headers, docs |
+| 07    | `be/app/models/user.py`                       | Modelo ORM User                           |
+| 08    | `be/app/models/password_reset_token.py`       | Modelo ORM PasswordResetToken             |
+| 09    | `be/app/models/email_verification_token.py`   | Modelo ORM EmailVerificationToken         |
+| 10    | `alembic/versions/*.py`                       | Migraciones Alembic                       |
+| 11    | `be/app/schemas/user.py`                      | Schemas Pydantic                          |
+| 12    | `be/app/utils/security.py`                    | Hashing bcrypt + JWT                      |
+| 13    | `be/app/utils/limiter.py`                     | Rate limiting (OWASP A04)                 |
+| 14    | `be/app/utils/audit_log.py`                   | Auditoría de seguridad (OWASP A09)        |
+| 15    | `be/app/dependencies.py`                      | get_db + get_current_user                 |
+| 16    | `be/app/services/auth_service.py`             | Lógica de negocio                         |
+| 17    | `be/app/utils/email.py`                       | Envío de emails                           |
+| 18    | `be/app/routers/auth.py`                      | Endpoints de auth (+ verify-email)        |
+| 19    | `be/app/routers/users.py`                     | Endpoint GET /me                          |
+| 20    | `be/app/tests/conftest.py`                    | Fixtures de testing                       |
+| 21    | `be/app/tests/test_auth.py`                   | Tests de integración (38 casos)           |
+| 22    | `fe/src/types/auth.ts`                        | Tipos TypeScript                          |
+| 23    | `fe/src/api/axios.ts`                         | Axios + interceptores                     |
+| 24    | `fe/src/api/auth.ts`                          | Cliente HTTP de auth                      |
+| 25    | `fe/src/context/AuthContext.tsx`              | Context API de auth                       |
+| 26    | `fe/src/hooks/useAuth.ts`                     | Hook personalizado                        |
+| 27    | `fe/src/components/ProtectedRoute.tsx`        | Rutas protegidas                          |
+| 28    | `fe/src/App.tsx`                              | Enrutamiento principal                    |
+| 29    | `fe/src/pages/*.tsx`                          | Páginas de la app                         |
+| 30    | `_docs/referencia-tecnica/architecture.md`    | Arquitectura actualizada                  |
+| 31    | `_docs/referencia-tecnica/api-endpoints.md`   | Catálogo completo de endpoints            |
+| 32    | `_docs/referencia-tecnica/database-schema.md` | Esquema y relaciones de BD                |
+| 33    | `_docs/conceptos/owasp-top-10.md`             | Mitigaciones de seguridad OWASP           |
+| 34    | `_docs/conceptos/accesibilidad-aria-wcag.md`  | Evidencia de accesibilidad frontend       |
