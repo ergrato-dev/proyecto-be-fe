@@ -34,6 +34,7 @@ Incluye registro de usuarios, login, cambio de contraseña y recuperación por e
 | **Backend**       | Python 3.12+, FastAPI, SQLAlchemy 2.0, Alembic, JWT |
 | **Frontend**      | React 18+, Vite, TypeScript, TailwindCSS 4+         |
 | **Base de datos** | PostgreSQL 17+ (Docker Compose)                     |
+| **Email (dev)**   | Mailpit — captura SMTP local, UI en puerto 8025     |
 | **Testing**       | pytest + httpx (BE), Vitest + Testing Library (FE)  |
 | **Linting**       | ruff (Python), ESLint + Prettier (TypeScript)       |
 
@@ -79,12 +80,12 @@ cd proyecto
 ### 2. Levantar la base de datos
 
 ```bash
-# Inicia PostgreSQL 17 en un contenedor Docker
+# Inicia PostgreSQL 17 + Mailpit (captura de emails) en contenedores Docker
 docker compose up -d
 
-# Verificar que está corriendo
+# Verificar que están corriendo
 docker compose ps
-# Deberías ver nn_auth_db con estado "healthy"
+# Deberías ver nn_auth_db y nn_auth_mailpit con estado "healthy"
 ```
 
 ### 3. Configurar el Backend
@@ -142,6 +143,9 @@ uvicorn app.main:app --reload
 cd fe && pnpm dev
 # → App disponible en http://localhost:5173
 ```
+
+> 📧 **Mailpit** — bandeja de entrada de emails de desarrollo: `http://localhost:8025`
+> Aquí se capturan los emails de verificación de cuenta y recuperación de contraseña.
 
 ---
 
