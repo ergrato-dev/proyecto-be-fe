@@ -40,6 +40,13 @@ Antes de tocar código, asegúrate de tener instalado:
 | Node.js     | 20 LTS         | `node --version` |
 | pnpm        | 9+             | `pnpm --version` |
 
+> 🖥️ **Usuarios de Windows — leer antes de continuar**
+> Todos los comandos de este documento usan sintaxis Bash.
+> Usa siempre **Git Bash** como terminal — viene incluido al instalar
+> [Git para Windows](https://git-scm.com/download/win).
+> **No uses CMD ni PowerShell** — algunos comandos (`cp`, rutas con `/`, etc.) no funcionarán igual.
+> Abre Git Bash, navega a la carpeta del proyecto y ejecuta los comandos desde ahí.
+
 ### ¿Por qué pnpm y no npm?
 
 `pnpm` (Performant NPM) instala paquetes de forma eficiente:

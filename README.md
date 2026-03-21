@@ -55,6 +55,12 @@ Antes de comenzar, asegúrate de tener instalado:
 
 > ⚠️ **Importante**: Usar **pnpm** como gestor de paquetes de Node.js. **Nunca usar npm ni yarn.**
 
+> 🖥️ **Usuarios de Windows — leer antes de continuar**
+> Todos los comandos de este proyecto usan sintaxis Bash (`source`, `export`, `/`, etc.).
+> Usa siempre **Git Bash** como terminal — viene incluido al instalar
+> [Git para Windows](https://git-scm.com/download/win).
+> **No uses CMD ni PowerShell** — los comandos no funcionarán igual.
+
 ### Instalar pnpm (si no lo tienes)
 
 ```bash
@@ -97,8 +103,8 @@ cd be
 python3 -m venv .venv
 
 # Activar el entorno virtual
-source .venv/bin/activate    # Linux/macOS
-# .venv\Scripts\activate     # Windows
+source .venv/bin/activate          # Linux/macOS y Windows (Git Bash) ← usar siempre
+# source .venv/Scripts/activate    # Windows (Git Bash — ruta alternativa si la anterior falla)
 
 # Instalar dependencias
 pip install -r requirements.txt

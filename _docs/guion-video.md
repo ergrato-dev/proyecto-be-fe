@@ -89,6 +89,10 @@
 
 > "Antes de arrancar, vamos a verificar que tenemos todo lo necesario instalado. Necesitamos cuatro cosas:"
 
+> 🖥️ **Nota para aprendices en Windows**
+> Este proyecto usa comandos Bash (`source`, `cp`, `/`). Si estás en Windows, usa
+> **Git Bash** — viene incluido con Git para Windows. No uses CMD ni PowerShell.
+
 **[Terminal: ejecutar cada comando]**
 
 ```bash
@@ -111,6 +115,8 @@ docker compose version
 ```
 
 > "Importante: en este proyecto usamos **pnpm** para el frontend, no npm. pnpm es más rápido y maneja mejor las dependencias. Para el backend, usamos **venv** de Python, que es el gestor de entornos virtuales estándar.
+>
+> ⚠️ **Si estás en Windows**: usa **Git Bash** para todos los comandos. Todos los ejemplos de este video usan sintaxis Bash, y Git Bash los ejecuta igual que en Linux o macOS. Git Bash viene incluido cuando instalas Git desde git-scm.com.
 >
 > ¿Por qué hacemos esto? Porque nunca queremos instalar dependencias globalmente en el sistema. Cada proyecto necesita su propio entorno aislado para evitar conflictos entre versiones."
 
@@ -247,8 +253,10 @@ cd be
 # Crear el entorno virtual
 python3 -m venv .venv
 
-# Activarlo (Linux/Mac)
+# Activarlo — funciona en Linux, macOS y Windows con Git Bash
 source .venv/bin/activate
+# ⚠️ Si estás en Windows: usa Git Bash, no CMD ni PowerShell.
+#    El mismo comando (source .venv/bin/activate) funciona en Git Bash.
 
 # El prompt cambia → (.venv) be$
 # Eso confirma que estamos dentro del entorno virtual

@@ -53,6 +53,13 @@ docker --version
 docker compose version
 ```
 
+> 🖥️ **Usuarios de Windows — leer antes de continuar**
+> Todos los comandos de este documento usan sintaxis Bash (`source`, `export`, rutas con `/`, etc.).
+> Debes usar **Git Bash** como terminal — viene incluido al instalar
+> [Git para Windows](https://git-scm.com/download/win).
+> **No uses CMD ni PowerShell** — los comandos de activación del `venv` y demás no
+> funcionarán igual. En Git Bash, `source .venv/bin/activate` funciona directamente.
+
 También necesitas tener la base de datos PostgreSQL corriendo. Desde la **raíz del monorepo**:
 
 ```bash
@@ -135,6 +142,8 @@ python3 -m venv .venv
 
 # Activar el entorno virtual
 source .venv/bin/activate
+# ← Este comando funciona en Linux, macOS y Windows con Git Bash.
+#   Si usas Windows, abre Git Bash (no CMD ni PowerShell) y ejecuta el mismo comando.
 # Después de activar, el prompt cambia a algo como: (.venv) $
 
 # Verificar que Python apunta al del entorno (no al del sistema)
