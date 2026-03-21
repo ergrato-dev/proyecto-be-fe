@@ -7,7 +7,7 @@
   ni entenderían su propósito, arquitectura o convenciones.
 -->
 
-> **Proyecto educativo** — SENA, Ficha 3171599 | Febrero 2026
+> **Proyecto educativo** — SENA | Febrero 2026
 
 Sistema de autenticación completo para una empresa genérica **"NN"**, diseñado como ejercicio formativo.
 Incluye registro de usuarios, login, cambio de contraseña y recuperación por email.
@@ -16,14 +16,28 @@ Incluye registro de usuarios, login, cambio de contraseña y recuperación por e
 
 ## 📋 Tabla de Contenidos
 
-- [Stack Tecnológico](#-stack-tecnológico)
-- [Prerrequisitos](#-prerrequisitos)
-- [Instalación y Setup](#-instalación-y-setup)
-- [Ejecución](#-ejecución)
-- [Testing](#-testing)
-- [Estructura del Proyecto](#-estructura-del-proyecto)
-- [Convenciones](#-convenciones)
-- [Documentación Adicional](#-documentación-adicional)
+- [🔐 NN Auth System](#-nn-auth-system)
+  - [📋 Tabla de Contenidos](#-tabla-de-contenidos)
+  - [🛠️ Stack Tecnológico](#️-stack-tecnológico)
+  - [✅ Prerrequisitos](#-prerrequisitos)
+    - [Instalar pnpm (si no lo tienes)](#instalar-pnpm-si-no-lo-tienes)
+  - [🚀 Instalación y Setup](#-instalación-y-setup)
+    - [1. Clonar el repositorio](#1-clonar-el-repositorio)
+    - [2. Levantar la base de datos](#2-levantar-la-base-de-datos)
+    - [3. Configurar el Backend](#3-configurar-el-backend)
+    - [4. Configurar el Frontend](#4-configurar-el-frontend)
+  - [▶️ Ejecución](#️-ejecución)
+    - [Levantar todo el sistema (3 terminales)](#levantar-todo-el-sistema-3-terminales)
+  - [🧪 Testing](#-testing)
+    - [Backend](#backend)
+    - [Frontend](#frontend)
+    - [Linting](#linting)
+  - [📁 Estructura del Proyecto](#-estructura-del-proyecto)
+  - [📏 Convenciones](#-convenciones)
+  - [📚 Documentación Adicional](#-documentación-adicional)
+  - [🎓 Propósito Educativo](#-propósito-educativo)
+  - [⚠️ Exención de Responsabilidades](#️-exención-de-responsabilidades)
+  - [📄 Licencia](#-licencia)
 
 ---
 
@@ -277,6 +291,20 @@ Este proyecto está diseñado para **aprender haciendo**. Cada archivo, función
 
 ---
 
+## ⚠️ Exención de Responsabilidades
+
+Este proyecto es de naturaleza **exclusivamente educativa**, desarrollado como ejercicio formativo en el marco del SENA.
+
+- **No apto para producción** — El sistema no ha sido auditado ni endurecido para entornos productivos reales. No debe usarse para proteger datos sensibles de usuarios reales sin una revisión de seguridad profesional previa.
+- **Credenciales de ejemplo** — Las contraseñas, claves secretas y cadenas de conexión presentes en `.env.example` y en la documentación son únicamente ilustrativas. **Nunca usarlas en producción.**
+- **Sin garantía de disponibilidad** — El proyecto puede contener bugs o comportamientos no documentados propios de un entorno de aprendizaje.
+- **Uso de terceros** — El proyecto referencia servicios externos (Resend, Neon, Supabase, Railway) como ejemplos pedagógicos. El autor no tiene afiliación con dichos servicios ni garantiza su disponibilidad o condiciones de uso.
+- **Responsabilidad del aprendiz** — Cada aprendiz es responsable de comprender el código que ejecuta en su equipo y de no reutilizarlo sin entenderlo completamente.
+
+> Este material se provee **"tal cual"**, sin garantías explícitas ni implícitas de ningún tipo.
+
+---
+
 ## 📄 Licencia
 
-Proyecto educativo — SENA, Ficha 3171599. Uso exclusivamente académico.
+Proyecto educativo — SENA. Uso exclusivamente académico.
