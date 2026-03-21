@@ -71,10 +71,18 @@ class User(Base):
         nullable=False,
     )
 
-    # ¿Qué? Nombre completo del usuario.
-    # ¿Para qué? Mostrar el nombre en el perfil y en la interfaz del frontend.
-    # ¿Impacto? Campo requerido para personalizar la experiencia del usuario.
-    full_name: Mapped[str] = mapped_column(
+    # ¿Qué? Nombres del usuario (primer nombre, nombres de pila).
+    # ¿Para qué? Mostrar y tratar los nombres de forma independiente a los apellidos.
+    # ¿Impacto? Campo requerido — separa los nombres del usuario para mayor flexibilidad en UI.
+    first_name: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+
+    # ¿Qué? Apellidos del usuario.
+    # ¿Para qué? Tratar apellidos de forma independiente — útil para ordenamiento y saludos formales.
+    # ¿Impacto? Campo requerido junto con first_name para identificar completamente al usuario.
+    last_name: Mapped[str] = mapped_column(
         String(255),
         nullable=False,
     )

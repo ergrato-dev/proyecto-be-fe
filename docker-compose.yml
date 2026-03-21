@@ -152,7 +152,7 @@ services:
       # ¿Qué? Mapea el puerto 80 del Nginx del contenedor al puerto 80 del host.
       # ¿Para qué? Acceder al frontend desde el navegador en http://localhost o http://localhost:80.
       # ¿Impacto? Si el puerto 80 está ocupado, cambiar a "3000:80" y acceder en :3000.
-      - "80:80"
+      - "3000:80"
 
     depends_on:
       # ¿Qué? El servicio fe sólo arranca después de que be haya iniciado.

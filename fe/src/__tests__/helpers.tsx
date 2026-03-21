@@ -18,7 +18,8 @@ import type { ReactNode } from "react";
 export const mockUser: UserResponse = {
   id: "550e8400-e29b-41d4-a716-446655440000",
   email: "test@nn-company.com",
-  full_name: "Test User",
+  first_name: "Test",
+  last_name: "User",
   is_active: true,
   created_at: "2026-01-01T00:00:00Z",
   updated_at: "2026-01-01T00:00:00Z",

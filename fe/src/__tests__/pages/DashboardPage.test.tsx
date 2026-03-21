@@ -16,7 +16,9 @@ describe("DashboardPage", () => {
       authContext: { user: mockUser, isAuthenticated: true },
     });
 
-    expect(screen.getByText(`Bienvenido, ${mockUser.full_name}`)).toBeInTheDocument();
+    expect(
+      screen.getByText(`Bienvenido, ${mockUser.first_name} ${mockUser.last_name}`),
+    ).toBeInTheDocument();
   });
 
   // ¿Qué? Verifica que se muestra el email del usuario.

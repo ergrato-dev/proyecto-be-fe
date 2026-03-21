@@ -22,7 +22,7 @@ export function DashboardPage() {
       {/* ¿Qué? Saludo personalizado con el nombre del usuario. */}
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Bienvenido, {user?.full_name}
+          Bienvenido, {user?.first_name} {user?.last_name}
         </h1>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
           Panel de control de tu cuenta
@@ -40,7 +40,9 @@ export function DashboardPage() {
         <dl className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:gap-4">
             <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Nombre</dt>
-            <dd className="text-sm text-gray-900 dark:text-gray-100">{user?.full_name}</dd>
+            <dd className="text-sm text-gray-900 dark:text-gray-100">
+              {user?.first_name} {user?.last_name}
+            </dd>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:gap-4">

@@ -60,7 +60,7 @@ export function Navbar() {
             <>
               {/* ¿Qué? Nombre del usuario autenticado. */}
               <span className="hidden text-sm text-gray-600 dark:text-gray-400 sm:block">
-                {user.full_name}
+                {user.first_name} {user.last_name}
               </span>
 
               {/* ¿Qué? Botón de cerrar sesión con icono de Lucide. */}

@@ -16,7 +16,8 @@ describe("RegisterPage", () => {
     renderWithProviders(<RegisterPage />, { initialRoute: "/register" });
 
     expect(screen.getByRole("heading", { name: "Crear cuenta" })).toBeInTheDocument();
-    expect(screen.getByLabelText("Nombre completo")).toBeInTheDocument();
+    expect(screen.getByLabelText("Nombres")).toBeInTheDocument();
+    expect(screen.getByLabelText("Apellidos")).toBeInTheDocument();
     expect(screen.getByLabelText("Correo electrónico")).toBeInTheDocument();
     expect(screen.getByLabelText("Contraseña")).toBeInTheDocument();
     expect(screen.getByLabelText("Confirmar contraseña")).toBeInTheDocument();
@@ -34,7 +35,8 @@ describe("RegisterPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<RegisterPage />, { initialRoute: "/register" });
 
-    await user.type(screen.getByLabelText("Nombre completo"), "A");
+    await user.type(screen.getByLabelText("Nombres"), "A");
+    await user.type(screen.getByLabelText("Apellidos"), "B");
     await user.type(screen.getByLabelText("Correo electrónico"), "a@b.com");
     await user.type(screen.getByLabelText("Contraseña"), "Password1");
     await user.type(screen.getByLabelText("Confirmar contraseña"), "Password1");
@@ -48,7 +50,8 @@ describe("RegisterPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<RegisterPage />, { initialRoute: "/register" });
 
-    await user.type(screen.getByLabelText("Nombre completo"), "Test User");
+    await user.type(screen.getByLabelText("Nombres"), "Test");
+    await user.type(screen.getByLabelText("Apellidos"), "User");
     await user.type(screen.getByLabelText("Correo electrónico"), "a@b.com");
     await user.type(screen.getByLabelText("Contraseña"), "Ab1");
     await user.type(screen.getByLabelText("Confirmar contraseña"), "Ab1");
@@ -62,7 +65,8 @@ describe("RegisterPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<RegisterPage />, { initialRoute: "/register" });
 
-    await user.type(screen.getByLabelText("Nombre completo"), "Test User");
+    await user.type(screen.getByLabelText("Nombres"), "Test");
+    await user.type(screen.getByLabelText("Apellidos"), "User");
     await user.type(screen.getByLabelText("Correo electrónico"), "a@b.com");
     await user.type(screen.getByLabelText("Contraseña"), "Password1");
     await user.type(screen.getByLabelText("Confirmar contraseña"), "Password2");
@@ -81,7 +85,8 @@ describe("RegisterPage", () => {
       authContext: { register: registerMock },
     });
 
-    await user.type(screen.getByLabelText("Nombre completo"), "Juan Pérez");
+    await user.type(screen.getByLabelText("Nombres"), "Juan");
+    await user.type(screen.getByLabelText("Apellidos"), "Pérez");
     await user.type(screen.getByLabelText("Correo electrónico"), "juan@nn.com");
     await user.type(screen.getByLabelText("Contraseña"), "Password1");
     await user.type(screen.getByLabelText("Confirmar contraseña"), "Password1");
@@ -89,7 +94,8 @@ describe("RegisterPage", () => {
 
     expect(registerMock).toHaveBeenCalledWith({
       email: "juan@nn.com",
-      full_name: "Juan Pérez",
+      first_name: "Juan",
+      last_name: "Pérez",
       password: "Password1",
     });
   });
@@ -104,7 +110,8 @@ describe("RegisterPage", () => {
       authContext: { register: registerMock },
     });
 
-    await user.type(screen.getByLabelText("Nombre completo"), "Test User");
+    await user.type(screen.getByLabelText("Nombres"), "Test");
+    await user.type(screen.getByLabelText("Apellidos"), "User");
     await user.type(screen.getByLabelText("Correo electrónico"), "dup@nn.com");
     await user.type(screen.getByLabelText("Contraseña"), "Password1");
     await user.type(screen.getByLabelText("Confirmar contraseña"), "Password1");

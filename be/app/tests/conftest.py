@@ -165,7 +165,8 @@ def reset_rate_limiter() -> Generator[None, None, None]:
 # ¿Para qué? Reutilizar los mismos datos en múltiples tests sin duplicación.
 # ¿Impacto? Centralizar datos de prueba facilita cambiarlos si los requisitos cambian.
 TEST_USER_EMAIL = "test@nn-company.com"
-TEST_USER_FULL_NAME = "Test User"
+TEST_USER_FIRST_NAME = "TEST"
+TEST_USER_LAST_NAME = "USER"
 TEST_USER_PASSWORD = "TestPass123"
 UNVERIFIED_USER_EMAIL = "unverified@nn-company.com"
 
@@ -182,7 +183,8 @@ def test_user(db: Session) -> User:
     """
     user = User(
         email=TEST_USER_EMAIL,
-        full_name=TEST_USER_FULL_NAME,
+        first_name=TEST_USER_FIRST_NAME,
+        last_name=TEST_USER_LAST_NAME,
         hashed_password=hash_password(TEST_USER_PASSWORD),
         # ¿Qué? El usuario de prueba se crea con email ya verificado.
         # ¿Para qué? Los tests de login, change-password, etc. asumen un usuario activo y verificado.
@@ -280,7 +282,8 @@ def unverified_user(db: Session) -> User:
     """
     user = User(
         email=UNVERIFIED_USER_EMAIL,
-        full_name="Unverified User",
+        first_name="Unverified",
+        last_name="User",
         hashed_password=hash_password(TEST_USER_PASSWORD),
         is_email_verified=False,
     )

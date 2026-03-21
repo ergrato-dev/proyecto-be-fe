@@ -67,10 +67,15 @@ class UserCreate(BaseModel):
     # ¿Impacto? EmailStr rechaza emails inválidos (sin @, sin dominio, etc.).
     email: EmailStr
 
-    # ¿Qué? Nombre completo del usuario.
-    # ¿Para qué? Personalización de la experiencia en el frontend.
-    # ¿Impacto? Campo requerido — el frontend lo usa para saludar al usuario.
-    full_name: str
+    # ¿Qué? Nombres del usuario (primer nombre, nombres de pila).
+    # ¿Para qué? Personalización de la experiencia — el frontend usa first_name para saludar.
+    # ¿Impacto? Campo requerido — sin nombre, no se puede personalizar la interfaz.
+    first_name: str
+
+    # ¿Qué? Apellidos del usuario.
+    # ¿Para qué? Complementar la identidad del usuario junto con first_name.
+    # ¿Impacto? Campo requerido — permite mostrar el nombre completo cuando sea necesario.
+    last_name: str
 
     # ¿Qué? Contraseña en texto plano (solo viaja en el request, NUNCA se almacena así).
     # ¿Para qué? El backend la hashea con bcrypt antes de guardarla en la BD.
@@ -88,20 +93,23 @@ class UserCreate(BaseModel):
         """
         return _validate_password_strength(v)
 
-    @field_validator("full_name")
+    @field_validator("first_name", "last_name")
     @classmethod
-    def validate_full_name(cls, v: str) -> str:
-        """Valida que el nombre no esté vacío y no exceda el límite.
+    def validate_name_field(cls, v: str) -> str:
+        """Valida y normaliza los campos de nombre.
 
-        ¿Qué? Verifica que el nombre tenga contenido real y no sea solo espacios.
-        ¿Para qué? Evitar registros con nombres vacíos o excesivamente largos.
-        ¿Impacto? Sin esto, un usuario podría registrarse con nombre "   " (solo espacios).
+        ¿Qué? Aplica a first_name y last_name: strip de espacios, longitud mínima/máxima
+              y conversión a MAYÚSCULAS.
+        ¿Para qué? Garantizar consistencia en la BD — siempre se almacenan en uppercase,
+                  sin importar cómo los ingrese el usuario (minúsculas, mixto, etc.).
+        ¿Impacto? Sin la normalización, el mismo nombre "juan" y "Juan" y "JUAN" podrían
+                  coexistir con formatos distintos, dificultando búsquedas y comparaciones.
         """
-        v = v.strip()
+        v = v.strip().upper()
         if len(v) < 2:
-            raise ValueError("El nombre debe tener al menos 2 caracteres")
+            raise ValueError("El campo debe tener al menos 2 caracteres")
         if len(v) > 255:
-            raise ValueError("El nombre no puede exceder 255 caracteres")
+            raise ValueError("El campo no puede exceder 255 caracteres")
         return v
 
 
@@ -217,7 +225,8 @@ class UserResponse(BaseModel):
 
     id: uuid.UUID
     email: str
-    full_name: str
+    first_name: str
+    last_name: str
     is_active: bool
     # ¿Qué? Campo que indica si el usuario verificó su email al registrarse.
     # ¿Para qué? El frontend puede mostrar un aviso "verifica tu email" en el dashboard.

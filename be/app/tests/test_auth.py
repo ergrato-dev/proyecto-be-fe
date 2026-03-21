@@ -11,7 +11,8 @@ from fastapi.testclient import TestClient
 
 from app.tests.conftest import (
     TEST_USER_EMAIL,
-    TEST_USER_FULL_NAME,
+    TEST_USER_FIRST_NAME,
+    TEST_USER_LAST_NAME,
     TEST_USER_PASSWORD,
     UNVERIFIED_USER_EMAIL,
 )
@@ -43,7 +44,8 @@ class TestRegister:
             self.URL,
             json={
                 "email": "new@nn-company.com",
-                "full_name": "New User",
+                "first_name": "New",
+                "last_name": "User",
                 "password": "NewPass123",
             },
         )
@@ -51,7 +53,8 @@ class TestRegister:
         assert response.status_code == 201
         data = response.json()
         assert data["email"] == "new@nn-company.com"
-        assert data["full_name"] == "New User"
+        assert data["first_name"] == "NEW"
+        assert data["last_name"] == "USER"
         assert data["is_active"] is True
         # ¿Qué? Verificar que el email parte sin verificar tras el registro.
         # ¿Para qué? El usuario debe hacer clic en el enlace del email antes de poder loguearse.
@@ -79,7 +82,8 @@ class TestRegister:
             self.URL,
             json={
                 "email": TEST_USER_EMAIL,
-                "full_name": "Duplicate User",
+                "first_name": "Duplicate",
+                "last_name": "User",
                 "password": "TestPass123",
             },
         )
@@ -98,7 +102,8 @@ class TestRegister:
             self.URL,
             json={
                 "email": "weak@nn-company.com",
-                "full_name": "Weak User",
+                "first_name": "Weak",
+                "last_name": "User",
                 "password": "Ab1",
             },
         )
@@ -111,7 +116,8 @@ class TestRegister:
             self.URL,
             json={
                 "email": "weak@nn-company.com",
-                "full_name": "Weak User",
+                "first_name": "Weak",
+                "last_name": "User",
                 "password": "testpass123",
             },
         )
@@ -124,7 +130,8 @@ class TestRegister:
             self.URL,
             json={
                 "email": "weak@nn-company.com",
-                "full_name": "Weak User",
+                "first_name": "Weak",
+                "last_name": "User",
                 "password": "TESTPASS123",
             },
         )
@@ -137,7 +144,8 @@ class TestRegister:
             self.URL,
             json={
                 "email": "weak@nn-company.com",
-                "full_name": "Weak User",
+                "first_name": "Weak",
+                "last_name": "User",
                 "password": "TestPassword",
             },
         )
@@ -155,7 +163,8 @@ class TestRegister:
             self.URL,
             json={
                 "email": "not-an-email",
-                "full_name": "Bad Email",
+                "first_name": "Bad",
+                "last_name": "Email",
                 "password": "TestPass123",
             },
         )
@@ -168,7 +177,8 @@ class TestRegister:
             self.URL,
             json={
                 "email": "empty@nn-company.com",
-                "full_name": " ",
+                "first_name": " ",
+                "last_name": " ",
                 "password": "TestPass123",
             },
         )
@@ -186,7 +196,7 @@ class TestRegister:
             self.URL,
             json={
                 "email": "partial@nn-company.com",
-                "full_name": "Partial User",
+                "first_name": "Partial",
             },
         )
 
@@ -725,7 +735,8 @@ class TestGetMe:
         assert response.status_code == 200
         data = response.json()
         assert data["email"] == TEST_USER_EMAIL
-        assert data["full_name"] == TEST_USER_FULL_NAME
+        assert data["first_name"] == TEST_USER_FIRST_NAME
+        assert data["last_name"] == TEST_USER_LAST_NAME
         assert data["is_active"] is True
         assert "hashed_password" not in data
         assert "password" not in data

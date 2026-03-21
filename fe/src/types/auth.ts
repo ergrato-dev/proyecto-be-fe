@@ -14,11 +14,12 @@
 /**
  * ¿Qué? Datos necesarios para registrar un nuevo usuario.
  * ¿Para qué? Tipado del body enviado a POST /api/v1/auth/register.
- * ¿Impacto? Garantiza que el frontend siempre envíe email, full_name y password.
+ * ¿Impacto? Garantiza que el frontend siempre envíe email, first_name, last_name y password.
  */
 export interface RegisterRequest {
   email: string;
-  full_name: string;
+  first_name: string;
+  last_name: string;
   password: string;
 }
 
@@ -82,7 +83,8 @@ export interface RefreshTokenRequest {
 export interface UserResponse {
   id: string;
   email: string;
-  full_name: string;
+  first_name: string;
+  last_name: string;
   is_active: boolean;
   created_at: string;
   updated_at: string;

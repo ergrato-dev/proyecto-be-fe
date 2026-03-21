@@ -775,8 +775,10 @@ describe("DataTable — Exportación CSV y PDF", () => {
 
     // ¿Qué? Mockear URL.createObjectURL — no disponible en jsdom.
     // ¿Para qué? Evitar errores al intentar crear URLs de Blob.
-    global.URL.createObjectURL = vi.fn().mockReturnValue("blob:mock-url");
-    global.URL.revokeObjectURL = vi.fn();
+    // ¿Impacto? globalThis es el estándar browser/DOM; 'global' es exclusivo de Node.js
+    //           y no existe en los tipos DOM que usa este proyecto (tsconfig lib: DOM).
+    globalThis.URL.createObjectURL = vi.fn().mockReturnValue("blob:mock-url");
+    globalThis.URL.revokeObjectURL = vi.fn();
 
     // ¿Qué? Interceptar click() en <a> para capturar el atributo `download`.
     // ¿Para qué? jsdom no realiza descargas reales; verificamos que el nombre

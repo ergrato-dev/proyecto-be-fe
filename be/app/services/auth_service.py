@@ -82,7 +82,8 @@ async def register_user(db: Session, user_data: UserCreate) -> User:
     #           ataques de fuerza bruta contra hashes filtrados.
     new_user = User(
         email=user_data.email,
-        full_name=user_data.full_name,
+        first_name=user_data.first_name,
+        last_name=user_data.last_name,
         hashed_password=hash_password(user_data.password),
     )
 

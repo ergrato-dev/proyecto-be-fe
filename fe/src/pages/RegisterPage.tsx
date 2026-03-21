@@ -25,7 +25,8 @@ export function RegisterPage() {
 
   const [formData, setFormData] = useState({
     email: "",
-    full_name: "",
+    first_name: "",
+    last_name: "",
     password: "",
     confirmPassword: "",
   });
@@ -52,8 +53,12 @@ export function RegisterPage() {
       newErrors.email = "El correo es obligatorio";
     }
 
-    if (!formData.full_name || formData.full_name.trim().length < 2) {
-      newErrors.full_name = "El nombre debe tener al menos 2 caracteres";
+    if (!formData.first_name || formData.first_name.trim().length < 2) {
+      newErrors.first_name = "El nombre debe tener al menos 2 caracteres";
+    }
+
+    if (!formData.last_name || formData.last_name.trim().length < 2) {
+      newErrors.last_name = "El apellido debe tener al menos 2 caracteres";
     }
 
     if (formData.password.length < 8) {
@@ -84,7 +89,8 @@ export function RegisterPage() {
     try {
       await register({
         email: formData.email,
-        full_name: formData.full_name.trim(),
+        first_name: formData.first_name.trim(),
+        last_name: formData.last_name.trim(),
         password: formData.password,
       });
       navigate("/dashboard", { replace: true });
@@ -105,17 +111,34 @@ export function RegisterPage() {
       )}
 
       <form onSubmit={handleSubmit} noValidate>
-        <InputField
-          label="Nombre completo"
-          name="full_name"
-          type="text"
-          value={formData.full_name}
-          placeholder="Juan Pérez"
-          autoComplete="name"
-          icon={<User className="h-5 w-5" />}
-          error={errors.full_name}
-          onChange={handleChange}
-        />
+        {/* ¿Qué? Fila con dos inputs en paralelo: nombre y apellido. */}
+        {/* ¿Para qué? Separar nombres y apellidos para mayor claridad y flexibilidad en el sistema. */}
+        {/* ¿Impacto? El backend almacena ambos campos por separado en la BD. */}
+        <div className="grid grid-cols-2 gap-3">
+          <InputField
+            label="Nombres"
+            name="first_name"
+            type="text"
+            value={formData.first_name}
+            placeholder="Juan"
+            autoComplete="given-name"
+            icon={<User className="h-5 w-5" />}
+            error={errors.first_name}
+            onChange={handleChange}
+          />
+
+          <InputField
+            label="Apellidos"
+            name="last_name"
+            type="text"
+            value={formData.last_name}
+            placeholder="Pérez"
+            autoComplete="family-name"
+            icon={<User className="h-5 w-5" />}
+            error={errors.last_name}
+            onChange={handleChange}
+          />
+        </div>
 
         <InputField
           label="Correo electrónico"
