@@ -202,6 +202,31 @@ docker compose logs db
 >
 > En esta primera parte del `docker-compose.yml` también hay configurado el backend y el frontend para cuando queramos hacer deploy completo con Docker. Eso lo veremos al final."
 
+### 💡 ¿No tienes Docker? Alternativas para los aprendices
+
+**[Pantalla: mencionar opciones brevemente]**
+
+> "Si Docker no está disponible en tu máquina, hay dos alternativas para la base de datos:
+>
+> **Opción A — PostgreSQL instalado localmente:**
+> En Ubuntu: `sudo apt install postgresql`. En macOS: `brew install postgresql@17`.
+> Luego creamos el usuario y la base de datos con psql y configuramos `DATABASE_URL` en el `.env`.
+>
+> **Opción B — PostgreSQL en la nube (gratis):**
+> Servicios como **Neon**, **Supabase** o **Railway** ofrecen planes gratuitos.
+> Simplemente copiamos la connection string que nos dan y la pegamos en `DATABASE_URL`.
+>
+> Y para los emails, también hay una alternativa a Docker: **Mailpit binario standalone**.
+> Es un ejecutable único que descargamos de GitHub, lo corremos con `./mailpit` y captura
+> todos los emails en http://localhost:8025 — igual que en Docker, pero sin contenedores.
+> Los detalles están en la sección 19 del README del backend."
+
+### 💻 Puntos clave a resaltar (sección 4)
+
+- Docker simplifica la configuración pero no es el único camino
+- Sin Docker: PostgreSQL local o BD cloud + Mailpit binario
+- El frontend **nunca** necesita Docker para desarrollo local
+
 ---
 
 ---
@@ -256,10 +281,13 @@ SECRET_KEY=your-super-secret-key-change-in-production
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=15
 REFRESH_TOKEN_EXPIRE_DAYS=7
-MAIL_SERVER=smtp.example.com
-MAIL_PORT=587
-MAIL_USERNAME=noreply@nn-company.com
-MAIL_PASSWORD=your-mail-password
+RESEND_API_KEY=
+RESEND_FROM_EMAIL=onboarding@resend.dev
+RESEND_FROM_NAME=NN Auth System
+SMTP_HOST=
+SMTP_PORT=1025
+SMTP_USERNAME=
+SMTP_PASSWORD=
 FRONTEND_URL=http://localhost:5173
 ```
 
@@ -1266,9 +1294,18 @@ cd fe && pnpm dev
 
 ### Paso 3: Verificación de email
 
-> "Después del registro, simulamos la recepción del enlace de verificación y ejecutamos `POST /api/v1/auth/verify-email` con el token.
+> "Después del registro, el backend envió un email de verificación.
 >
-> En base de datos se marca el token como usado y el usuario pasa a `is_email_verified=true`."
+> **Con Docker Compose (Mailpit):** abrimos http://localhost:8025 y vemos el email capturado
+> en tiempo real. Hacemos clic en el botón 'Verificar mi cuenta' dentro del email.
+>
+> **Con Mailpit binario (sin Docker):** exactamente igual, http://localhost:8025.
+>
+> **Sin Mailpit:** el enlace aparece en los logs de uvicorn con el prefijo `📧 ENLACE`.
+> Lo copiamos y lo pegamos en el navegador. Es el modo más simple para pruebas rápidas.
+>
+> En la base de datos, se marca el token como usado y el usuario pasa a `is_email_verified=true`.
+> Solo con ese campo en `true` el login funciona."
 
 ### Paso 4: Login y tokens
 
@@ -1349,6 +1386,10 @@ cd fe && pnpm dev
 > 2. Endpoint de verificación de email integrado al flujo.
 > 3. Documentación de Fase 8 completada y enlazada.
 > 4. Guía de accesibilidad ARIA/WCAG consolidada para frontend.
+> 5. Sistema de email multi-backend: SMTP (Mailpit local) → Resend → logs de consola.
+>    - Mailpit permite probar emails sin cuenta ni dominio, solo descargando un binario.
+>    - Con Docker Compose: se levanta automáticamente con `docker compose up -d`.
+>    - Sin Docker: binario standalone en http://localhost:8025.
 >
 > En seguridad, ya tenemos rate limiting con `slowapi`, logging de auditoría para eventos sensibles y headers HTTP de hardening.
 >
@@ -1398,6 +1439,14 @@ docker compose up -d db
 
 # Base de datos — ver logs
 docker compose logs -f db
+
+# Mailpit — capturador de emails (con Docker)
+docker compose up -d mailpit
+# Web UI: http://localhost:8025
+
+# Mailpit — binario standalone (sin Docker)
+# Linux: curl -sSL https://github.com/axllent/mailpit/releases/latest/download/mailpit-linux-amd64.tar.gz | tar -xz && ./mailpit
+# macOS: brew install axllent/apps/mailpit && mailpit
 
 # Alembic — nueva migración
 cd be && source .venv/bin/activate && alembic revision --autogenerate -m "descripcion"

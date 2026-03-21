@@ -117,6 +117,16 @@ services:
       # ¿Impacto? env_file tiene menor prioridad que environment: — por eso estas variables
       #           NO deben estar en este bloque si el valor real está en be/.env.
 
+      # ─── Configuración de email — SMTP (Mailpit en desarrollo) ───
+      # ¿Qué? Apunta el backend al servicio Mailpit como servidor SMTP local.
+      # ¿Para qué? Mailpit captura TODOS los emails sin enviarlos a internet.
+      #            No requiere cuenta, ni dominio, ni configuración extra.
+      #            Ideal para aprendices y desarrollo en aula.
+      # ¿Impacto? Abrir http://localhost:8025 para ver los emails capturados en tiempo real.
+      #           Para deshabilitar Mailpit: eliminar estas dos líneas y levantar sin él.
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+
     ports:
       # ¿Qué? Mapea el puerto 8000 del contenedor al 8000 del host.
       # ¿Para qué? Permite acceder a la API y Swagger desde el host en http://localhost:8000.
@@ -169,6 +179,28 @@ services:
       # ¿Impacto? Fe es un servidor de archivos estáticos — puede funcionar sin be,
       #           pero el usuario vería errores de red inmediatamente.
       - be
+
+    networks:
+      - nn_auth_network
+
+  # ────────────────────────────
+  # 📧 Mailpit — Servidor SMTP local para desarrollo y pruebas
+  # ────────────────────────────
+  mailpit:
+    # ¿Qué? Mailpit es un servidor SMTP que captura emails en una bandeja web local.
+    # ¿Para qué? Permite probar envío de emails (verificación + recuperación) sin salir a internet.
+    #            No requiere cuenta, ni dominio registrado, ni configuración extra.
+    # ¿Impacto? Todos los emails enviados por el backend aparecen en http://localhost:8025.
+    #           NADA sale a internet — perfecto para desarrollo en clase o proyectos SENA.
+    image: axllent/mailpit:latest
+    container_name: nn_auth_mailpit
+    restart: unless-stopped
+
+    ports:
+      # Web UI — abrir en el navegador para ver todos los emails capturados
+      - "8025:8025"
+      # Puerto SMTP — el backend (be) envía emails aquí usando el hostname "mailpit"
+      - "1025:1025"
 
     networks:
       - nn_auth_network

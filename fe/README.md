@@ -1370,6 +1370,26 @@ const handleSubmit = async (e) => {
 //     - Muestra botón "Ir al inicio de sesión"
 ```
 
+### `VerifyEmailPage.tsx`
+
+```typescript
+// Lee el token del query string: const [searchParams] = useSearchParams()
+// const token = searchParams.get("token")
+//
+// Llama a POST /api/v1/auth/verify-email una sola vez.
+// useRef evita la doble llamada de React StrictMode (monta componentes 2 veces en desarrollo).
+//
+// Estado loading  → spinner mientras se verifica
+// Estado success  → Alert verde + botón "Ir al inicio de sesión"
+// Estado error    → Alert rojo + links a /login y /register
+//   (mensaje común: "Este enlace ya fue usado o ha expirado.")
+//
+// El token llega en el email de verificación enviado por el backend al registrarse:
+//   - Con Docker Compose (Mailpit): abrir http://localhost:8025 y hacer clic en el enlace.
+//   - Con Mailpit binario (sin Docker): igual, http://localhost:8025.
+//   - Sin Mailpit: copiar el enlace de los logs de uvicorn (prefijo 📧 ENLACE).
+```
+
 ---
 
 ## 17. Tests – Vitest + Testing Library
@@ -1598,13 +1618,32 @@ cd fe && pnpm dev
 
 # Flujo manual a probar en http://localhost:5173:
 # 1. /register      → Crear cuenta nueva
-# 2. /dashboard     → Ver perfil (auto-login después del registro)
-# 3. /change-password → Cambiar contraseña
-# 4. Logout         → Botón "Salir" en el navbar
-# 5. /login         → Iniciar sesión con credenciales originales
-# 6. /forgot-password → Solicitar recuperación (ver consola del backend por el token)
-# 7. /reset-password?token=xxx → Restablecer contraseña
+#    → el backend envía un email de verificación
+#    → con Mailpit (Docker): abrir http://localhost:8025 y hacer clic en "Verificar mi cuenta"
+#    → sin Mailpit: copiar el enlace de los logs de uvicorn (prefijo 📧 ENLACE)
+# 2. /verify-email?token=xxx → la página verifica el token automáticamente
+# 3. /login         → Iniciar sesión con las credenciales del registro
+# 4. /dashboard     → Ver perfil del usuario autenticado
+# 5. /change-password → Cambiar contraseña
+# 6. Logout         → Botón "Salir" en el navbar
+# 7. /forgot-password → Solicitar recuperación de contraseña
+#    → igual que el registro: el enlace llega a Mailpit o aparece en los logs
+# 8. /reset-password?token=xxx → Restablecer contraseña
 ```
+
+### Sin Docker — el frontend nunca necesita contenedores
+
+El servidor de desarrollo de Vite (`pnpm dev`) corre directamente en Node.js.
+No importa cómo esté corriendo el backend (Docker o uvicorn directo) — el comando
+del frontend siempre es el mismo:
+
+```bash
+# Solo necesitas que el backend esté accesible en http://localhost:8000
+pnpm dev   # → http://localhost:5173
+```
+
+> Consulta la sección **19. Ejecutar sin Docker** en el README del backend (`be/README.md`)
+> para instrucciones sobre cómo levantar PostgreSQL y Mailpit sin Docker.
 
 ---
 

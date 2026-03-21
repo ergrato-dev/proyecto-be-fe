@@ -15,26 +15,27 @@
 
 ## Índice
 
-| #   | Sección                                                                                     | Qué aprenderás              |
-| --- | ------------------------------------------------------------------------------------------- | --------------------------- |
-| 1   | [Prerrequisitos](#1-prerrequisitos)                                                         | Herramientas necesarias     |
-| 2   | [Estructura del backend](#2-estructura-del-backend)                                         | Cómo se organiza el código  |
-| 3   | [Entorno virtual Python](#3-entorno-virtual-python-venv)                                    | Aislamiento de dependencias |
-| 4   | [Dependencias (`requirements.txt`)](#4-dependencias-requirementstxt)                        | Cada librería y su rol      |
-| 5   | [Variables de entorno](#5-variables-de-entorno)                                             | Configuración segura        |
-| 6   | [Configuración (`config.py`)](#6-configuración-configpy)                                    | Pydantic Settings           |
-| 7   | [Base de datos (`database.py`)](#7-base-de-datos-databasepy)                                | SQLAlchemy engine y sesión  |
-| 8   | [Modelos ORM (`models/`)](#8-modelos-orm-models)                                            | Tablas en Python            |
-| 9   | [Migraciones con Alembic](#9-migraciones-con-alembic)                                       | Alterar la BD versionado    |
-| 10  | [Schemas Pydantic (`schemas/`)](#10-schemas-pydantic-schemas)                               | Validación de datos         |
-| 11  | [Seguridad (`utils/security.py`)](#11-seguridad-utilssecuritypy)                            | Hashing y JWT               |
-| 12  | [Dependencias inyectables (`dependencies.py`)](#12-dependencias-inyectables-dependenciespy) | get_db y get_current_user   |
-| 13  | [Servicios (`services/`)](#13-servicios-services)                                           | Lógica de negocio           |
-| 14  | [Routers y endpoints (`routers/`)](#14-routers-y-endpoints-routers)                         | La API REST                 |
-| 15  | [Utilidades adicionales (`utils/`)](#15-utilidades-adicionales-utils)                       | Email, rate limiting, logs  |
-| 16  | [Punto de entrada (`main.py`)](#16-punto-de-entrada-mainpy)                                 | FastAPI + middleware        |
-| 17  | [Tests con pytest](#17-tests-con-pytest)                                                    | Verificar que todo funciona |
-| 18  | [Ejecutar el servidor](#18-ejecutar-el-servidor)                                            | Comandos del día a día      |
+| #   | Sección                                                                                     | Qué aprenderás               |
+| --- | ------------------------------------------------------------------------------------------- | ---------------------------- |
+| 1   | [Prerrequisitos](#1-prerrequisitos)                                                         | Herramientas necesarias      |
+| 2   | [Estructura del backend](#2-estructura-del-backend)                                         | Cómo se organiza el código   |
+| 3   | [Entorno virtual Python](#3-entorno-virtual-python-venv)                                    | Aislamiento de dependencias  |
+| 4   | [Dependencias (`requirements.txt`)](#4-dependencias-requirementstxt)                        | Cada librería y su rol       |
+| 5   | [Variables de entorno](#5-variables-de-entorno)                                             | Configuración segura         |
+| 6   | [Configuración (`config.py`)](#6-configuración-configpy)                                    | Pydantic Settings            |
+| 7   | [Base de datos (`database.py`)](#7-base-de-datos-databasepy)                                | SQLAlchemy engine y sesión   |
+| 8   | [Modelos ORM (`models/`)](#8-modelos-orm-models)                                            | Tablas en Python             |
+| 9   | [Migraciones con Alembic](#9-migraciones-con-alembic)                                       | Alterar la BD versionado     |
+| 10  | [Schemas Pydantic (`schemas/`)](#10-schemas-pydantic-schemas)                               | Validación de datos          |
+| 11  | [Seguridad (`utils/security.py`)](#11-seguridad-utilssecuritypy)                            | Hashing y JWT                |
+| 12  | [Dependencias inyectables (`dependencies.py`)](#12-dependencias-inyectables-dependenciespy) | get_db y get_current_user    |
+| 13  | [Servicios (`services/`)](#13-servicios-services)                                           | Lógica de negocio            |
+| 14  | [Routers y endpoints (`routers/`)](#14-routers-y-endpoints-routers)                         | La API REST                  |
+| 15  | [Utilidades adicionales (`utils/`)](#15-utilidades-adicionales-utils)                       | Email, rate limiting, logs   |
+| 16  | [Punto de entrada (`main.py`)](#16-punto-de-entrada-mainpy)                                 | FastAPI + middleware         |
+| 17  | [Tests con pytest](#17-tests-con-pytest)                                                    | Verificar que todo funciona  |
+| 18  | [Ejecutar el servidor](#18-ejecutar-el-servidor)                                            | Comandos del día a día       |
+| 19  | [Ejecutar sin Docker](#19-ejecutar-sin-docker)                                              | Alternativa sin contenedores |
 
 ---
 
@@ -249,6 +250,17 @@ RESEND_API_KEY=
 # Email remitente (visible para el destinatario)
 RESEND_FROM_EMAIL=onboarding@resend.dev
 RESEND_FROM_NAME=NN Auth System
+
+# ── Email — SMTP (alternativa a Resend, sin cuenta ni dominio) ──
+# Con Docker Compose (automático): SMTP_HOST=mailpit ya está en docker-compose.yml
+# Sin Docker — Mailpit binario standalone: SMTP_HOST=localhost, SMTP_PORT=1025
+#   → Mailpit captura emails localmente, no los envía a internet
+#   → Ver todos los emails capturados en http://localhost:8025
+# Sin nada — solo logs: dejar SMTP_HOST vacío → enlace aparece en logs de uvicorn
+SMTP_HOST=
+SMTP_PORT=1025
+SMTP_USERNAME=
+SMTP_PASSWORD=
 
 # URL del frontend (se usa para construir los enlaces en los emails)
 FRONTEND_URL=http://localhost:5173
@@ -933,27 +945,48 @@ def change_password(
 
 ```python
 # app/utils/email.py — Fragmento pedagógico
-import asyncio
+# Backend de email — orden de prioridad:
+#   1. SMTP_HOST configurado  → smtplib stdlib (ideal para Mailpit local)
+#   2. RESEND_API_KEY          → SDK de Resend (requiere dominio verificado)
+#   3. Ninguno                 → imprime el enlace en los logs de uvicorn
+
+import asyncio, smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import resend
 from app.config import settings
 
-async def send_password_reset_email(email: str, token: str) -> None:
-    reset_url = f"{settings.FRONTEND_URL}/reset-password?token={token}"
+def _send_email_smtp(to_email: str, subject: str, html: str) -> None:
+    """Envía email via smtplib — funciona con Mailpit y cualquier servidor SMTP."""
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = subject
+    msg["From"] = f"{settings.RESEND_FROM_NAME} <{settings.RESEND_FROM_EMAIL}>"
+    msg["To"] = to_email
+    msg.attach(MIMEText(html, "html"))
+    with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
+        if settings.SMTP_USERNAME:             # Mailpit no requiere auth → se omite
+            server.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
+        server.send_message(msg)
 
-    # Modo desarrollo: si no hay API key, imprime el enlace en los logs
-    if not settings.RESEND_API_KEY:
-        logger.info(f"[DEV] Reset URL para {email}: {reset_url}")
+async def send_verification_email(email: str, token: str) -> None:
+    verification_url = f"{settings.FRONTEND_URL}/verify-email?token={token}"
+    subject = "NN Auth System — Verifica tu cuenta"
+    html = f'<a href="{verification_url}">Verificar mi cuenta</a>'
+
+    # 1. SMTP disponible (Mailpit en Docker o binario standalone)
+    if settings.SMTP_HOST:
+        await asyncio.to_thread(_send_email_smtp, email, subject, html)
         return
 
-    resend.api_key = settings.RESEND_API_KEY
-    params = {
-        "from": f"{settings.RESEND_FROM_NAME} <{settings.RESEND_FROM_EMAIL}>",
-        "to": [email],
-        "subject": "Restablecer contraseña — NN Auth System",
-        "html": f'<a href="{reset_url}">Haz clic aquí para restablecer tu contraseña</a>'
-    }
-    # asyncio.to_thread → ejecuta el SDK síncrono de Resend sin bloquear FastAPI
-    await asyncio.to_thread(resend.Emails.send, params)
+    # 2. Resend configurado (requiere dominio verificado)
+    if settings.RESEND_API_KEY:
+        params = {"from": f"{settings.RESEND_FROM_NAME} <{settings.RESEND_FROM_EMAIL}>",
+                  "to": [email], "subject": subject, "html": html}
+        await asyncio.to_thread(_send_email_sync, params)
+        return
+
+    # 3. Sin backend — mostrar enlace en los logs de uvicorn
+    logger.info("📧 ENLACE DE VERIFICACIÓN — Para: %s — Enlace: %s", email, verification_url)
 ```
 
 > **¿Por qué `asyncio.to_thread()`?**
@@ -1246,6 +1279,96 @@ pytest --cov=app --cov-report=term-missing -v
 # 6. Arrancar el servidor
 uvicorn app.main:app --reload
 ```
+
+---
+
+## 19. Ejecutar sin Docker
+
+Si Docker no está disponible en tu entorno (permisos, recursos, o preferencia),
+el sistema puede correr completamente sin contenedores.
+
+### 19.1 Opción A — PostgreSQL instalado localmente
+
+```bash
+# Ubuntu / Debian
+sudo apt update && sudo apt install -y postgresql
+
+# macOS (Homebrew)
+brew install postgresql@17 && brew services start postgresql@17
+
+# Crear usuario y base de datos
+sudo -u postgres psql <<SQL
+CREATE USER nn_user WITH PASSWORD 'nn_password';
+CREATE DATABASE nn_auth_db OWNER nn_user;
+\q
+SQL
+```
+
+Edita `be/.env`:
+
+```bash
+DATABASE_URL=postgresql://nn_user:nn_password@localhost:5432/nn_auth_db
+```
+
+### 19.2 Opción B — Base de datos cloud gratuita
+
+Servicios como **[Neon](https://neon.tech)**, **[Supabase](https://supabase.com)** o
+**[Railway](https://railway.app)** ofrecen planes gratuitos de PostgreSQL.
+
+1. Crear una cuenta y un proyecto en cualquiera de esos servicios.
+2. Copiar la **connection string** que te dan (formato `postgresql://...`).
+3. Pegarla en `be/.env` como `DATABASE_URL`:
+
+```bash
+# Ejemplo (Neon)
+DATABASE_URL=postgresql://usuario:contraseña@ep-xxx.us-east-1.aws.neon.tech/nn_auth_db
+```
+
+### 19.3 Email sin Docker — Mailpit binario standalone
+
+[Mailpit](https://github.com/axllent/mailpit) también funciona como binario independiente,
+sin necesitar Docker:
+
+```bash
+# Linux (64-bit)
+curl -sSL https://github.com/axllent/mailpit/releases/latest/download/mailpit-linux-amd64.tar.gz \
+  | tar -xz
+chmod +x mailpit
+./mailpit
+# → SMTP en localhost:1025 | Web UI en http://localhost:8025
+
+# macOS (Homebrew)
+brew install axllent/apps/mailpit
+mailpit
+```
+
+Luego en `be/.env`:
+
+```bash
+SMTP_HOST=localhost
+SMTP_PORT=1025
+SMTP_USERNAME=
+SMTP_PASSWORD=
+```
+
+### 19.4 Flujo completo sin Docker
+
+```bash
+# Terminal 1 — Mailpit standalone (para capturar emails, opcional)
+./mailpit
+
+# Terminal 2 — Backend
+cd be && source .venv/bin/activate
+alembic upgrade head
+uvicorn app.main:app --reload
+
+# Terminal 3 — Frontend
+cd fe && pnpm dev
+```
+
+> **Sin Mailpit:** Si `SMTP_HOST` está vacío y no hay `RESEND_API_KEY`, el enlace de
+> verificación aparece en los logs de uvicorn con el prefijo `📧 ENLACE`.
+> Cópialo y ábrelo en el navegador manualmente — es el modo más simple para pruebas rápidas.
 
 ---
 

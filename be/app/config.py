@@ -105,6 +105,28 @@ class Settings(BaseSettings):
     RESEND_FROM_NAME: str = "NN Auth System"
 
     # ────────────────────────────
+    # 📧 Email — SMTP (alternativa a Resend, sin cuenta ni dominio)
+    # ────────────────────────────
+    # ¿Qué? Configuración del servidor SMTP para envío de emails con smtplib (stdlib de Python).
+    # ¿Para qué? Si SMTP_HOST está configurado, se usa en lugar de Resend.
+    #           En Docker con Mailpit: SMTP_HOST="mailpit" (hostname del servicio en la red Docker).
+    #           En producción con Gmail: SMTP_HOST="smtp.gmail.com", SMTP_PORT=587.
+    # ¿Impacto? Si SMTP_HOST está vacío Y RESEND_API_KEY está vacío → emails solo en logs de consola.
+    SMTP_HOST: str = ""
+
+    # ¿Qué? Puerto del servidor SMTP.
+    # ¿Para qué? Mailpit escucha en 1025; Gmail usa 587 (STARTTLS); el puerto 25 suele estar bloqueado.
+    # ¿Impacto? Un puerto incorrecto causará un error de conexión y el email no se enviará.
+    SMTP_PORT: int = 1025
+
+    # ¿Qué? Credenciales opcionales para autenticación SMTP.
+    # ¿Para qué? Mailpit no requiere autenticación (dejar vacíos). Gmail sí requiere credenciales.
+    # ¿Impacto? Para Gmail, usar una "contraseña de aplicación" generada en Google Account Settings,
+    #           nunca la contraseña personal. OWASP A02: no hardcodear credenciales en el código.
+    SMTP_USERNAME: str = ""
+    SMTP_PASSWORD: str = ""
+
+    # ────────────────────────────
     # 🌐 URLs
     # ────────────────────────────
     # ¿Qué? URL base del frontend.
