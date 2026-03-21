@@ -26,6 +26,12 @@ interface InputFieldProps {
    *  ¿Para qué? Mejorar la UX/UI dando contexto visual sobre el tipo de campo.
    *  ¿Impacto? Un icono de sobre para email, candado para password, etc. */
   icon?: ReactNode;
+  /** ¿Qué? Bloquea pegar, copiar, cortar y arrastrar texto en el campo.
+   *  ¿Para qué? Campos de confirmación (correo, contraseña) exigen que el usuario
+   *             escriba el valor a mano para garantizar que lo conoce y lo recuerda.
+   *  ¿Impacto? Previene el error silencioso más común: copiar un dato incorrecto
+   *            y pegarlo dos veces — el error solo se detectaría al intentar acceder. */
+  disablePaste?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -44,6 +50,7 @@ export function InputField({
   placeholder,
   autoComplete,
   icon,
+  disablePaste = false,
   onChange,
 }: InputFieldProps) {
   // ¿Qué? Estado para mostrar/ocultar contraseña.
@@ -91,6 +98,15 @@ export function InputField({
           onChange={onChange}
           aria-invalid={!!error}
           aria-describedby={error ? `${name}-error` : undefined}
+          // ¿Qué? Bloquea pegar, copiar, cortar y arrastrar cuando disablePaste=true.
+          // ¿Para qué? Garantizar que el usuario escribe el valor manualmente — aplica en
+          //            campos de confirmación de correo y contraseña.
+          // ¿Impacto? Sin esto, se podría pegar el mismo dato incorrecto dos veces sin darse cuenta.
+          //           onDrop cubre el arrastre de texto como vía alternativa de "pegar".
+          onPaste={disablePaste ? (e) => e.preventDefault() : undefined}
+          onCopy={disablePaste ? (e) => e.preventDefault() : undefined}
+          onCut={disablePaste ? (e) => e.preventDefault() : undefined}
+          onDrop={disablePaste ? (e) => e.preventDefault() : undefined}
           className={`block w-full rounded-lg border ${icon ? "pl-10" : "px-3"} ${isPassword ? "pr-10" : icon ? "pr-3" : ""} py-2.5 text-sm transition-colors duration-200 placeholder:text-gray-400 focus:outline-none focus:ring-2 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500 ${
             error
               ? "border-red-500 focus:border-red-500 focus:ring-red-500/20 dark:border-red-400 dark:focus:ring-red-400/20"

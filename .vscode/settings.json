@@ -42,5 +42,18 @@
     "**/.pytest_cache": true,
     "**/.ruff_cache": true,
     "**/node_modules": true
-  }
+  },
+  "sqltools.connections": [
+    {
+      "ssh": "Disabled",
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "be-fe",
+      "database": "nn_auth_db",
+      "username": "nn_user",
+      "password": "nn_password"
+    }
+  ]
 }

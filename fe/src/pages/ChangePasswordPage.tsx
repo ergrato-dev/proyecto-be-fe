@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { InputField } from "@/components/ui/InputField";
 import { Button } from "@/components/ui/Button";
 import { Alert } from "@/components/ui/Alert";
+import { PasswordStrengthIndicator } from "@/components/ui/PasswordStrengthIndicator";
 
 /**
  * ¿Qué? Formulario de cambio de contraseña con validación y feedback.
@@ -138,6 +139,11 @@ export function ChangePasswordPage() {
             error={errors.new_password}
             onChange={handleChange}
           />
+
+          {/* ¿Qué? Indicador de fortaleza para la nueva contraseña. */}
+          {/* ¿Para qué? El usuario puede ver si su nueva contraseña es suficientemente segura. */}
+          {/* ¿Impacto? Misma lógica que en registro — 4 niveles de fortaleza. */}
+          <PasswordStrengthIndicator password={formData.new_password} />
 
           <InputField
             label="Confirmar nueva contraseña"

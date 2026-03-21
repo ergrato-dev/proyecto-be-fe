@@ -78,6 +78,13 @@ services:
     container_name: nn_auth_be
     restart: unless-stopped
 
+    # ¿Qué? Carga las variables de entorno desde be/.env al contenedor.
+    # ¿Para qué? Permite usar credenciales reales (RESEND_API_KEY, etc.) sin hardcodearlas
+    #            en este archivo. Las variables en `environment:` tienen PRIORIDAD sobre env_file.
+    # ¿Impacto? be/.env no se versiona en git — cada desarrollador configura sus propias keys.
+    env_file:
+      - ./be/.env
+
     environment:
       # ¿Qué? URL de conexión a PostgreSQL usando el hostname del servicio `db`.
       # ¿Para qué? Dentro de la red Docker, los servicios se referencian por su nombre,
@@ -96,18 +103,19 @@ services:
       ACCESS_TOKEN_EXPIRE_MINUTES: 15
       REFRESH_TOKEN_EXPIRE_DAYS: 7
 
-      # ¿Qué? URL del frontend — usada en el email de recuperación de contraseña.
+      # ¿Qué? URL del frontend — usada en el email de recuperación de contraseña y en CORS.
       # ¿Para qué? Construir el enlace de reset: {FRONTEND_URL}/reset-password?token=...
-      # ¿Impacto? Si apunta a una URL incorrecta, el enlace en el email no funcionará.
-      FRONTEND_URL: http://localhost:80
+      #            y permitir que el navegador envíe peticiones desde ese origen al backend.
+      # ¿Impacto? Debe coincidir con el puerto expuesto en el mapeo del servicio `fe` (3000:80).
+      #           Si cambia el puerto del host (ej: "8080:80"), actualizar este valor también.
+      FRONTEND_URL: http://localhost:3000
 
       # ─── Configuración de email — Resend ───
-      # ¿Qué? API key de Resend para envío de emails (verificación de cuenta + recuperación).
-      # ¿Para qué? Sin esto, los emails no se envían (solo se registran en logs del servidor).
-      # ¿Impacto? Para activar el envío real, reemplazar con tu API key de https://resend.com
-      RESEND_API_KEY: ${RESEND_API_KEY:-}
-      RESEND_FROM_EMAIL: ${RESEND_FROM_EMAIL:-onboarding@resend.dev}
-      RESEND_FROM_NAME: "NN Auth System"
+      # ¿Qué? Las variables RESEND_* se cargan desde ./be/.env vía env_file (ver arriba).
+      # ¿Para qué? No sobreescribir los valores reales con cadenas vacías — si se definen
+      #            aquí con ${RESEND_API_KEY:-}, resuelven a "" y anulan lo que viene de env_file.
+      # ¿Impacto? env_file tiene menor prioridad que environment: — por eso estas variables
+      #           NO deben estar en este bloque si el valor real está en be/.env.
 
     ports:
       # ¿Qué? Mapea el puerto 8000 del contenedor al 8000 del host.

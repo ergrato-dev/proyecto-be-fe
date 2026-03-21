@@ -88,6 +88,16 @@ export async function resetPassword(data: ResetPasswordRequest): Promise<Message
 }
 
 /**
+ * ¿Qué? Verifica la dirección de email usando el token recibido en el correo de registro.
+ * ¿Para qué? Enviar POST /api/v1/auth/verify-email con el token UUID del enlace de verificación.
+ * ¿Impacto? Activa is_email_verified=True en la BD — sin esto el usuario no puede iniciar sesión.
+ */
+export async function verifyEmail(token: string): Promise<MessageResponse> {
+  const response = await api.post<MessageResponse>(`${AUTH_PREFIX}/verify-email`, { token });
+  return response.data;
+}
+
+/**
  * ¿Qué? Obtiene el perfil del usuario autenticado.
  * ¿Para qué? Enviar GET /api/v1/users/me con el access token en el header.
  * ¿Impacto? Se usa al cargar la app para verificar si el usuario está logueado.

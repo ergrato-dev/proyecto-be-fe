@@ -129,6 +129,20 @@ async def send_verification_email(email: str, token: str) -> None:
         # ¿Para qué? Un fallo de Resend no debe impedir que el usuario se registre.
         # ¿Impacto? El usuario puede solicitar reenvío del email (funcionalidad futura).
         logger.error("❌ Error enviando email de verificación a %s: %s", email, exc)
+        # ¿Qué? Si Resend falla (ej: dominio no verificado, límite de envío), mostrar el enlace en logs.
+        # ¿Para qué? Permitir verificación manual durante desarrollo sin un dominio configurado en Resend.
+        # ¿Impacto? El desarrollador puede copiar el enlace del log y abrirlo manualmente.
+        logger.info(
+            "\n%s\n"
+            "📧 ENLACE DE VERIFICACIÓN (fallback — Resend falló)\n"
+            "   Para: %s\n"
+            "   Enlace: %s\n"
+            "%s",
+            "=" * 60,
+            email,
+            verification_url,
+            "=" * 60,
+        )
 
 
 async def send_password_reset_email(email: str, token: str) -> None:
@@ -202,4 +216,18 @@ async def send_password_reset_email(email: str, token: str) -> None:
         logger.info("✅ Email de recuperación enviado a %s", email)
     except Exception as exc:
         logger.error("❌ Error enviando email de recuperación a %s: %s", email, exc)
+        # ¿Qué? Fallback: mostrar el enlace en logs cuando Resend falla.
+        # ¿Para qué? Permitir recuperación manual durante desarrollo sin dominio verificado.
+        # ¿Impacto? El desarrollador puede copiar el enlace del log y usarlo manualmente.
+        logger.info(
+            "\n%s\n"
+            "📧 ENLACE DE RECUPERACIÓN (fallback — Resend falló)\n"
+            "   Para: %s\n"
+            "   Enlace: %s\n"
+            "%s",
+            "=" * 60,
+            email,
+            reset_url,
+            "=" * 60,
+        )
 

@@ -19,6 +19,7 @@ import { DashboardPage } from "@/pages/DashboardPage";
 import { ChangePasswordPage } from "@/pages/ChangePasswordPage";
 import { ForgotPasswordPage } from "@/pages/ForgotPasswordPage";
 import { ResetPasswordPage } from "@/pages/ResetPasswordPage";
+import { VerifyEmailPage } from "@/pages/VerifyEmailPage";
 import { DataTableDemoPage } from "@/pages/DataTableDemoPage";
 
 /**
@@ -41,6 +42,10 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          {/* ¿Qué? Ruta para verificar el email al hacer clic en el enlace del correo. */}
+          {/* ¿Para qué? Captura el token de la URL y lo envía al backend para activar la cuenta. */}
+          {/* ¿Impacto? Sin esta ruta, los usuarios no pueden completar el registro. */}
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
 
           {/* ¿Qué? Ruta de demo del componente DataTable (acceso público, sin auth). */}
           {/* ¿Para qué? Demostrar todas las funcionalidades del componente en un sandbox. */}

@@ -7,12 +7,13 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { User, Mail, Lock, KeyRound } from "lucide-react";
+import { User, Mail, MailCheck, Lock, KeyRound } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { InputField } from "@/components/ui/InputField";
 import { Button } from "@/components/ui/Button";
 import { Alert } from "@/components/ui/Alert";
+import { PasswordStrengthIndicator } from "@/components/ui/PasswordStrengthIndicator";
 
 /**
  * ¿Qué? Página de registro con validación de campos y feedback de errores.
@@ -25,6 +26,7 @@ export function RegisterPage() {
 
   const [formData, setFormData] = useState({
     email: "",
+    confirmEmail: "",
     first_name: "",
     last_name: "",
     password: "",
@@ -51,6 +53,16 @@ export function RegisterPage() {
 
     if (!formData.email) {
       newErrors.email = "El correo es obligatorio";
+    }
+
+    // ¿Qué? Validar que el correo de confirmación coincida con el principal.
+    // ¿Para qué? El usuario debe haber escrito el mismo correo dos veces de forma manual.
+    // ¿Impacto? Previene registros con errores tipográficos que bloquearían la cuenta
+    //           (el email de verificación llegaría a una dirección incorrecta).
+    if (!formData.confirmEmail) {
+      newErrors.confirmEmail = "Debes confirmar tu correo electrónico";
+    } else if (formData.email !== formData.confirmEmail) {
+      newErrors.confirmEmail = "Los correos electrónicos no coinciden";
     }
 
     if (!formData.first_name || formData.first_name.trim().length < 2) {
@@ -152,6 +164,24 @@ export function RegisterPage() {
           onChange={handleChange}
         />
 
+        {/* ¿Qué? Campo de confirmación del correo electrónico con pegado deshabilitado. */}
+        {/* ¿Para qué? Obligar al usuario a escribir el correo dos veces de forma manual, */}
+        {/*            garantizando que la dirección es la correcta y que la conoce de memoria. */}
+        {/* ¿Impacto? Evita el error clásico de registrarse con un typo en el email — */}
+        {/*            lo que impediría recibir el enlace de verificación. */}
+        <InputField
+          label="Confirmar correo electrónico"
+          name="confirmEmail"
+          type="email"
+          value={formData.confirmEmail}
+          placeholder="Repite tu correo"
+          autoComplete="off"
+          icon={<MailCheck className="h-5 w-5" />}
+          error={errors.confirmEmail}
+          onChange={handleChange}
+          disablePaste
+        />
+
         <InputField
           label="Contraseña"
           name="password"
@@ -164,6 +194,11 @@ export function RegisterPage() {
           onChange={handleChange}
         />
 
+        {/* ¿Qué? Indicador visual de fortaleza de contraseña en tiempo real. */}
+        {/* ¿Para qué? Guiar al usuario a construir una contraseña segura antes de enviar. */}
+        {/* ¿Impacto? No se muestra si el campo está vacío — se activa al primer carácter. */}
+        <PasswordStrengthIndicator password={formData.password} />
+
         <InputField
           label="Confirmar contraseña"
           name="confirmPassword"
@@ -174,6 +209,7 @@ export function RegisterPage() {
           icon={<KeyRound className="h-5 w-5" />}
           error={errors.confirmPassword}
           onChange={handleChange}
+          disablePaste
         />
 
         <div className="mt-2 flex justify-end">

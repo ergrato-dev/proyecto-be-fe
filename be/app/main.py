@@ -9,6 +9,8 @@ Descripción: Punto de entrada de la aplicación FastAPI — configura y arranca
 
 from contextlib import asynccontextmanager
 from collections.abc import AsyncGenerator
+import logging
+import sys
 
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -44,6 +46,20 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
               El código después de `yield` se ejecuta al CERRAR.
     """
     # --- Startup ---
+    # ¿Qué? Configura el logger del paquete `app` con un StreamHandler a stdout.
+    # ¿Para qué? Uvicorn NO agrega handlers al root logger — solo configura sus propios
+    #            loggers (uvicorn, uvicorn.access). Sin un handler explícito, los logs
+    #            INFO/ERROR de `app.utils.email`, `app.services.*`, etc. se pierden.
+    # ¿Impacto? Igual que audit_log.py que sí añade su StreamHandler, esto garantiza
+    #           que `logger.info/error/warning` del paquete `app` aparezcan en
+    #           `docker logs nn_auth_be`.
+    app_logger = logging.getLogger("app")
+    app_logger.setLevel(logging.INFO)
+    if not app_logger.handlers:
+        _handler = logging.StreamHandler(sys.stdout)
+        _handler.setFormatter(logging.Formatter("%(name)s - %(levelname)s - %(message)s"))
+        app_logger.addHandler(_handler)
+        app_logger.propagate = False
     print("🚀 NN Auth System — Backend iniciando...")
     print(f"📡 CORS habilitado para: {settings.FRONTEND_URL}")
     yield
