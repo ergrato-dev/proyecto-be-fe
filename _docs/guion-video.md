@@ -99,6 +99,7 @@
 
 **[Terminal: ejecutar cada comando]**
 
+**💻 Terminal**
 ```bash
 # 1. Python 3.12 o superior
 python3 --version
@@ -166,6 +167,7 @@ docker compose version
 
 **[Leer y explicar el archivo `docker-compose.yml`]**
 
+**📄 `docker-compose.yml`**
 ```yaml
 services:
   db:
@@ -175,6 +177,7 @@ services:
 
 > "Aquí configuramos el servicio `db` usando la imagen oficial de PostgreSQL 17, variante Alpine — que es la más liviana. Le damos el nombre `nn_auth_db` al contenedor para poder identificarlo fácilmente."
 
+**📄 `docker-compose.yml`**
 ```yaml
 environment:
   POSTGRES_USER: nn_user
@@ -184,6 +187,7 @@ environment:
 
 > "Estas variables de entorno son las que PostgreSQL usa al inicializarse por primera vez. Crean el usuario, la contraseña y la base de datos. **Importante**: estos valores son solo para desarrollo local. En producción, nunca hardcodeamos credenciales — usamos secrets de Docker o variables de entorno seguras."
 
+**📄 `docker-compose.yml`**
 ```yaml
 ports:
   - "5432:5432"
@@ -197,6 +201,7 @@ volumes:
 
 **[Terminal: levantar el contenedor]**
 
+**💻 Terminal**
 ```bash
 # Desde la raíz del proyecto
 docker compose up -d
@@ -255,6 +260,7 @@ docker compose logs db
 
 **[Pantalla: terminal, dentro de la carpeta `be/`]**
 
+**💻 Terminal**
 ```bash
 cd be
 
@@ -291,6 +297,7 @@ pip install -r requirements.txt
 
 **[Abrir `be/.env.example`]**
 
+**💻 Terminal**
 ```bash
 DATABASE_URL=postgresql://nn_user:nn_password@localhost:5432/nn_auth_db
 SECRET_KEY=your-super-secret-key-change-in-production
@@ -309,6 +316,7 @@ FRONTEND_URL=http://localhost:5173
 
 > "El archivo `.env.example` es una plantilla — le muestra a cualquier desarrollador qué variables necesita configurar. El archivo real `.env` está en el `.gitignore` y nunca se versiona, porque contiene credenciales reales."
 
+**💻 Terminal**
 ```bash
 # Crear el .env a partir del ejemplo
 cp .env.example .env
@@ -319,6 +327,7 @@ cp .env.example .env
 
 > "Este es uno de los archivos más importantes del proyecto: la configuración centralizada. Usamos `pydantic-settings` para cargar las variables del `.env` y validarlas automáticamente."
 
+**📄 `be/app/config.py`**
 ```python
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -339,6 +348,7 @@ class Settings(BaseSettings):
 
 > "Este módulo configura la conexión a PostgreSQL. Tres piezas clave:"
 
+**📄 `be/app/database.py`**
 ```python
 engine = create_engine(
     settings.DATABASE_URL,
@@ -351,6 +361,7 @@ engine = create_engine(
 >
 > `pool_pre_ping=True` hace una verificación rápida antes de usar una conexión para asegurarse de que sigue activa. Esto previene errores de 'conexión cerrada' después de períodos de inactividad."
 
+**📄 `be/app/database.py`**
 ```python
 SessionLocal = sessionmaker(
     autocommit=False,
@@ -363,6 +374,7 @@ SessionLocal = sessionmaker(
 >
 > `autocommit=False` es crucial: los cambios **no** se guardan automáticamente. Tenemos que llamar `db.commit()` explícitamente. Esto nos da control total sobre las transacciones — si algo falla a la mitad, podemos hacer rollback."
 
+**📄 `be/app/database.py`**
 ```python
 class Base(DeclarativeBase):
     pass
@@ -376,6 +388,7 @@ class Base(DeclarativeBase):
 
 > "El punto de entrada de la aplicación. Aquí creamos la instancia de FastAPI, configuramos CORS y registramos los routers."
 
+**📄 `be/app/main.py`**
 ```python
 _is_production = settings.ENVIRONMENT == "production"
 
@@ -390,6 +403,7 @@ app = FastAPI(
 
 > "Los metadatos del constructor se muestran en Swagger UI, pero ahora con control por entorno. En desarrollo (`ENVIRONMENT=development`) tenemos `/docs` y `/redoc`; en producción se deshabilitan para no exponer la superficie de la API."
 
+**📄 `be/app/main.py`**
 ```python
 app.add_middleware(
     CORSMiddleware,
@@ -404,6 +418,7 @@ app.add_middleware(
 >
 > Fijense que solo permitimos el origen de nuestro frontend y además limitamos métodos y headers al mínimo necesario. Esta configuración reduce exposición y sigue OWASP A05 (Security Misconfiguration)."
 
+**📄 `be/app/main.py`**
 ```python
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
@@ -413,6 +428,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 **[Terminal: arrancar el backend]**
 
+**💻 Terminal**
 ```bash
 cd be
 source .venv/bin/activate
@@ -433,6 +449,7 @@ uvicorn app.main:app --reload
 
 > "Los modelos ORM son clases Python que representan tablas en la base de datos. SQLAlchemy traduce las operaciones sobre estos objetos a SQL automáticamente — a eso se le llama ORM, Object-Relational Mapping."
 
+**📄 `be/app/models/user.py`**
 ```python
 class User(Base):
     __tablename__ = "users"
@@ -449,6 +466,7 @@ class User(Base):
 > 1. No revela cuántos usuarios tiene el sistema — con IDs numéricos, si tu ID es 1042, sabes que hay al menos 1042 usuarios.
 > 2. No son predecibles — no se puede adivinar el ID de otro usuario."
 
+**📄 `be/app/models/user.py`**
 ```python
     email: Mapped[str] = mapped_column(
         String(255),
@@ -460,6 +478,7 @@ class User(Base):
 
 > "`unique=True` — no pueden existir dos usuarios con el mismo email. `index=True` — PostgreSQL crea un índice en esta columna, lo que acelera las búsquedas por email. El login hace una búsqueda por email en cada petición, así que el índice es esencial para el rendimiento."
 
+**📄 `be/app/models/user.py`**
 ```python
     hashed_password: Mapped[str] = mapped_column(
         String(255),
@@ -469,6 +488,7 @@ class User(Base):
 
 > "**Hashed password** — la contraseña almacenada es un hash, no el texto original. Un hash es el resultado de una función matemática unidireccional: puedes ir de contraseña a hash, pero no de hash a contraseña. Incluso si alguien roba la base de datos, las contraseñas no se pueden recuperar."
 
+**📄 `be/app/models/user.py`**
 ```python
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -484,6 +504,7 @@ class User(Base):
 
 > "Para el flujo de 'olvidé mi contraseña', necesitamos una tabla adicional que almacene tokens temporales de un solo uso."
 
+**📄 `be/app/models/password_reset_token.py`**
 ```python
 class PasswordResetToken(Base):
     __tablename__ = "password_reset_tokens"
@@ -511,6 +532,7 @@ class PasswordResetToken(Base):
 
 > "Los modelos definen la estructura, pero ¿cómo la creamos en la base de datos real? Con **Alembic** — el control de versiones para esquemas de base de datos. Igual que git gestiona versiones del código, Alembic gestiona versiones de la estructura de la BD."
 
+**💻 Terminal**
 ```bash
 # Así se inicializa Alembic (ya está hecho en este proyecto)
 # alembic init alembic
@@ -545,6 +567,7 @@ alembic history
 
 > "Los schemas Pydantic son la 'forma' de los datos que la API acepta y retorna. Son diferentes a los modelos ORM — los modelos definen la base de datos, los schemas definen la interfaz HTTP."
 
+**📄 `be/app/schemas/user.py`**
 ```python
 class UserCreate(BaseModel):
     email: EmailStr
@@ -568,6 +591,7 @@ class UserCreate(BaseModel):
 >
 > El validador de contraseña exige mínimo 8 caracteres, mayúsculas, minúsculas y números. Sin esta validación, alguien podría registrarse con contraseña '1' — inadmisible."
 
+**📄 `be/app/schemas/user.py`**
 ```python
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -584,6 +608,7 @@ class UserResponse(BaseModel):
 >
 > `from_attributes=True` le dice a Pydantic que puede construir este schema a partir de un objeto SQLAlchemy (no solo de diccionarios)."
 
+**📄 `be/app/schemas/user.py`**
 ```python
 class TokenResponse(BaseModel):
     access_token: str
@@ -613,6 +638,7 @@ class TokenResponse(BaseModel):
 
 > "Este es el módulo más crítico de seguridad. Cualquier error aquí compromete todo el sistema de autenticación."
 
+**📄 `be/app/utils/security.py`**
 ```python
 from passlib.context import CryptContext
 
@@ -623,6 +649,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 >
 > bcrypt también incluye automáticamente un **salt** — datos aleatorios únicos por cada hash. Dos hashes de la misma contraseña serán siempre diferentes, lo que previene ataques con **rainbow tables**."
 
+**📄 `be/app/utils/security.py`**
 ```python
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
@@ -696,6 +723,7 @@ def decode_token(token: str) -> dict:
 
 > "Las dependencias de FastAPI son funciones reutilizables que se 'inyectan' en los endpoints usando `Depends()`. Es el patrón de **Dependency Injection** aplicado a los endpoints HTTP."
 
+**📄 `be/app/dependencies.py`**
 ```python
 def get_db() -> Generator[Session, None, None]:
     db = SessionLocal()
@@ -709,6 +737,7 @@ def get_db() -> Generator[Session, None, None]:
 >
 > Es un generador con `yield` — FastAPI ejecuta el código hasta el `yield`, le pasa la sesión al endpoint, y cuando el endpoint termina, continúa con el `finally`."
 
+**📄 `be/app/dependencies.py`**
 ```python
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 
@@ -738,6 +767,7 @@ def get_current_user(
 
 > "Los servicios contienen la **lógica de negocio** — las reglas de qué puede y no puede hacer el sistema. Los routers (endpoints) son delgados: solo reciben el request, llaman al service y retornan la respuesta. La lógica real está aquí."
 
+**📄 `be/app/services/auth_service.py`**
 ```python
 def register_user(db: Session, user_data: UserCreate) -> User:
     # 1. Verificar email duplicado
@@ -764,6 +794,7 @@ def register_user(db: Session, user_data: UserCreate) -> User:
 > 2. Crear el usuario con la contraseña hasheada — `hash_password()` es de `utils/security.py`
 > 3. Guardar en la BD con `commit()` y refrescar para obtener los valores generados por PostgreSQL (como `created_at`)"
 
+**📄 `be/app/services/auth_service.py`**
 ```python
 def login_user(db: Session, login_data: UserLogin) -> TokenResponse:
     # 1. Buscar usuario
@@ -784,6 +815,7 @@ def login_user(db: Session, login_data: UserLogin) -> TokenResponse:
 
 > "Fijense algo importante en el mensaje de error: `'Credenciales inválidas'`. No decimos `'usuario no encontrado'` ni `'contraseña incorrecta'`. ¿Por qué? Seguridad — si diferenciamos entre 'email no existe' y 'contraseña incorrecta', estamos dándole información a un atacante sobre qué emails están registrados. Un único mensaje genérico previene la **enumeración de usuarios**."
 
+**📄 `be/app/services/auth_service.py`**
 ```python
 async def forgot_password(db: Session, email: str) -> None:
     user = db.execute(select(User).where(User.email == email)).scalar_one_or_none()
@@ -818,6 +850,7 @@ async def forgot_password(db: Session, email: str) -> None:
 
 > "Los routers son los endpoints HTTP — definen las rutas, los métodos HTTP, los schemas de entrada y salida, y delegan al service."
 
+**📄 `be/app/routers/auth.py`**
 ```python
 router = APIRouter(
     prefix="/api/v1/auth",
@@ -827,6 +860,7 @@ router = APIRouter(
 
 > "El `prefix` hace que todos los endpoints de este router sean accesibles bajo `/api/v1/auth/...`. El versionamiento en la URL (`v1`) es una buena práctica — si en el futuro cambiamos la API, podemos crear `/api/v2/` sin romper los clientes existentes."
 
+**📄 `be/app/routers/auth.py`**
 ```python
 @router.post(
     "/register",
@@ -842,6 +876,7 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)) -> UserRespon
 >
 > `status_code=201 Created` — convenio HTTP: cuando se crea un recurso, se retorna 201, no 200."
 
+**📄 `be/app/routers/auth.py`**
 ```python
 @router.post("/change-password", response_model=MessageResponse)
 def change_password(
@@ -854,6 +889,7 @@ def change_password(
 
 > "El parámetro `current_user: User = Depends(get_current_user)` es lo que hace este endpoint protegido. Si el request no tiene un `Authorization: Bearer <token>` válido, FastAPI retorna 401 automáticamente antes de ejecutar el cuerpo de la función."
 
+**📄 `be/app/routers/auth.py`**
 ```python
 @router.post("/verify-email", response_model=MessageResponse)
 def verify_email(request_data: VerifyEmailRequest, db: Session = Depends(get_db)) -> MessageResponse:
@@ -863,6 +899,7 @@ def verify_email(request_data: VerifyEmailRequest, db: Session = Depends(get_db)
 
 > "Este endpoint completa el flujo de activación de cuenta. Después del registro, el usuario recibe un token por correo y debe verificar su email antes de iniciar sesión."
 
+**📄 `be/app/routers/auth.py`**
 ```python
 @limiter.limit("5/minute")
 @router.post("/register", ...)
@@ -877,6 +914,7 @@ def verify_email(request_data: VerifyEmailRequest, db: Session = Depends(get_db)
 
 **[Terminal: probar endpoints en Swagger UI]**
 
+**💻 Terminal**
 ```bash
 # Con el servidor corriendo: http://localhost:8000/docs
 # 1. Registrar usuario
@@ -908,6 +946,7 @@ def verify_email(request_data: VerifyEmailRequest, db: Session = Depends(get_db)
 >
 > El archivo `conftest.py` define los **fixtures** — bloques de configuración y datos reutilizables que se inyectan en los tests automáticamente."
 
+**📄 `be/app/tests/conftest.py`**
 ```python
 @pytest.fixture(scope="session", autouse=True)
 def setup_database() -> Generator[None, None, None]:
@@ -919,6 +958,7 @@ def setup_database() -> Generator[None, None, None]:
 
 > "Este fixture se ejecuta **una sola vez** por sesión de pytest. Borra y recrea todas las tablas al inicio, y las borra al final. Los tests usan la misma base de datos pero con datos aislados — los tests **nunca** afectan la BD de desarrollo."
 
+**📄 `be/app/tests/conftest.py`**
 ```python
 @pytest.fixture()
 def db() -> Generator[Session, None, None]:
@@ -933,6 +973,7 @@ def db() -> Generator[Session, None, None]:
 
 > "Este es el truco clave del aislamiento: cada test corre dentro de una **transacción que nunca se hace commit**. Al final, se hace `rollback` — como si el test nunca hubiera ocurrido. El siguiente test empieza con la BD limpia."
 
+**📄 `be/app/tests/conftest.py`**
 ```python
 @pytest.fixture()
 def client(db: Session) -> TestClient:
@@ -946,6 +987,7 @@ def client(db: Session) -> TestClient:
 
 **[Abrir `app/tests/test_auth.py`]**
 
+**📄 `be/app/tests/test_auth.py`**
 ```python
 class TestRegister:
     URL = "/api/v1/auth/register"
@@ -967,6 +1009,7 @@ class TestRegister:
 >
 > Organizamos los tests en clases — `TestRegister`, `TestLogin`, `TestChangePassword` — para agrupar tests relacionados y compartir la URL del endpoint."
 
+**📄 `be/app/tests/test_auth.py`**
 ```python
     def test_register_weak_password(self, client: TestClient) -> None:
         response = client.post(self.URL, json={
@@ -981,6 +1024,7 @@ class TestRegister:
 
 **[Terminal: ejecutar tests]**
 
+**💻 Terminal**
 ```bash
 cd be
 source .venv/bin/activate
@@ -1017,6 +1061,7 @@ pytest app/tests/test_auth.py::TestRegister -v
 
 **[Pantalla: terminal, desde la raíz del proyecto]**
 
+**💻 Terminal**
 ```bash
 cd fe
 
@@ -1035,6 +1080,7 @@ pnpm dev
 
 **[Abrir `vite.config.ts`]**
 
+**📄 `fe/vite.config.ts`**
 ```typescript
 resolve: {
   alias: {
@@ -1047,6 +1093,7 @@ resolve: {
 
 **[Abrir `tsconfig.app.json`]**
 
+**📄 `fe/tsconfig.app.json`**
 ```json
 "strict": true
 ```
@@ -1065,6 +1112,7 @@ resolve: {
 >
 > Esto se llama **contratos de tipos** — garantizan en tiempo de compilación que estamos enviando los datos correctos."
 
+**📄 `fe/src/types/auth.ts`**
 ```typescript
 export interface RegisterRequest {
   email: string;
@@ -1102,6 +1150,7 @@ export interface UserResponse {
 
 > "Configuramos una instancia de Axios con comportamiento predefinido — URL base, headers y manejo de errores — para que todos los módulos de API la usen consistentemente."
 
+**📄 `fe/src/api/axios.ts`**
 ```typescript
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000",
@@ -1112,6 +1161,7 @@ const api = axios.create({
 
 > "`import.meta.env.VITE_API_URL` lee la variable de entorno del archivo `.env` de Vite. En desarrollo apunta a `localhost:8000`, en producción al dominio real. El default `|| "http://localhost:8000"` es solo un respaldo de seguridad."
 
+**📄 `fe/src/api/axios.ts`**
 ```typescript
 api.interceptors.request.use((config) => {
   const token = sessionStorage.getItem("access_token");
@@ -1128,6 +1178,7 @@ api.interceptors.request.use((config) => {
 
 **[Abrir `fe/src/api/auth.ts`]**
 
+**📄 `fe/src/api/auth.ts`**
 ```typescript
 export async function loginUser(data: LoginRequest): Promise<TokenResponse> {
   const response = await api.post<TokenResponse>(`${AUTH_PREFIX}/login`, data);
@@ -1147,6 +1198,7 @@ export async function loginUser(data: LoginRequest): Promise<TokenResponse> {
 
 > "El **Context API** de React permite compartir estado entre componentes sin pasar props manualmente por toda la jerarquía del árbol. El `AuthContext` es el corazón del frontend — cualquier componente puede saber si el usuario está autenticado y llamar a las acciones de auth."
 
+**📄 `fe/src/context/AuthContext.tsx`**
 ```typescript
 const [user, setUser] = useState<UserResponse | null>(null);
 const [accessToken, setAccessToken] = useState<string | null>(() =>
@@ -1165,6 +1217,7 @@ const isAuthenticated = !!user && !!accessToken;
 >
 > `isAuthenticated` es un derivado — es `true` solo cuando hay usuario **y** hay token. Si falta cualquiera de los dos, el usuario no está autenticado."
 
+**📄 `fe/src/context/AuthContext.tsx`**
 ```typescript
 useEffect(() => {
   const restoreSession = async () => {
@@ -1198,6 +1251,7 @@ useEffect(() => {
 
 **[Abrir `fe/src/hooks/useAuth.ts`]**
 
+**📄 `fe/src/hooks/useAuth.ts`**
 ```typescript
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
@@ -1216,6 +1270,7 @@ export function useAuth(): AuthContextType {
 
 **[Abrir `fe/src/components/ProtectedRoute.tsx`]**
 
+**📄 `fe/src/components/ProtectedRoute.tsx`**
 ```typescript
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -1238,6 +1293,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
 **[Abrir `fe/src/App.tsx` — mostrar cómo se usan las rutas]**
 
+**📄 `fe/src/App.tsx`**
 ```tsx
 <Routes>
   {/* Rutas públicas */}
@@ -1274,6 +1330,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
 **[Mostrar el componente `NNAuthLogo`]**
 
+**📄 `fe/src/pages/LandingPage.tsx`**
 ```typescript
 function NNAuthLogo({ size = 36 }: NNAuthLogoProps) {
   return (
@@ -1299,6 +1356,7 @@ function NNAuthLogo({ size = 36 }: NNAuthLogoProps) {
 
 **[Mostrar `App.tsx` con la ruta]**
 
+**📄 `fe/src/App.tsx`**
 ```tsx
 // La ruta raíz muestra la landing, no redirige
 <Route path="/" element={<LandingPage />} />
@@ -1326,6 +1384,7 @@ function NNAuthLogo({ size = 36 }: NNAuthLogoProps) {
 
 > "Estas tres páginas comparten un layout común: el componente `LegalLayout`. Tiene header con logo y botón de retorno, contenedor tipográfico y footer. Las secciones numeradas usan el subcomponente `LegalSection` que recibe un número, un título y los hijos React."
 
+**📄 `fe/src/components/layout/LegalLayout.tsx`**
 ```tsx
 // Uso del layout compartido — cada página es solo contenido
 <LegalLayout
@@ -1362,6 +1421,7 @@ function NNAuthLogo({ size = 36 }: NNAuthLogoProps) {
 
 > "El archivo se abre con un comentario que explica: qué es, para qué sirve, qué impacto tiene y cuál es el marco legal. Luego define las constantes de correos ficticios en un objeto `CONTACT_INFO`. Estos valores son los mismos que aparecen en la Política de Privacidad — consistencia."
 
+**📄 `fe/src/pages/ContactPage.tsx`**
 ```tsx
 // Correos ficticios — NUNCA usar correos reales en el código fuente
 const CONTACT_INFO = {
@@ -1426,6 +1486,7 @@ setFormData(INITIAL_FORM);
 
 ### Paso 1: Arrancar todos los servicios
 
+**💻 Terminal**
 ```bash
 # Terminal 1: Base de datos
 docker compose up -d db
@@ -1573,6 +1634,7 @@ cd fe && pnpm dev
 
 ### Comandos de referencia rápida
 
+**💻 Terminal**
 ```bash
 # Backend — arranque
 cd be && source .venv/bin/activate && uvicorn app.main:app --reload
