@@ -58,17 +58,32 @@ function App() {
 
           {/* ════════════════════════════════════════ */}
           {/* 🔒 Rutas protegidas (requieren sesión activa) */}
+          {/* ¿Qué? Cada ruta protegida envuelve su elemento con ProtectedRoute + AppLayout. */}
+          {/* ¿Para qué? Evitar el uso del layout route sin path que en React Router v7 puede    */}
+          {/*            interferir con el matching de la ruta raíz "/" y causar redirects        */}
+          {/*            inesperados al login cuando el usuario no está autenticado.              */}
+          {/* ¿Impacto? La protección es explícita por ruta — más predecible y sin ambigüedad.   */}
           {/* ════════════════════════════════════════ */}
           <Route
+            path="/dashboard"
             element={
               <ProtectedRoute>
-                <AppLayout />
+                <AppLayout>
+                  <DashboardPage />
+                </AppLayout>
               </ProtectedRoute>
             }
-          >
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/change-password" element={<ChangePasswordPage />} />
-          </Route>
+          />
+          <Route
+            path="/change-password"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <ChangePasswordPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
 
           {/* ¿Qué? Ruta raíz muestra la landing page pública del sistema. */}
           {/* ¿Para qué? Primera impresión del producto antes de que el usuario se autentique. */}
