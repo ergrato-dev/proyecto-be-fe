@@ -29,16 +29,12 @@ import { NNAuthLogo } from "@/pages/LandingPage";
 // ─────────────────────────────────────────────────────────────
 
 /**
- * ¿Qué? Información de contacto FICTICIA usada exclusivamente en entornos educativos.
- * ¿Para qué? Demostrar el patrón de cómo se expone la información de contacto sin
- *            comprometer datos reales de personas o empresas.
- * ¿Impacto? NUNCA deben ser correos reales. Si este proyecto se desplegara en producción,
- *           estos valores deben venir de variables de entorno, nunca hardcodeados.
+ * ¿Qué? Información de contacto del proyecto educativo.
+ * ¿Para qué? Proveer datos de ubicación y horario sin exponer buzones de correo.
+ * ¿Impacto? Por política antispam, NUNCA se publican direcciones de email en el frontend.
+ *           El canal principal de contacto es el formulario de esta misma página.
  */
 const CONTACT_INFO = {
-  emailGeneral: "contacto@nn-company.co",
-  emailDatosPersonales: "datospersonales@nn-company.co",
-  emailSoporte: "soporte@nn-company.co",
   telefono: "(+57) 601 000 0000",
   direccion: "Bogotá D.C., Colombia",
   horario: "Lunes a viernes, 8:00 am – 5:00 pm (hora Colombia)",
@@ -302,7 +298,10 @@ function ContactFormFields({
       {/* Campo: Asunto (select) */}
       <div className="mb-5">
         <label htmlFor="contact-subject" className="mb-1.5 block text-sm font-medium text-gray-300">
-          Asunto{" "}<span className="text-red-500" aria-hidden="true">*</span>
+          Asunto{" "}
+          <span className="text-red-500" aria-hidden="true">
+            *
+          </span>
         </label>
         <select
           id="contact-subject"
@@ -660,35 +659,16 @@ export function ContactPage() {
                 Información de contacto
               </h2>
 
-              {/* Aviso: correos ficticios */}
-              <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 text-xs text-gray-500">
-                <p className="font-semibold text-gray-400">⚠️ Correos ficticios</p>
-                <p className="mt-1">
-                  Los siguientes correos corresponden a una empresa educativa ficticia. No envíes
-                  mensajes reales a estas direcciones.
+              {/* ¿Qué? Canal principal de contacto — formulario de esta página. */}
+              {/* ¿Para qué? Por política antispam no se publican buzones de correo. */}
+              {/* ¿Impacto? Evita que scrapers recolecten direcciones de email para spam. */}
+              <div className="rounded-lg border border-blue-800/40 bg-blue-950/30 p-4 text-sm text-blue-300">
+                <p className="font-semibold text-blue-200">📬 Canal principal de contacto</p>
+                <p className="mt-1 text-xs text-blue-400">
+                  Por política antispam no publicamos buzones de correo electrónico. Usa el
+                  formulario de esta página para enviarnos tu mensaje — te responderemos dentro de
+                  los plazos legales indicados abajo.
                 </p>
-              </div>
-
-              {/* Tarjetas de contacto */}
-              <div className="space-y-4">
-                <ContactInfoCard
-                  icon={<Mail size={16} aria-hidden="true" />}
-                  label="Consultas generales"
-                  value={CONTACT_INFO.emailGeneral}
-                  isEmail
-                />
-                <ContactInfoCard
-                  icon={<Mail size={16} aria-hidden="true" />}
-                  label="Datos personales (Ley 1581)"
-                  value={CONTACT_INFO.emailDatosPersonales}
-                  isEmail
-                />
-                <ContactInfoCard
-                  icon={<Mail size={16} aria-hidden="true" />}
-                  label="Soporte técnico"
-                  value={CONTACT_INFO.emailSoporte}
-                  isEmail
-                />
               </div>
 
               {/* Información adicional */}
@@ -745,8 +725,7 @@ export function ContactPage() {
           ══════════════════════════════════════════════════════ */}
       <footer className="border-t border-gray-800 px-6 py-6">
         <p className="text-center text-xs text-gray-600">
-          NN Auth System — Proyecto educativo SENA &middot;{" "}
-          {new Date().getFullYear()}
+          NN Auth System — Proyecto educativo SENA &middot; {new Date().getFullYear()}
         </p>
       </footer>
     </div>
@@ -754,42 +733,5 @@ export function ContactPage() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// SUB-COMPONENT — tarjeta de información de contacto
+// SUB-COMPONENTS
 // ─────────────────────────────────────────────────────────────
-
-interface ContactInfoCardProps {
-  readonly icon: React.ReactNode;
-  readonly label: string;
-  readonly value: string;
-  readonly isEmail?: boolean;
-}
-
-/**
- * ¿Qué? Tarjeta de una información de contacto (correo ficticio, teléfono, etc.).
- * ¿Para qué? Reutilizar el diseño visual de cada fila de contacto sin repetir clases.
- * ¿Impacto? Si cambia el diseño de las tarjetas de contacto, basta con editar aquí.
- */
-function ContactInfoCard({ icon, label, value, isEmail = false }: ContactInfoCardProps) {
-  return (
-    <div className="flex items-start gap-3 rounded-lg border border-gray-800 bg-gray-900 p-3">
-      <div className="mt-0.5 shrink-0 text-blue-500">{icon}</div>
-      <div className="min-w-0">
-        <p className="text-xs text-gray-500">{label}</p>
-        {isEmail ? (
-          // ¿Qué? href="mailto:" muestra el cliente de correo, pero el correo es ficticio.
-          // ¿Para qué? Patrón correcto de marcado semántico para emails.
-          // ¿Impacto? En producción, se reemplazaría por un correo real gestionado por el equipo.
-          <a
-            href={`mailto:${value}`}
-            className="mt-0.5 block truncate text-sm text-blue-400 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
-            aria-label={`Correo ficticio: ${value}`}
-          >
-            {value}
-          </a>
-        ) : (
-          <p className="mt-0.5 text-sm text-gray-300">{value}</p>
-        )}
-      </div>
-    </div>
-  );
-}
