@@ -10,7 +10,7 @@
            decisiones tecnicas del proyecto ante evaluaciones o presentaciones.
 -->
 
-> **Proyecto:** NN Auth System · SENA Ficha 3171599
+> **Proyecto:** NN Auth System 
 > **Stack:** FastAPI + React + PostgreSQL + Docker
 > **Cobertura tests:** 96 % backend · 80 tests frontend
 

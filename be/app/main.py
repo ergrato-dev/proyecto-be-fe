@@ -83,7 +83,7 @@ app = FastAPI(
     description=(
         "🔐 Sistema de autenticación completo para la empresa NN. "
         "Incluye registro, login, cambio y recuperación de contraseña. "
-        "Proyecto educativo — SENA, Ficha 3171599."
+        "Proyecto educativo — SENA."
     ),
     version="0.1.0",
     # ¿Qué? docs_url/redoc_url = None desactiva esas rutas completamente.

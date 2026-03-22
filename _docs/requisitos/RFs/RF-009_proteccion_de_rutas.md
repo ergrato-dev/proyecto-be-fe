@@ -10,14 +10,14 @@
 
 ## Identificación
 
-| Campo             | Valor                                                  |
-| ----------------- | ------------------------------------------------------ |
-| **ID**            | RF-009                                                 |
-| **Nombre**        | Protección de rutas                                    |
-| **Módulo**        | Autenticación / Frontend                               |
-| **Prioridad**     | Alta                                                   |
-| **Estado**        | Implementado                                           |
-| **Fecha**         | Febrero 2026                                           |
+| Campo         | Valor                    |
+| ------------- | ------------------------ |
+| **ID**        | RF-009                   |
+| **Nombre**    | Protección de rutas      |
+| **Módulo**    | Autenticación / Frontend |
+| **Prioridad** | Alta                     |
+| **Estado**    | Implementado             |
+| **Fecha**     | Febrero 2026             |
 
 ---
 
@@ -29,35 +29,40 @@ El sistema debe proteger las rutas que requieren autenticación, redirigiendo a 
 
 ## Rutas protegidas (requieren autenticación)
 
-| Ruta                | Página               |
-| ------------------- | -------------------- |
-| `/dashboard`        | Dashboard principal  |
-| `/change-password`  | Cambio de contraseña |
+| Ruta               | Página               |
+| ------------------ | -------------------- |
+| `/dashboard`       | Dashboard principal  |
+| `/change-password` | Cambio de contraseña |
 
 ---
 
-## Rutas públicas (solo para usuarios no autenticados)
+## Rutas de libre acceso (accesibles para todos los visitantes)
 
-| Ruta                | Página                       |
-| ------------------- | ---------------------------- |
-| `/login`            | Inicio de sesión             |
-| `/register`         | Registro de cuenta           |
-| `/forgot-password`  | Solicitud de recuperación    |
-| `/reset-password`   | Restablecimiento de contraseña |
+| Ruta               | Página                         | Notas                                |
+| ------------------ | ------------------------------ | ------------------------------------ |
+| `/`                | Landing page                   | Ver RF-011 — sin redirección         |
+| `/login`           | Inicio de sesión               | Solo redirect si ya está autenticado |
+| `/register`        | Registro de cuenta             | Solo redirect si ya está autenticado |
+| `/forgot-password` | Solicitud de recuperación      |                                      |
+| `/reset-password`  | Restablecimiento de contraseña |                                      |
+| `/verify-email`    | Verificación de email          |                                      |
 
 ---
 
 ## Proceso
 
 ### Usuario no autenticado intenta acceder a ruta protegida:
+
 1. El componente `ProtectedRoute` verifica si existe un usuario autenticado en el contexto.
 2. Si no hay usuario autenticado, redirige automáticamente a `/login`.
 
 ### Usuario autenticado intenta acceder a ruta pública:
+
 1. Las rutas públicas verifican si el usuario ya está autenticado.
 2. Si está autenticado, redirige automáticamente a `/dashboard`.
 
 ### Rutas inexistentes:
+
 1. Cualquier ruta no definida redirige a `/login`.
 
 ---
@@ -66,5 +71,5 @@ El sistema debe proteger las rutas que requieren autenticación, redirigiendo a 
 
 - RN-030: Un usuario no autenticado nunca puede ver el contenido de una ruta protegida.
 - RN-031: La redirección usa `replace` para no ensuciar el historial de navegación.
-- RN-032: La ruta raíz (`/`) redirige a `/login` si no está autenticado.
+- RN-032: ~~La ruta raíz (`/`) redirige a `/login` si no está autenticado.~~ **Actualizado (Marzo 2026):** La ruta `/` muestra `<LandingPage />` sin redirección. Ver RF-011.
 - RN-033: Las rutas no definidas (`*`) redirigen a `/login`.

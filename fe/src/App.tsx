@@ -21,6 +21,11 @@ import { ForgotPasswordPage } from "@/pages/ForgotPasswordPage";
 import { ResetPasswordPage } from "@/pages/ResetPasswordPage";
 import { VerifyEmailPage } from "@/pages/VerifyEmailPage";
 import { DataTableDemoPage } from "@/pages/DataTableDemoPage";
+import { LandingPage } from "@/pages/LandingPage";
+import { TerminosDeUsoPage } from "@/pages/TerminosDeUsoPage";
+import { PoliticaPrivacidadPage } from "@/pages/PoliticaPrivacidadPage";
+import { PoliticaCookiesPage } from "@/pages/PoliticaCookiesPage";
+import { ContactPage } from "@/pages/ContactPage";
 
 /**
  * ¿Qué? Componente raíz que configura el AuthProvider y las rutas de la aplicación.
@@ -65,10 +70,29 @@ function App() {
             <Route path="/change-password" element={<ChangePasswordPage />} />
           </Route>
 
-          {/* ¿Qué? Ruta raíz redirige al login. */}
-          {/* ¿Para qué? Si el usuario accede a "/", lo enviamos al login. */}
-          {/* ¿Impacto? Evita una página en blanco en la ruta raíz. */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          {/* ¿Qué? Ruta raíz muestra la landing page pública del sistema. */}
+          {/* ¿Para qué? Primera impresión del producto antes de que el usuario se autentique. */}
+          {/* ¿Impacto? Presenta el sistema y dirige al login o registro según la acción del usuario. */}
+          <Route path="/" element={<LandingPage />} />
+
+          {/* ════════════════════════════════════════ */}
+          {/* 📄 Páginas legales (públicas, sin auth)  */}
+          {/* Marco normativo: Ley 1581/2012, Decreto 1377/2013, Ley 527/1999, Ley 1480/2011 */}
+          {/* ════════════════════════════════════════ */}
+          {/* ¿Qué? Términos de Uso del servicio NN Auth System. */}
+          {/* ¿Para qué? Establecer las condiciones de uso conforme a Ley 527/1999 y 1480/2011. */}
+          <Route path="/terminos-de-uso" element={<TerminosDeUsoPage />} />
+          {/* ¿Qué? Política de Privacidad y Tratamiento de Datos Personales. */}
+          {/* ¿Para qué? Cumplir con la Ley 1581/2012 (Habeas Data) y Decreto 1377/2013. */}
+          <Route path="/privacidad" element={<PoliticaPrivacidadPage />} />
+          {/* ¿Qué? Política de Uso de Cookies del servicio. */}
+          {/* ¿Para qué? Informar al titular qué cookies se usan y cómo gestionarlas. */}
+          <Route path="/cookies" element={<PoliticaCookiesPage />} />
+
+          {/* ¿Qué? Formulario de contacto público con validación y envío simulado. */}
+          {/* ¿Para qué? Canal formal de atención exigido por Ley 1581/2012 Arts. 14-15. */}
+          {/* ¿Impacto? Sin canal de contacto, no se cumple el derecho a consultas y reclamos. */}
+          <Route path="/contacto" element={<ContactPage />} />
 
           {/* ¿Qué? Ruta catch-all para URLs no existentes. */}
           {/* ¿Para qué? Redirigir al login cualquier ruta desconocida. */}

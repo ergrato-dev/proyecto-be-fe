@@ -9,7 +9,7 @@
              Este documento reduce significativamente el tiempo de onboarding.
 -->
 
-> **Proyecto**: NN Auth System · SENA Ficha 3171599
+> **Proyecto**: NN Auth System 
 > **Stack**: FastAPI (Python 3.12) + React (TypeScript) + PostgreSQL 17 + Docker
 > **Tests**: 38/38 backend · 136/136 frontend
 

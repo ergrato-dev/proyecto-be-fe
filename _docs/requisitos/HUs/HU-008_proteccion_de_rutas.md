@@ -10,14 +10,14 @@
 
 ## Identificación
 
-| Campo             | Valor                                                  |
-| ----------------- | ------------------------------------------------------ |
-| **ID**            | HU-008                                                 |
-| **Título**        | Protección de rutas y navegación                       |
-| **Módulo**        | Autenticación / Frontend                               |
-| **Prioridad**     | Alta                                                   |
-| **Estado**        | Implementada                                           |
-| **RF asociados**  | RF-009                                                 |
+| Campo            | Valor                            |
+| ---------------- | -------------------------------- |
+| **ID**           | HU-008                           |
+| **Título**       | Protección de rutas y navegación |
+| **Módulo**       | Autenticación / Frontend         |
+| **Prioridad**    | Alta                             |
+| **Estado**       | Implementada                     |
+| **RF asociados** | RF-009                           |
 
 ---
 
@@ -32,26 +32,35 @@
 ## Criterios de aceptación
 
 ### CA-008.1 — Redirección de usuario no autenticado
+
 - **Dado que** no he iniciado sesión,
 - **cuando** intento acceder al dashboard (`/dashboard`) o cambio de contraseña (`/change-password`),
 - **entonces** debo ser redirigido automáticamente al login (`/login`).
 
 ### CA-008.2 — Redirección de usuario autenticado a rutas públicas
+
 - **Dado que** ya he iniciado sesión,
 - **cuando** intento acceder al login (`/login`) o registro (`/register`),
 - **entonces** debo ser redirigido automáticamente al dashboard (`/dashboard`).
 
 ### CA-008.3 — Ruta raíz
+
 - **Dado que** accedo a la URL raíz (`/`),
 - **cuando** la página carga,
-- **entonces** debo ser redirigido al login si no estoy autenticado, o al dashboard si lo estoy.
+- **entonces** debo ver la **landing page pública** del sistema (sin redirección automática),
+  independientemente de si estoy autenticado o no.
+
+> ℹ️ La ruta `/` fue actualizada en Marzo 2026 para mostrar `<LandingPage />` en lugar de
+> redirigir al login. Ver HU-009 y RF-011. El redirect anterior al login fue eliminado.
 
 ### CA-008.4 — Rutas inexistentes
+
 - **Dado que** accedo a una URL que no existe (por ejemplo, `/no-existe`),
 - **cuando** la página procesa la ruta,
 - **entonces** debo ser redirigido al login.
 
 ### CA-008.5 — Navegación limpia
+
 - **Dado que** soy redirigido automáticamente,
 - **cuando** reviso el historial del navegador,
 - **entonces** las redirecciones deben usar `replace` para no ensuciar el historial de navegación.

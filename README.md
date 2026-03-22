@@ -10,7 +10,7 @@
 > **Proyecto educativo** — SENA | Febrero 2026
 
 Sistema de autenticación completo para una empresa genérica **"NN"**, diseñado como ejercicio formativo.
-Incluye registro de usuarios, login, cambio de contraseña y recuperación por email.
+Incluye landing page pública, registro de usuarios, login, cambio de contraseña y recuperación por email.
 
 ---
 
@@ -161,6 +161,7 @@ uvicorn app.main:app --reload
 
 # Terminal 3 — Frontend (React + Vite)
 cd fe && pnpm dev
+# → Landing page en http://localhost:5173
 # → App disponible en http://localhost:5173
 ```
 
@@ -240,7 +241,7 @@ proyecto/
     ├── src/
     │   ├── api/                      # Clientes HTTP
     │   ├── components/               # Componentes reutilizables
-    │   ├── pages/                    # Páginas/vistas
+    │   ├── pages/                    # Páginas/vistas (Landing, Login, Register, Dashboard…)
     │   ├── hooks/                    # Custom hooks
     │   ├── context/                  # Context providers
     │   └── types/                    # Tipos TypeScript

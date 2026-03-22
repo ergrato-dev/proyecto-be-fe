@@ -12,13 +12,13 @@
 
 ## 1. Identidad del Proyecto
 
-| Campo              | Valor                                                     |
-| ------------------ | --------------------------------------------------------- |
-| **Nombre**         | NN Auth System                                            |
-| **Tipo**           | Proyecto educativo — SENA, Ficha 3171599                  |
-| **Propósito**      | Sistema de autenticación completo (registro, login, cambio y recuperación de contraseña) para una empresa genérica "NN" |
-| **Enfoque**        | Aprendizaje guiado: cada línea de código y documentación debe enseñar |
-| **Fecha de inicio**| Febrero 2026                                              |
+| Campo               | Valor                                                                                                                   |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| **Nombre**          | NN Auth System                                                                                                          |
+| **Tipo**            | Proyecto educativo — SENA                                                                                |
+| **Propósito**       | Sistema de autenticación completo (registro, login, cambio y recuperación de contraseña) para una empresa genérica "NN" |
+| **Enfoque**         | Aprendizaje guiado: cada línea de código y documentación debe enseñar                                                   |
+| **Fecha de inicio** | Febrero 2026                                                                                                            |
 
 ---
 
@@ -26,56 +26,56 @@
 
 ### 2.1 Backend (`be/`)
 
-| Tecnología           | Versión   | Propósito                                      |
-| -------------------- | --------- | ---------------------------------------------- |
-| Python               | 3.12+     | Lenguaje principal del backend                  |
-| FastAPI              | 0.115+    | Framework web async de alto rendimiento         |
-| Uvicorn              | latest    | Servidor ASGI para ejecutar FastAPI             |
-| SQLAlchemy           | 2.0+      | ORM para interactuar con la base de datos       |
-| Alembic              | latest    | Migraciones de base de datos versionadas        |
-| Pydantic             | 2.0+      | Validación de datos y schemas (request/response)|
-| pydantic-settings    | latest    | Configuración desde variables de entorno        |
-| python-jose[cryptography] | latest | Creación y verificación de tokens JWT      |
-| passlib[bcrypt]      | latest    | Hashing seguro de contraseñas con bcrypt        |
-| psycopg2-binary      | latest    | Driver PostgreSQL para Python                   |
-| python-multipart     | latest    | Soporte para form data en FastAPI               |
-| pytest               | latest    | Framework de testing                            |
-| pytest-asyncio       | latest    | Soporte para tests async con pytest             |
-| httpx                | latest    | Cliente HTTP async para tests de integración    |
-| ruff                 | latest    | Linter + formatter ultrarrápido para Python     |
+| Tecnología                | Versión | Propósito                                        |
+| ------------------------- | ------- | ------------------------------------------------ |
+| Python                    | 3.12+   | Lenguaje principal del backend                   |
+| FastAPI                   | 0.115+  | Framework web async de alto rendimiento          |
+| Uvicorn                   | latest  | Servidor ASGI para ejecutar FastAPI              |
+| SQLAlchemy                | 2.0+    | ORM para interactuar con la base de datos        |
+| Alembic                   | latest  | Migraciones de base de datos versionadas         |
+| Pydantic                  | 2.0+    | Validación de datos y schemas (request/response) |
+| pydantic-settings         | latest  | Configuración desde variables de entorno         |
+| python-jose[cryptography] | latest  | Creación y verificación de tokens JWT            |
+| passlib[bcrypt]           | latest  | Hashing seguro de contraseñas con bcrypt         |
+| psycopg2-binary           | latest  | Driver PostgreSQL para Python                    |
+| python-multipart          | latest  | Soporte para form data en FastAPI                |
+| pytest                    | latest  | Framework de testing                             |
+| pytest-asyncio            | latest  | Soporte para tests async con pytest              |
+| httpx                     | latest  | Cliente HTTP async para tests de integración     |
+| ruff                      | latest  | Linter + formatter ultrarrápido para Python      |
 
 ### 2.2 Frontend (`fe/`)
 
-| Tecnología           | Versión   | Propósito                                      |
-| -------------------- | --------- | ---------------------------------------------- |
-| Node.js              | 20 LTS+   | Runtime de JavaScript                           |
-| React                | 18+       | Biblioteca para interfaces de usuario           |
-| Vite                 | 6+        | Bundler y dev server ultrarrápido               |
-| TypeScript           | 5.0+      | Superset tipado de JavaScript                   |
-| TailwindCSS          | 4+        | Framework CSS utility-first                     |
-| React Router         | 7+        | Enrutamiento del lado del cliente               |
-| Axios                | latest    | Cliente HTTP para comunicación con la API       |
-| Vitest               | latest    | Framework de testing compatible con Vite        |
-| Testing Library      | latest    | Utilidades de testing para componentes React    |
-| ESLint               | latest    | Linter para TypeScript/React                    |
-| Prettier             | latest    | Formateador de código                           |
+| Tecnología      | Versión | Propósito                                    |
+| --------------- | ------- | -------------------------------------------- |
+| Node.js         | 20 LTS+ | Runtime de JavaScript                        |
+| React           | 18+     | Biblioteca para interfaces de usuario        |
+| Vite            | 6+      | Bundler y dev server ultrarrápido            |
+| TypeScript      | 5.0+    | Superset tipado de JavaScript                |
+| TailwindCSS     | 4+      | Framework CSS utility-first                  |
+| React Router    | 7+      | Enrutamiento del lado del cliente            |
+| Axios           | latest  | Cliente HTTP para comunicación con la API    |
+| Vitest          | latest  | Framework de testing compatible con Vite     |
+| Testing Library | latest  | Utilidades de testing para componentes React |
+| ESLint          | latest  | Linter para TypeScript/React                 |
+| Prettier        | latest  | Formateador de código                        |
 
 ### 2.3 Base de Datos
 
-| Tecnología   | Versión | Propósito                                       |
-| ------------ | ------- | ----------------------------------------------- |
-| PostgreSQL   | 17+     | Base de datos relacional principal               |
-| Docker Compose | latest | Orquestación de contenedores (BD en desarrollo) |
+| Tecnología     | Versión | Propósito                                       |
+| -------------- | ------- | ----------------------------------------------- |
+| PostgreSQL     | 17+     | Base de datos relacional principal              |
+| Docker Compose | latest  | Orquestación de contenedores (BD en desarrollo) |
 
 ### 2.4 Autenticación
 
-| Concepto        | Implementación                                        |
-| --------------- | ----------------------------------------------------- |
-| Método          | JWT (JSON Web Tokens) — stateless                     |
-| Access Token    | Duración: 15 minutos                                  |
-| Refresh Token   | Duración: 7 días                                      |
-| Hashing         | bcrypt vía passlib                                    |
-| Flujos          | Registro, Login, Cambio de contraseña, Recuperación por email |
+| Concepto      | Implementación                                                |
+| ------------- | ------------------------------------------------------------- |
+| Método        | JWT (JSON Web Tokens) — stateless                             |
+| Access Token  | Duración: 15 minutos                                          |
+| Refresh Token | Duración: 7 días                                              |
+| Hashing       | bcrypt vía passlib                                            |
+| Flujos        | Registro, Login, Cambio de contraseña, Recuperación por email |
 
 ---
 
@@ -323,16 +323,16 @@ proyecto/                          # Raíz del monorepo
 
 ### 6.1 Python (Backend)
 
-| Aspecto            | Convención                                                |
-| ------------------ | --------------------------------------------------------- |
-| Estilo             | PEP 8, reforzado por `ruff`                               |
-| Naming variables   | `snake_case`                                              |
-| Naming clases      | `PascalCase`                                              |
-| Naming constantes  | `UPPER_SNAKE_CASE`                                        |
-| Type hints         | **Obligatorios** en parámetros y retornos de funciones    |
-| Docstrings         | Formato Google, en español                                |
-| Imports            | Ordenados por `ruff` (stdlib → third-party → local)       |
-| Línea máxima       | 100 caracteres                                            |
+| Aspecto           | Convención                                             |
+| ----------------- | ------------------------------------------------------ |
+| Estilo            | PEP 8, reforzado por `ruff`                            |
+| Naming variables  | `snake_case`                                           |
+| Naming clases     | `PascalCase`                                           |
+| Naming constantes | `UPPER_SNAKE_CASE`                                     |
+| Type hints        | **Obligatorios** en parámetros y retornos de funciones |
+| Docstrings        | Formato Google, en español                             |
+| Imports           | Ordenados por `ruff` (stdlib → third-party → local)    |
+| Línea máxima      | 100 caracteres                                         |
 
 ```python
 # ✅ Ejemplo de función bien documentada y tipada
@@ -355,17 +355,17 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 ### 6.2 TypeScript/React (Frontend)
 
-| Aspecto            | Convención                                                |
-| ------------------ | --------------------------------------------------------- |
-| Estilo             | ESLint + Prettier                                         |
-| Naming variables   | `camelCase`                                               |
-| Naming componentes | `PascalCase`                                              |
-| Naming archivos    | `PascalCase` para componentes, `camelCase` para utilidades|
-| Naming tipos       | `PascalCase` con sufijo descriptivo (`UserResponse`, `LoginRequest`) |
-| Componentes        | **Funcionales** con hooks — nunca clases                  |
-| Interfaces vs Types| Preferir `interface` para objetos, `type` para uniones/intersecciones |
-| CSS                | TailwindCSS utility classes — evitar CSS custom           |
-| Strict mode        | `"strict": true` en tsconfig.json                         |
+| Aspecto             | Convención                                                            |
+| ------------------- | --------------------------------------------------------------------- |
+| Estilo              | ESLint + Prettier                                                     |
+| Naming variables    | `camelCase`                                                           |
+| Naming componentes  | `PascalCase`                                                          |
+| Naming archivos     | `PascalCase` para componentes, `camelCase` para utilidades            |
+| Naming tipos        | `PascalCase` con sufijo descriptivo (`UserResponse`, `LoginRequest`)  |
+| Componentes         | **Funcionales** con hooks — nunca clases                              |
+| Interfaces vs Types | Preferir `interface` para objetos, `type` para uniones/intersecciones |
+| CSS                 | TailwindCSS utility classes — evitar CSS custom                       |
+| Strict mode         | `"strict": true` en tsconfig.json                                     |
 
 ```typescript
 // ✅ Ejemplo de componente bien documentado
@@ -406,14 +406,14 @@ export function InputField({ label, name, type = "text", error, value, onChange 
 
 ### 6.3 SQL / Base de Datos
 
-| Aspecto            | Convención                                                |
-| ------------------ | --------------------------------------------------------- |
-| Nombres de tablas  | `snake_case`, plural (`users`, `password_reset_tokens`)   |
-| Nombres de columnas| `snake_case` (`created_at`, `hashed_password`)            |
-| Primary Keys       | `id` (UUID o autoincremental)                             |
-| Foreign Keys       | `<tabla_singular>_id` (ej: `user_id`)                     |
-| Timestamps         | `created_at`, `updated_at` en toda tabla                  |
-| Migraciones        | Siempre vía Alembic, nunca alterar BD manualmente         |
+| Aspecto             | Convención                                              |
+| ------------------- | ------------------------------------------------------- |
+| Nombres de tablas   | `snake_case`, plural (`users`, `password_reset_tokens`) |
+| Nombres de columnas | `snake_case` (`created_at`, `hashed_password`)          |
+| Primary Keys        | `id` (UUID o autoincremental)                           |
+| Foreign Keys        | `<tabla_singular>_id` (ej: `user_id`)                   |
+| Timestamps          | `created_at`, `updated_at` en toda tabla                |
+| Migraciones         | Siempre vía Alembic, nunca alterar BD manualmente       |
 
 ---
 
@@ -431,17 +431,17 @@ Impact: What effect this has on the system
 
 ### 7.2 Tipos permitidos
 
-| Tipo       | Uso                                                        |
-| ---------- | ---------------------------------------------------------- |
-| `feat`     | Nueva funcionalidad                                        |
-| `fix`      | Corrección de bug                                          |
-| `docs`     | Solo documentación                                         |
-| `style`    | Formato, espacios, puntos y comas (no afecta lógica)       |
-| `refactor` | Reestructuración sin cambiar funcionalidad                 |
-| `test`     | Agregar o corregir tests                                   |
-| `chore`    | Tareas de mantenimiento, configuración, dependencias       |
-| `ci`       | Cambios en CI/CD                                           |
-| `perf`     | Mejoras de rendimiento                                     |
+| Tipo       | Uso                                                  |
+| ---------- | ---------------------------------------------------- |
+| `feat`     | Nueva funcionalidad                                  |
+| `fix`      | Corrección de bug                                    |
+| `docs`     | Solo documentación                                   |
+| `style`    | Formato, espacios, puntos y comas (no afecta lógica) |
+| `refactor` | Reestructuración sin cambiar funcionalidad           |
+| `test`     | Agregar o corregir tests                             |
+| `chore`    | Tareas de mantenimiento, configuración, dependencias |
+| `ci`       | Cambios en CI/CD                                     |
+| `perf`     | Mejoras de rendimiento                               |
 
 ### 7.3 Scopes sugeridos
 
@@ -516,11 +516,11 @@ pytest app/tests/test_auth.py::test_register_user -v
 
 ### 8.3 Testing — Frontend
 
-| Herramienta          | Propósito                                       |
-| -------------------- | ----------------------------------------------- |
-| `vitest`             | Test runner compatible con Vite                 |
-| `@testing-library/react` | Testing de componentes React               |
-| `jsdom`              | Simular el DOM en Node.js                       |
+| Herramienta              | Propósito                       |
+| ------------------------ | ------------------------------- |
+| `vitest`                 | Test runner compatible con Vite |
+| `@testing-library/react` | Testing de componentes React    |
+| `jsdom`                  | Simular el DOM en Node.js       |
 
 ```bash
 # Ejecutar todos los tests del frontend
@@ -603,22 +603,22 @@ Todos los endpoints van bajo `/api/v1/`
 
 ### 10.2 Endpoints de autenticación (`/api/v1/auth/`)
 
-| Método | Ruta                | Descripción                          | Auth requerida |
-| ------ | ------------------- | ------------------------------------ | -------------- |
-| POST   | `/register`         | Registrar nuevo usuario              | No             |
-| POST   | `/login`            | Iniciar sesión, obtener tokens       | No             |
-| POST   | `/refresh`          | Renovar access token con refresh     | No (*)         |
-| POST   | `/change-password`  | Cambiar contraseña (usuario logueado)| Sí             |
-| POST   | `/forgot-password`  | Solicitar email de recuperación      | No             |
-| POST   | `/reset-password`   | Restablecer contraseña con token     | No (*)         |
+| Método | Ruta               | Descripción                           | Auth requerida |
+| ------ | ------------------ | ------------------------------------- | -------------- |
+| POST   | `/register`        | Registrar nuevo usuario               | No             |
+| POST   | `/login`           | Iniciar sesión, obtener tokens        | No             |
+| POST   | `/refresh`         | Renovar access token con refresh      | No (\*)        |
+| POST   | `/change-password` | Cambiar contraseña (usuario logueado) | Sí             |
+| POST   | `/forgot-password` | Solicitar email de recuperación       | No             |
+| POST   | `/reset-password`  | Restablecer contraseña con token      | No (\*)        |
 
-(*) Requiere un token válido (refresh o reset), pero no el access token estándar.
+(\*) Requiere un token válido (refresh o reset), pero no el access token estándar.
 
 ### 10.3 Endpoints de usuario (`/api/v1/users/`)
 
-| Método | Ruta    | Descripción                     | Auth requerida |
-| ------ | ------- | ------------------------------- | -------------- |
-| GET    | `/me`   | Obtener perfil del usuario actual | Sí           |
+| Método | Ruta  | Descripción                       | Auth requerida |
+| ------ | ----- | --------------------------------- | -------------- |
+| GET    | `/me` | Obtener perfil del usuario actual | Sí             |
 
 ---
 
@@ -626,26 +626,26 @@ Todos los endpoints van bajo `/api/v1/`
 
 ### 11.1 Tabla `users`
 
-| Columna           | Tipo         | Restricciones                        |
-| ----------------- | ------------ | ------------------------------------ |
-| `id`              | UUID         | PK, default uuid4                    |
-| `email`           | VARCHAR(255) | UNIQUE, NOT NULL, INDEXED            |
-| `full_name`       | VARCHAR(255) | NOT NULL                             |
-| `hashed_password` | VARCHAR(255) | NOT NULL                             |
-| `is_active`       | BOOLEAN      | DEFAULT TRUE                         |
-| `created_at`      | TIMESTAMP    | DEFAULT NOW(), NOT NULL              |
-| `updated_at`      | TIMESTAMP    | DEFAULT NOW(), ON UPDATE NOW()       |
+| Columna           | Tipo         | Restricciones                  |
+| ----------------- | ------------ | ------------------------------ |
+| `id`              | UUID         | PK, default uuid4              |
+| `email`           | VARCHAR(255) | UNIQUE, NOT NULL, INDEXED      |
+| `full_name`       | VARCHAR(255) | NOT NULL                       |
+| `hashed_password` | VARCHAR(255) | NOT NULL                       |
+| `is_active`       | BOOLEAN      | DEFAULT TRUE                   |
+| `created_at`      | TIMESTAMP    | DEFAULT NOW(), NOT NULL        |
+| `updated_at`      | TIMESTAMP    | DEFAULT NOW(), ON UPDATE NOW() |
 
 ### 11.2 Tabla `password_reset_tokens`
 
-| Columna      | Tipo         | Restricciones                        |
-| ------------ | ------------ | ------------------------------------ |
-| `id`         | UUID         | PK, default uuid4                    |
-| `user_id`    | UUID         | FK → users.id, NOT NULL              |
-| `token`      | VARCHAR(255) | UNIQUE, NOT NULL, INDEXED            |
-| `expires_at` | TIMESTAMP    | NOT NULL                             |
-| `used`       | BOOLEAN      | DEFAULT FALSE                        |
-| `created_at` | TIMESTAMP    | DEFAULT NOW(), NOT NULL              |
+| Columna      | Tipo         | Restricciones             |
+| ------------ | ------------ | ------------------------- |
+| `id`         | UUID         | PK, default uuid4         |
+| `user_id`    | UUID         | FK → users.id, NOT NULL   |
+| `token`      | VARCHAR(255) | UNIQUE, NOT NULL, INDEXED |
+| `expires_at` | TIMESTAMP    | NOT NULL                  |
+| `used`       | BOOLEAN      | DEFAULT FALSE             |
+| `created_at` | TIMESTAMP    | DEFAULT NOW(), NOT NULL   |
 
 ---
 
@@ -762,18 +762,18 @@ volumes:
 
 ### 14.4 Diseño y UX/UI — OBLIGATORIO
 
-| Aspecto              | Regla                                                                |
-| -------------------- | -------------------------------------------------------------------- |
-| **Temas**            | Dark mode y Light mode con toggle — usar `prefers-color-scheme`      |
-| **Tipografía**       | Fuentes **sans-serif** exclusivamente (`Inter`, `system-ui`)         |
-| **Colores**          | Sólidos y planos — **SIN degradados** (`gradient`) en ningún lugar   |
-| **Estilo visual**    | Diseño moderno, limpio, minimalista con excelente UX/UI              |
-| **Botones de acción**| Siempre alineados a la **derecha** (`justify-end`, `text-right`)     |
-| **Spacing**          | Usar escala consistente de Tailwind (`p-4`, `gap-6`, `space-y-4`)   |
-| **Bordes**           | Sutiles (`border`, `border-gray-200 dark:border-gray-700`)           |
-| **Transiciones**     | Suaves en hover/focus (`transition-colors`, `duration-200`)          |
-| **Responsividad**    | Mobile-first — los formularios de auth deben verse bien en móvil     |
-| **Accesibilidad**    | Labels en inputs, `aria-*` básicos, contraste suficiente (WCAG AA)   |
+| Aspecto               | Regla                                                              |
+| --------------------- | ------------------------------------------------------------------ |
+| **Temas**             | Dark mode y Light mode con toggle — usar `prefers-color-scheme`    |
+| **Tipografía**        | Fuentes **sans-serif** exclusivamente (`Inter`, `system-ui`)       |
+| **Colores**           | Sólidos y planos — **SIN degradados** (`gradient`) en ningún lugar |
+| **Estilo visual**     | Diseño moderno, limpio, minimalista con excelente UX/UI            |
+| **Botones de acción** | Siempre alineados a la **derecha** (`justify-end`, `text-right`)   |
+| **Spacing**           | Usar escala consistente de Tailwind (`p-4`, `gap-6`, `space-y-4`)  |
+| **Bordes**            | Sutiles (`border`, `border-gray-200 dark:border-gray-700`)         |
+| **Transiciones**      | Suaves en hover/focus (`transition-colors`, `duration-200`)        |
+| **Responsividad**     | Mobile-first — los formularios de auth deben verse bien en móvil   |
+| **Accesibilidad**     | Labels en inputs, `aria-*` básicos, contraste suficiente (WCAG AA) |
 
 ```typescript
 // ✅ CORRECTO — Botón de acción a la derecha, sin degradados, sans-serif
@@ -881,7 +881,15 @@ volumes:
 - [x] Crear componentes UI (InputField, Button, Alert)
 - [x] Crear ProtectedRoute
 - [x] Crear páginas: Login, Register, Dashboard, ChangePassword, ForgotPassword, ResetPassword
-- [x] Configurar rutas en App.tsx
+- [x] Crear `LandingPage.tsx` — página pública en ruta `/` con logo SVG, features, pasos, stack y CTAs
+- [x] Configurar rutas en App.tsx (ruta `/` muestra `<LandingPage />`, no redirect)
+- [x] Crear páginas legales: `TerminosDeUsoPage.tsx`, `PoliticaPrivacidadPage.tsx`, `PoliticaCookiesPage.tsx`
+- [x] Crear `LegalLayout.tsx` — layout compartido para páginas legales (secciones numeradas)
+- [x] Registrar rutas `/terminos-de-uso`, `/privacidad`, `/cookies` en App.tsx
+- [x] Agregar nav de aviso legal con 3 enlaces en el footer de `LandingPage.tsx`
+- [x] Crear `ContactPage.tsx` — formulario de contacto público con validación y envío simulado
+- [x] Registrar ruta `/contacto` en App.tsx
+- [x] Agregar enlace "Contacto" en nav de aviso legal del footer de `LandingPage.tsx`
 - [x] ✅ Verificar: flujo completo funciona contra la API
 
 ### Fase 7 — Tests Frontend
@@ -896,6 +904,14 @@ volumes:
 - [ ] Crear `_docs/api-endpoints.md` — documentación de endpoints
 - [ ] Crear `_docs/database-schema.md` — esquema ER
 - [ ] Actualizar `README.md` con instrucciones finales
+- [x] Crear `HU-009` — Historia de usuario: landing page pública
+- [x] Crear `RF-011` — Requisito funcional: landing page pública
+- [x] Actualizar `HU-008` CA-008.3 — ruta raíz muestra landing, no redirect
+- [x] Actualizar `RF-009` RN-032 — ruta raíz actualizada
+- [x] Crear `HU-010` — Historia de usuario: páginas de información legal
+- [x] Crear `RF-012` — Requisito funcional: páginas legales (Ley 1581/2012, Ley 527/1999, Ley 1480/2011)
+- [x] Crear `HU-011` — Historia de usuario: formulario de contacto público
+- [x] Crear `RF-013` — Requisito funcional: formulario de contacto (RN-055 a RN-072)
 - [ ] ✅ Verificar: documentación completa y coherente
 
 ---

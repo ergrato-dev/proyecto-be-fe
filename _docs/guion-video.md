@@ -14,29 +14,29 @@
 
 ## Índice del Video
 
-| #   | Sección                                    | Duración estimada |
-| --- | ------------------------------------------ | ----------------- |
-| 1   | Introducción y presentación del proyecto   | ~5 min            |
-| 2   | Prerrequisitos y herramientas              | ~5 min            |
-| 3   | Estructura del monorepo                    | ~5 min            |
-| 4   | Docker y PostgreSQL — la base de datos     | ~10 min           |
-| 5   | Backend — Configuración inicial            | ~15 min           |
-| 6   | Backend — Modelos ORM y migraciones        | ~15 min           |
-| 7   | Backend — Schemas Pydantic                 | ~10 min           |
-| 8   | Backend — Seguridad: hashing y JWT         | ~15 min           |
-| 9   | Backend — Dependencias inyectables         | ~10 min           |
-| 10  | Backend — Servicios (lógica de negocio)    | ~20 min           |
-| 11  | Backend — Routers y endpoints              | ~15 min           |
-| 12  | Backend — Tests con pytest                 | ~15 min           |
-| 13  | Frontend — Configuración inicial           | ~10 min           |
-| 14  | Frontend — Tipos TypeScript                | ~8 min            |
-| 15  | Frontend — Cliente HTTP con Axios          | ~12 min           |
-| 16  | Frontend — Contexto de autenticación       | ~15 min           |
-| 17  | Frontend — Hook useAuth y rutas protegidas | ~10 min           |
-| 18  | Frontend — Páginas de autenticación        | ~20 min           |
-| 19  | Demostración del flujo completo            | ~15 min           |
-| 20  | Cierre y recapitulación                    | ~5 min            |
-| 21  | Actualizaciones recientes (OWASP + docs)   | ~8 min            |
+| #   | Sección                                                              | Duración estimada |
+| --- | -------------------------------------------------------------------- | ----------------- |
+| 1   | Introducción y presentación del proyecto                             | ~5 min            |
+| 2   | Prerrequisitos y herramientas                                        | ~5 min            |
+| 3   | Estructura del monorepo                                              | ~5 min            |
+| 4   | Docker y PostgreSQL — la base de datos                               | ~10 min           |
+| 5   | Backend — Configuración inicial                                      | ~15 min           |
+| 6   | Backend — Modelos ORM y migraciones                                  | ~15 min           |
+| 7   | Backend — Schemas Pydantic                                           | ~10 min           |
+| 8   | Backend — Seguridad: hashing y JWT                                   | ~15 min           |
+| 9   | Backend — Dependencias inyectables                                   | ~10 min           |
+| 10  | Backend — Servicios (lógica de negocio)                              | ~20 min           |
+| 11  | Backend — Routers y endpoints                                        | ~15 min           |
+| 12  | Backend — Tests con pytest                                           | ~15 min           |
+| 13  | Frontend — Configuración inicial                                     | ~10 min           |
+| 14  | Frontend — Tipos TypeScript                                          | ~8 min            |
+| 15  | Frontend — Cliente HTTP con Axios                                    | ~12 min           |
+| 16  | Frontend — Contexto de autenticación                                 | ~15 min           |
+| 17  | Frontend — Hook useAuth y rutas protegidas                           | ~10 min           |
+| 18  | Frontend — Páginas de autenticación + Landing page + Páginas legales | ~30 min           |
+| 19  | Demostración del flujo completo                                      | ~15 min           |
+| 20  | Cierre y recapitulación                                              | ~5 min            |
+| 21  | Actualizaciones recientes (OWASP + docs)                             | ~8 min            |
 
 **Duración total estimada: ~3 horas 10 min** (recomendado dividir en 5-6 videos de 30-40 min)
 
@@ -54,6 +54,10 @@
 | Video 6 | 21           | Cierre técnico: OWASP, Swagger y documentación |
 
 ---
+
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
 
 ---
 
@@ -234,6 +238,10 @@ docker compose logs db
 - El frontend **nunca** necesita Docker para desarrollo local
 
 ---
+
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
 
 ---
 
@@ -587,6 +595,10 @@ class TokenResponse(BaseModel):
 
 ---
 
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
+
 ---
 
 # 🎥 VIDEO 3 — Backend: Seguridad, Servicios y Endpoints
@@ -876,6 +888,10 @@ def verify_email(request_data: VerifyEmailRequest, db: Session = Depends(get_db)
 
 ---
 
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
+
 ---
 
 # 🎥 VIDEO 4 — Backend: Testing completo con pytest
@@ -984,6 +1000,10 @@ pytest app/tests/test_auth.py::TestRegister -v
 > Veremos que 38 tests pasan en backend y se mantiene cobertura alta en los módulos críticos de autenticación."
 
 ---
+
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
+> ***✂️ ✂️ ✂️ ─────────── CORTE DE VIDEO ─────────── ✂️ ✂️ ✂️***
 
 ---
 
@@ -1242,9 +1262,136 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
 ---
 
-## SECCIÓN 18 — Frontend: Páginas de autenticación
+## SECCIÓN 18 — Frontend: Páginas de autenticación + Landing page
 
-### 🎙️ Guión
+### 🎙️ Guión — Landing page (`LandingPage.tsx`)
+
+**[Abrir `fe/src/pages/LandingPage.tsx` y navegar a `http://localhost:5173`]**
+
+> "Antes de entrar a las páginas de auth, hay algo que ver cuando el usuario llega al sistema por primera vez: la **landing page pública**. Es la URL raíz — `/` — y es accesible para cualquier visitante, con o sin sesión."
+
+> "La landing tiene seis secciones principales: **header** con navegación, **hero** con propuesta de valor, **features** (características del sistema con tarjetas), **cómo funciona** (tres pasos), **stack tecnológico** y un **CTA final**."
+
+**[Mostrar el componente `NNAuthLogo`]**
+
+```typescript
+function NNAuthLogo({ size = 36 }: NNAuthLogoProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 36 36" ...>
+      {/* Badge cuadrado con bordes redondeados */}
+      <rect x="1" y="1" width="34" height="34" rx="8" fill="#0f172a" stroke="#3b82f6" />
+      {/* Primera N */}
+      <polyline points="7,27 7,9 15,27 15,9" stroke="#60a5fa" strokeWidth="2.5" />
+      {/* Segunda N */}
+      <polyline points="21,27 21,9 29,27 29,9" stroke="#60a5fa" strokeWidth="2.5" />
+    </svg>
+  );
+}
+```
+
+> "El logo es un **SVG embebido** — no una imagen externa ni un archivo. Aparece en el header, hero y footer. Dos letras N dibujadas con `<polyline>` dentro de un badge cuadrado redondeado. Sin fuentes de terceros, sin dependencias adicionales."
+
+**[Revisar la estructura semántica del JSX]**
+
+> "La landing usa elementos semánticos HTML5 correctamente: `<header>`, `<main>`, `<section>` con `aria-labelledby`, `<article>` para tarjetas, `<ol>` para los pasos, `<ul>` para features y badges, y `<footer>`. Esto es fundamental para accesibilidad (WCAG AA) y SEO."
+
+> "Las reglas de diseño que seguimos: fondo oscuro (`bg-gray-950`), tipografía sans-serif exclusivamente, cero degradados, colores sólidos azul/gris, responsividad mobile-first."
+
+**[Mostrar `App.tsx` con la ruta]**
+
+```tsx
+// La ruta raíz muestra la landing, no redirige
+<Route path="/" element={<LandingPage />} />
+```
+
+> "En `App.tsx` la ruta `/` apunta directamente a `<LandingPage />`. No hay redirect. Cualquier visitante, autenticado o no, ve la landing. Si quiere entrar al sistema, hace clic en los CTAs."
+
+---
+
+### 🎙️ Guión — Páginas legales (Ley 1581 de 2012)
+
+**[Hacer clic en "Términos de uso" en el footer de la landing]**
+
+> "En el footer de la landing encontramos tres enlaces: **Términos de uso**, **Política de privacidad** y **Política de cookies**. No son decorativos — son un requisito legal para operar un servicio digital en Colombia."
+
+> "La **Ley 1581 de 2012** —conocida como Ley de Habeas Data— obliga a cualquier responsable del tratamiento de datos personales a publicar y mantener una Política de Privacidad y a informar al titular sobre sus derechos. El **Decreto 1377 de 2013** reglamentario define el contenido mínimo de ese aviso. La **Ley 527 de 1999** valida los contratos electrónicos y la **Ley 1480 de 2011** protege al consumidor digital."
+
+**[Mostrar `PoliticaPrivacidadPage.tsx` en el editor]**
+
+> "La Política de Privacidad es el documento más técnico desde el punto de vista legal. Identifica al responsable del tratamiento, los datos recolectados, las finalidades, y los **seis derechos del titular** del artículo 8 de la Ley 1581: conocer, actualizar, rectificar, suprimir, revocar, acceder gratuitamente y presentar quejas ante la **SIC** — la Superintendencia de Industria y Comercio."
+
+> "También menciona el **RNBD** — el Registro Nacional de Bases de Datos del Decreto 886 de 2014 — que exige inscribir ante la SIC cualquier base de datos con datos personales."
+
+**[Mostrar `LegalLayout.tsx` en el editor]**
+
+> "Estas tres páginas comparten un layout común: el componente `LegalLayout`. Tiene header con logo y botón de retorno, contenedor tipográfico y footer. Las secciones numeradas usan el subcomponente `LegalSection` que recibe un número, un título y los hijos React."
+
+```tsx
+// Uso del layout compartido — cada página es solo contenido
+<LegalLayout
+  title="Política de Privacidad..."
+  lastUpdated="2026-02-01"
+  version="1.0"
+>
+  <LegalSection
+    id="responsable"
+    number="1"
+    heading="Responsable del Tratamiento"
+  >
+    <p>Los datos serán tratados por Empresa NN S.A.S. ...</p>
+  </LegalSection>
+  {/* ... más secciones */}
+</LegalLayout>
+```
+
+> "Esto permite que si mañana actualizamos el diseño legal, basta con editar `LegalLayout.tsx` y el cambio se aplica a las tres páginas. DRY — Don't Repeat Yourself."
+
+---
+
+### 🎙️ Guión — Formulario de contacto (`/contacto`)
+
+**[Hacer clic en "Contacto" en el footer de la landing]**
+
+> "El cuarto enlace del footer es el **formulario de contacto** en `/contacto`. No es solo un formulario bonito — es un requisito legal. La Ley 1581 de 2012 exige al responsable del tratamiento disponer de un canal para que el titular pueda presentar **consultas** (Art. 14, respuesta en 10 días hábiles) y **reclamos** (Art. 15, respuesta en 15 días hábiles)."
+
+**[Mostrar el recuadro ámbar en la página]**
+
+> "Lo primero que vemos es un **aviso educativo prominente**. Dice que el formulario es demostrativo, que los mensajes no se envían a ningún servidor real y que los correos son ficticios. Esto es fundamental en un proyecto educativo: **NUNCA** hardcodear correos reales de personas en el código fuente."
+
+**[Mostrar `ContactPage.tsx` en el editor]**
+
+> "El archivo se abre con un comentario que explica: qué es, para qué sirve, qué impacto tiene y cuál es el marco legal. Luego define las constantes de correos ficticios en un objeto `CONTACT_INFO`. Estos valores son los mismos que aparecen en la Política de Privacidad — consistencia."
+
+```tsx
+// Correos ficticios — NUNCA usar correos reales en el código fuente
+const CONTACT_INFO = {
+  emailGeneral: "contacto@nn-company.co",
+  emailDatosPersonales: "datospersonales@nn-company.co",
+  emailSoporte: "soporte@nn-company.co",
+  // ...
+} as const;
+```
+
+> "Los **tipos TypeScript** son los de siempre: `ContactFormData` con los cinco campos y `ContactFormErrors` con los mismos campos pero opcionales. La función `validateForm` valida todos los campos y devuelve un objeto de errores. Si el objeto está vacío, no hay errores."
+
+**[Mostrar el flujo de envío en el navegador — llenar el formulario y enviar]**
+
+> "Al enviar el formulario con datos válidos: aparece el spinner, los campos se deshabilitan, y después de 1.5 segundos aparece el **panel de éxito**. El formulario desaparece y vemos el check verde con los plazos legales. Esto es el patrón correcto de UX para formularios: feedback claro del estado."
+
+```tsx
+// Simulación del envío — en producción sería axios.post('/api/v1/contact', formData)
+await new Promise((resolve) => setTimeout(resolve, 1500));
+setSubmitResult("success");
+setFormData(INITIAL_FORM);
+```
+
+> "El checkbox de aceptación de la Política de Privacidad **bloquea el envío** si no está marcado. Por qué? Porque el nombre y el correo del remitente son datos personales bajo la Ley 1581. Recolectarlos sin autorización expresa sería una violación del **principio de autorización** del artículo 9."
+
+> "El layout es un grid de tres columnas en desktop: el formulario ocupa dos y la columna de información de contacto ocupa una. En móvil se apila en una sola columna — mobile-first, como siempre."
+
+---
+
+### 🎙️ Guión — Páginas de autenticación
 
 **[Navegar por las páginas en el navegador mientras se explica]**
 
@@ -1363,7 +1510,7 @@ cd fe && pnpm dev
 >
 > **Backend:** FastAPI con Python, utilizando arquitectura en capas — routers, services, models y schemas. Autenticación con JWT, contraseñas hasheadas con bcrypt, verificación de email previa al login, mitigaciones OWASP Top 10 (rate limiting, audit logging, hardening de headers y Swagger condicionado por entorno) y 38 tests de integración en verde.
 >
-> **Frontend:** React con TypeScript, Context API para el estado global de auth, interceptores de Axios para tokens automáticos, protección de rutas y mejoras de accesibilidad ARIA/WCAG con tests frontend en verde.
+> **Frontend:** Landing page pública (ruta `/`) con logo SVG, presentación del sistema y CTAs. Páginas de cumplimiento legal (Términos de Uso, Política de Privacidad y Política de Cookies) conforme a Ley 1581/2012, Decreto 1377/2013, Ley 527/1999 y Ley 1480/2011. Formulario de contacto público (`/contacto`) con validación client-side, envío simulado y aviso educativo. Además: React con TypeScript, Context API para el estado global de auth, interceptores de Axios para tokens automáticos, protección de rutas y mejoras de accesibilidad ARIA/WCAG con tests frontend en verde.
 >
 > **Infraestructura:** PostgreSQL en Docker, migraciones con Alembic, variables de entorno para toda la configuración sensible.
 >

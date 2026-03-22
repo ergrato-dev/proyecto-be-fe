@@ -95,7 +95,7 @@ Toda la documentación y comentarios deben escribirse en español:
 ## 5. Restricciones Organizacionales
 
 ### RO-001 — Proyecto educativo
-Este es un proyecto educativo del SENA (Ficha 3171599). Cada línea de código y documentación debe tener enfoque pedagógico. Los comentarios deben explicar el "qué", "para qué" e "impacto" de cada decisión técnica.
+Este es un proyecto educativo del SENA. Cada línea de código y documentación debe tener enfoque pedagógico. Los comentarios deben explicar el "qué", "para qué" e "impacto" de cada decisión técnica.
 
 ### RO-002 — Conventional Commits
 Todos los mensajes de commit deben seguir el formato **Conventional Commits** con cuerpo que incluya What, For e Impact.

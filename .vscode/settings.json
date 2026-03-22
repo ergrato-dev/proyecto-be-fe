@@ -55,5 +55,25 @@
       "username": "nn_user",
       "password": "nn_password"
     }
-  ]
+  ],
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#115cd0",
+    "activityBar.background": "#115cd0",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#f36ca1",
+    "activityBarBadge.foreground": "#15202b",
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#115cd0",
+    "statusBar.background": "#0d47a1",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#115cd0",
+    "statusBarItem.remoteBackground": "#0d47a1",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#0d47a1",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#0d47a199",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#0D47A1"
 }
