@@ -1710,3 +1710,17 @@ cd be && source .venv/bin/activate && alembic upgrade head
 | 32    | `_docs/referencia-tecnica/database-schema.md` | Esquema y relaciones de BD                |
 | 33    | `_docs/conceptos/owasp-top-10.md`             | Mitigaciones de seguridad OWASP           |
 | 34    | `_docs/conceptos/accesibilidad-aria-wcag.md`  | Evidencia de accesibilidad frontend       |
+
+
+implementación SSL
+manejo de errores
+
+
+
+
+
+
+
+
+
+
