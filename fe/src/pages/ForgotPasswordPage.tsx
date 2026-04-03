@@ -9,6 +9,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { InputField } from "@/components/ui/InputField";
@@ -22,6 +23,7 @@ import { Alert } from "@/components/ui/Alert";
  */
 export function ForgotPasswordPage() {
   const { forgotPassword } = useAuth();
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -34,19 +36,17 @@ export function ForgotPasswordPage() {
     setSuccess(null);
 
     if (!email) {
-      setError("El correo es obligatorio");
+      setError(t("auth.forgotPassword.validation.emailRequired"));
       return;
     }
 
     setIsLoading(true);
     try {
       await forgotPassword({ email });
-      setSuccess(
-        "Si el correo está registrado, recibirás un enlace para restablecer tu contraseña.",
-      );
+      setSuccess(t("auth.forgotPassword.successMessage"));
       setEmail("");
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Error al enviar la solicitud";
+      const message = err instanceof Error ? err.message : t("auth.forgotPassword.errorDefault");
       setError(message);
     } finally {
       setIsLoading(false);
@@ -54,10 +54,7 @@ export function ForgotPasswordPage() {
   };
 
   return (
-    <AuthLayout
-      title="Recuperar contraseña"
-      subtitle="Ingresa tu correo y te enviaremos un enlace de recuperación"
-    >
+    <AuthLayout title={t("auth.forgotPassword.title")} subtitle={t("auth.forgotPassword.subtitle")}>
       {success && (
         <div className="mb-4">
           <Alert type="success" message={success} />
@@ -71,11 +68,11 @@ export function ForgotPasswordPage() {
 
       <form onSubmit={handleSubmit} noValidate>
         <InputField
-          label="Correo electrónico"
+          label={t("common.email")}
           name="email"
           type="email"
           value={email}
-          placeholder="correo@ejemplo.com"
+          placeholder={t("common.emailPlaceholder")}
           autoComplete="email"
           icon={<Mail className="h-5 w-5" />}
           onChange={(e) => {
@@ -86,7 +83,7 @@ export function ForgotPasswordPage() {
 
         <div className="mt-2 flex justify-end">
           <Button type="submit" fullWidth isLoading={isLoading}>
-            Enviar enlace
+            {t("auth.forgotPassword.submit")}
           </Button>
         </div>
       </form>
@@ -96,7 +93,7 @@ export function ForgotPasswordPage() {
           to="/login"
           className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
         >
-          Volver al inicio de sesión
+          {t("auth.forgotPassword.backToLogin")}
         </Link>
       </p>
     </AuthLayout>

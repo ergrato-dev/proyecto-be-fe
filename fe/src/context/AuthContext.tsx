@@ -10,6 +10,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import * as authApi from "@/api/auth";
 import { AuthContext } from "@/context/authContextDef";
+// ¿Qué? Instancia de i18next para cambiar el idioma activo.
+// ¿Para qué? Sincronizar el idioma de la interfaz con la preferencia guardada del usuario.
+// ¿Impacto? Si el usuario guardó "en" en la BD, al iniciar sesión la app cambia a inglés automáticamente.
+import i18n from "@/i18n";
 import type {
   AuthContextType,
   ChangePasswordRequest,
@@ -43,11 +47,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // ¿Qué? Tokens JWT almacenados en estado de React.
   // ¿Para qué? Mantener los tokens en memoria durante la sesión del navegador.
   // ¿Impacto? Se inicializan desde sessionStorage para persistir durante la tab.
-  const [accessToken, setAccessToken] = useState<string | null>(
-    () => sessionStorage.getItem("access_token"),
+  const [accessToken, setAccessToken] = useState<string | null>(() =>
+    sessionStorage.getItem("access_token"),
   );
-  const [refreshToken, setRefreshToken] = useState<string | null>(
-    () => sessionStorage.getItem("refresh_token"),
+  const [refreshToken, setRefreshToken] = useState<string | null>(() =>
+    sessionStorage.getItem("refresh_token"),
   );
 
   // ¿Qué? Flag de carga — true mientras se verifica la sesión al arrancar.
@@ -100,6 +104,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       try {
         const userData = await authApi.getMe();
         setUser(userData);
+        // ¿Qué? Aplica el idioma guardado del usuario al restaurar la sesión.
+        // ¿Para qué? Garantizar que la preferencia persista incluso al recargar la página.
+        // ¿Impacto? Si el usuario cambió a inglés, la app arrancará en inglés al volver.
+        if (userData.locale) {
+          await i18n.changeLanguage(userData.locale);
+        }
       } catch {
         // ¿Qué? Si el token es inválido o expiró, limpiamos la sesión.
         // ¿Para qué? Evitar que la app quede en un estado inconsistente.
@@ -123,6 +133,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       saveTokens(tokens.access_token, tokens.refresh_token);
       const userData = await authApi.getMe();
       setUser(userData);
+      // ¿Qué? Aplica el idioma del usuario inmediatamente después del login.
+      // ¿Para qué? Si el usuario tenía configurado inglés, la app cambia al instante.
+      // ¿Impacto? Sin esto, el idioma solo cambiaría al recargar la página.
+      if (userData.locale) {
+        await i18n.changeLanguage(userData.locale);
+      }
     },
     [saveTokens],
   );

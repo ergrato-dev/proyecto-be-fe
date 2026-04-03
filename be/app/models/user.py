@@ -119,6 +119,19 @@ class User(Base):
         nullable=False,
     )
 
+    # ¿Qué? Idioma preferido del usuario para la interfaz (locale).
+    # ¿Para qué? Recordar en qué idioma el usuario quiere ver la aplicación,
+    #            independientemente del dispositivo o navegador que use.
+    # ¿Impacto? i18n — al iniciar sesión, el frontend aplica este locale para
+    #            mostrar la interfaz en el idioma guardado. DEFAULT 'es' porque
+    #            el proyecto es de contexto colombiano (SENA). Solo acepta 'es' y 'en'.
+    locale: Mapped[str] = mapped_column(
+        String(10),
+        default="es",
+        server_default="es",
+        nullable=False,
+    )
+
     # ¿Qué? Fecha y hora de creación del registro.
     # ¿Para qué? Trazabilidad — saber cuándo se registró cada usuario.
     # ¿Impacto? server_default=func.now() hace que PostgreSQL genere la fecha,

@@ -232,6 +232,11 @@ class UserResponse(BaseModel):
     # ¿Para qué? El frontend puede mostrar un aviso "verifica tu email" en el dashboard.
     # ¿Impacto? False = el usuario no puede iniciar sesión hasta verificar.
     is_email_verified: bool
+    # ¿Qué? Idioma preferido del usuario para la interfaz (locale).
+    # ¿Para qué? El frontend lo lee al iniciar sesión para aplicar el idioma correcto
+    #            sin que el usuario tenga que seleccionarlo de nuevo en cada dispositivo.
+    # ¿Impacto? i18n — la preferencia del usuario viaja en el response del login/perfil.
+    locale: str
     created_at: datetime
     updated_at: datetime
 
@@ -266,3 +271,53 @@ class MessageResponse(BaseModel):
     """
 
     message: str
+
+
+class UpdateLocaleRequest(BaseModel):
+    """Schema para actualizar el idioma preferido del usuario (i18n).
+
+    ¿Qué? Contiene el nuevo locale que el usuario seleccionó en la interfaz.
+    ¿Para qué? Persistir la preferencia de idioma en la base de datos,
+              de forma que se restaure al iniciar sesión desde cualquier dispositivo.
+    ¿Impacto? Sin este schema, el idioma solo se guardaría en localStorage
+              del navegador actual — al cambiar de dispositivo se perdería la preferencia.
+
+    Concepto i18n pedagógico:
+        locale: código de idioma estándar (ISO 639-1). Soportamos:
+          - "es" → Español (por defecto — contexto SENA/Colombia)
+          - "en" → English (inglés general)
+        Formato reducido: solo el base-language code, sin región (no "es-CO", no "en-US").
+    """
+
+    # ¿Qué? Código del idioma seleccionado por el usuario.
+    # ¿Para qué? Identificar en qué idioma debe mostrarse la interfaz.
+    # ¿Impacto? SOLO acepta "es" o "en". Cualquier otro valor retorna 422 Unprocessable Entity.
+    locale: str
+
+    @field_validator("locale")
+    @classmethod
+    def validate_locale(cls, v: str) -> str:
+        """Valida que el locale sea uno de los idiomas soportados.
+
+        ¿Qué? Verifica que el valor sea "es" o "en".
+        ¿Para qué? Evitar que el cliente envíe locales no soportados
+                   como "fr", "pt" o "es-CO" que causan comportamientos indefinidos.
+        ¿Impacto? OWASP A03 Injection: validar inputs en el servidor siempre,
+                   aunque el frontend también valide. Nunca confiar solo en el cliente.
+
+        Args:
+            v: Valor del locale enviado por el cliente.
+
+        Returns:
+            El locale validado.
+
+        Raises:
+            ValueError: Si el locale no es "es" o "en".
+        """
+        supported_locales = ("es", "en")
+        if v not in supported_locales:
+            raise ValueError(
+                f"Locale '{v}' no está soportado. "
+                f"Usa uno de: {', '.join(supported_locales)}"
+            )
+        return v

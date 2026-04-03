@@ -1,0 +1,126 @@
+{
+  "nav": {
+    "brand": "NN Auth",
+    "logout": "Sign out",
+    "language": "Language"
+  },
+  "common": {
+    "loading": "Loading...",
+    "email": "Email address",
+    "emailPlaceholder": "email@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "or": "or"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Enter your credentials to access your account",
+      "forgotPassword": "Forgot your password?",
+      "noAccount": "Don't have an account?",
+      "createAccountLink": "Create account",
+      "submit": "Sign in",
+      "errorDefault": "Error signing in"
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Fill in your details to register",
+      "confirmEmail": "Confirm email",
+      "confirmPassword": "Confirm password",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "errorDefault": "Error creating account",
+      "validation": {
+        "emailRequired": "Email is required",
+        "confirmEmailRequired": "Please confirm your email address",
+        "emailsMismatch": "Email addresses do not match",
+        "firstNameMin": "First name must be at least 2 characters",
+        "lastNameMin": "Last name must be at least 2 characters",
+        "passwordMin": "Minimum 8 characters",
+        "passwordUppercase": "Must include at least one uppercase letter",
+        "passwordLowercase": "Must include at least one lowercase letter",
+        "passwordNumber": "Must include at least one number",
+        "passwordsMismatch": "Passwords do not match"
+      }
+    },
+    "changePassword": {
+      "title": "Change password",
+      "subtitle": "Update your account password",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "submit": "Change password",
+      "successMessage": "Password updated successfully",
+      "backToDashboard": "Back to dashboard",
+      "validation": {
+        "currentRequired": "Current password is required",
+        "passwordMin": "Minimum 8 characters",
+        "passwordUppercase": "Must include at least one uppercase letter",
+        "passwordLowercase": "Must include at least one lowercase letter",
+        "passwordNumber": "Must include at least one number",
+        "passwordsMismatch": "Passwords do not match"
+      }
+    },
+    "forgotPassword": {
+      "title": "Reset password",
+      "subtitle": "Enter your email and we'll send you a recovery link",
+      "submit": "Send link",
+      "backToLogin": "Back to sign in",
+      "successMessage": "If your email is registered, you'll receive a link to reset your password.",
+      "errorDefault": "Error sending the request",
+      "validation": {
+        "emailRequired": "Email is required"
+      }
+    },
+    "resetPassword": {
+      "title": "Set new password",
+      "subtitle": "Enter your new password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "submit": "Set new password",
+      "successMessage": "Password reset successfully. You can now sign in.",
+      "loginLink": "Go to sign in",
+      "errorDefault": "Error resetting password",
+      "tokenMissing": "Recovery token not found in the URL",
+      "invalidLinkTitle": "Invalid link",
+      "invalidLinkMessage": "The recovery link is invalid or has expired. Please request a new one.",
+      "requestNewLink": "Request a new link",
+      "validation": {
+        "passwordMin": "Minimum 8 characters",
+        "passwordUppercase": "Must include at least one uppercase letter",
+        "passwordLowercase": "Must include at least one lowercase letter",
+        "passwordNumber": "Must include at least one number",
+        "passwordsMismatch": "Passwords do not match"
+      }
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome, {{name}}",
+    "subtitle": "Your account control panel",
+    "profileTitle": "Profile information",
+    "labelName": "Name",
+    "labelEmail": "Email",
+    "labelStatus": "Status",
+    "labelMemberSince": "Member since",
+    "labelEmailVerified": "Email verified",
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "statusVerified": "Verified",
+    "statusNotVerified": "Not verified",
+    "accountStatus": "Account status: {{status}}",
+    "changePasswordButton": "Change password",
+    "languageTitle": "Interface language",
+    "languageSubtitle": "Select the language in which the application will be displayed"
+  },
+  "language": {
+    "selector": "Language",
+    "es": "Español",
+    "en": "English"
+  }
+}

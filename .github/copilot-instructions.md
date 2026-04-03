@@ -15,7 +15,7 @@
 | Campo               | Valor                                                                                                                   |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | **Nombre**          | NN Auth System                                                                                                          |
-| **Tipo**            | Proyecto educativo — SENA                                                                                |
+| **Tipo**            | Proyecto educativo — SENA                                                                                               |
 | **Propósito**       | Sistema de autenticación completo (registro, login, cambio y recuperación de contraseña) para una empresa genérica "NN" |
 | **Enfoque**         | Aprendizaje guiado: cada línea de código y documentación debe enseñar                                                   |
 | **Fecha de inicio** | Febrero 2026                                                                                                            |
@@ -46,19 +46,22 @@
 
 ### 2.2 Frontend (`fe/`)
 
-| Tecnología      | Versión | Propósito                                    |
-| --------------- | ------- | -------------------------------------------- |
-| Node.js         | 20 LTS+ | Runtime de JavaScript                        |
-| React           | 18+     | Biblioteca para interfaces de usuario        |
-| Vite            | 6+      | Bundler y dev server ultrarrápido            |
-| TypeScript      | 5.0+    | Superset tipado de JavaScript                |
-| TailwindCSS     | 4+      | Framework CSS utility-first                  |
-| React Router    | 7+      | Enrutamiento del lado del cliente            |
-| Axios           | latest  | Cliente HTTP para comunicación con la API    |
-| Vitest          | latest  | Framework de testing compatible con Vite     |
-| Testing Library | latest  | Utilidades de testing para componentes React |
-| ESLint          | latest  | Linter para TypeScript/React                 |
-| Prettier        | latest  | Formateador de código                        |
+| Tecnología                       | Versión | Propósito                                    |
+| -------------------------------- | ------- | -------------------------------------------- |
+| Node.js                          | 20 LTS+ | Runtime de JavaScript                        |
+| React                            | 18+     | Biblioteca para interfaces de usuario        |
+| Vite                             | 6+      | Bundler y dev server ultrarrápido            |
+| TypeScript                       | 5.0+    | Superset tipado de JavaScript                |
+| TailwindCSS                      | 4+      | Framework CSS utility-first                  |
+| React Router                     | 7+      | Enrutamiento del lado del cliente            |
+| Axios                            | latest  | Cliente HTTP para comunicación con la API    |
+| Vitest                           | latest  | Framework de testing compatible con Vite     |
+| Testing Library                  | latest  | Utilidades de testing para componentes React |
+| ESLint                           | latest  | Linter para TypeScript/React                 |
+| Prettier                         | latest  | Formateador de código                        |
+| i18next                          | latest  | Motor de internacionalización (i18n)         |
+| react-i18next                    | latest  | Integración de i18next con React (hooks/HOC) |
+| i18next-browser-languagedetector | latest  | Detecta idioma del navegador automáticamente |
 
 ### 2.3 Base de Datos
 
@@ -415,6 +418,80 @@ export function InputField({ label, name, type = "text", error, value, onChange 
 | Timestamps          | `created_at`, `updated_at` en toda tabla                |
 | Migraciones         | Siempre vía Alembic, nunca alterar BD manualmente       |
 
+### 6.4 Internacionalización (i18n) — Frontend
+
+> **Conceptos clave para los aprendices:**
+>
+> - **i18n** (internacionalización): preparar el código para admitir múltiples idiomas sin cambios de código
+> - **l10n** (localización): adaptar el contenido al idioma y región específicos
+> - **locale**: identificador de idioma/región (ej: `es`, `en`, `es-CO`, `en-US`)
+
+| Aspecto                    | Convención                                                            |
+| -------------------------- | --------------------------------------------------------------------- |
+| Librería                   | `react-i18next` + `i18next` + `i18next-browser-languagedetector`      |
+| Idiomas soportados         | `es` (español — por defecto) y `en` (inglés)                          |
+| Archivos de traducción     | `src/locales/{locale}/translation.json`                               |
+| Namespace                  | Un único namespace `translation` (simplicidad pedagógica)             |
+| Claves de traducción       | **inglés**, `camelCase`, agrupadas por sección/página                 |
+| Valores de traducción      | En el idioma correspondiente al archivo                               |
+| Textos con variables       | Usar interpolación `{{variable}}` (ej: `"welcome": "Hola, {{name}}"`) |
+| Almacenamiento preferencia | `localStorage` (clave `i18nextLng`) + columna `locale` en BD          |
+| Detección automática       | `navigator.language` → fallback a `es`                                |
+
+```typescript
+// ✅ CORRECTO — Clave en inglés, sintaxis de hook
+
+import { useTranslation } from "react-i18next";
+
+function LoginPage() {
+  const { t } = useTranslation();
+
+  return <h1>{t("auth.login.title")}</h1>;
+  // Renderiza: "Iniciar sesión" (en español) | "Sign in" (en inglés)
+}
+
+// ✅ CORRECTO — Interpolación de variables
+function DashboardPage() {
+  const { t } = useTranslation();
+  const { user } = useAuth();
+
+  return <h1>{t("dashboard.welcome", { name: user?.first_name })}</h1>;
+  // Renderiza: "Bienvenido, Carlos" | "Welcome, Carlos"
+}
+
+// ❌ INCORRECTO — Texto hardcoded en componentes
+function LoginPage() {
+  return <h1>Iniciar sesión</h1>; // ← No se puede traducir
+}
+```
+
+```json
+// ✅ CORRECTO — Estructura de un archivo de traducción (es/translation.json)
+{
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "submit": "Iniciar sesión"
+    }
+  },
+  "dashboard": {
+    "welcome": "Bienvenido, {{name}}"
+  }
+}
+```
+
+**Convenciones de estructura de claves:**
+
+```
+auth.login.title          → título de la página de login
+auth.register.submit      → botón de submit del formulario de registro
+auth.changePassword.*     → textos de la página cambio de contraseña
+dashboard.*               → textos del dashboard
+nav.*                     → textos de la navbar (brand, logout, etc.)
+common.*                  → textos reutilizables (loading, cancel, etc.)
+language.*                → textos del selector de idioma
+```
+
 ---
 
 ## 7. Conventional Commits — OBLIGATORIO
@@ -626,15 +703,18 @@ Todos los endpoints van bajo `/api/v1/`
 
 ### 11.1 Tabla `users`
 
-| Columna           | Tipo         | Restricciones                  |
-| ----------------- | ------------ | ------------------------------ |
-| `id`              | UUID         | PK, default uuid4              |
-| `email`           | VARCHAR(255) | UNIQUE, NOT NULL, INDEXED      |
-| `full_name`       | VARCHAR(255) | NOT NULL                       |
-| `hashed_password` | VARCHAR(255) | NOT NULL                       |
-| `is_active`       | BOOLEAN      | DEFAULT TRUE                   |
-| `created_at`      | TIMESTAMP    | DEFAULT NOW(), NOT NULL        |
-| `updated_at`      | TIMESTAMP    | DEFAULT NOW(), ON UPDATE NOW() |
+| Columna             | Tipo         | Restricciones                  |
+| ------------------- | ------------ | ------------------------------ |
+| `id`                | UUID         | PK, default uuid4              |
+| `email`             | VARCHAR(255) | UNIQUE, NOT NULL, INDEXED      |
+| `first_name`        | VARCHAR(255) | NOT NULL                       |
+| `last_name`         | VARCHAR(255) | NOT NULL                       |
+| `hashed_password`   | VARCHAR(255) | NOT NULL                       |
+| `is_active`         | BOOLEAN      | DEFAULT TRUE                   |
+| `is_email_verified` | BOOLEAN      | DEFAULT FALSE                  |
+| `locale`            | VARCHAR(10)  | DEFAULT 'es', NOT NULL         |
+| `created_at`        | TIMESTAMP    | DEFAULT NOW(), NOT NULL        |
+| `updated_at`        | TIMESTAMP    | DEFAULT NOW(), ON UPDATE NOW() |
 
 ### 11.2 Tabla `password_reset_tokens`
 
@@ -913,6 +993,29 @@ volumes:
 - [x] Crear `HU-011` — Historia de usuario: formulario de contacto público
 - [x] Crear `RF-013` — Requisito funcional: formulario de contacto (RN-055 a RN-072)
 - [ ] ✅ Verificar: documentación completa y coherente
+
+### Fase 9 — Internacionalización (i18n)
+
+- [x] Crear `HU-012` — Historia de usuario: cambio de idioma de la interfaz
+- [x] Crear `RF-014` — Requisito funcional: i18n (RN-073 a RN-090)
+- [x] Backend: agregar columna `locale VARCHAR(10) DEFAULT 'es'` en tabla `users`
+- [x] Backend: crear migración Alembic `e5f7a9b1c3d5_add_locale_to_users`
+- [x] Backend: agregar `locale` en schema `UserResponse` y nuevo `UpdateLocaleRequest`
+- [x] Backend: agregar endpoint `PATCH /api/v1/users/me/locale`
+- [x] Backend: agregar función `update_user_locale` en `auth_service.py`
+- [x] Backend: agregar test para endpoint de locale
+- [x] Frontend: instalar `react-i18next`, `i18next`, `i18next-browser-languagedetector`
+- [x] Frontend: crear `src/locales/es/translation.json` — catálogo español
+- [x] Frontend: crear `src/locales/en/translation.json` — catálogo inglés
+- [x] Frontend: crear `src/i18n.ts` — configuración de i18next
+- [x] Frontend: importar i18n en `main.tsx`
+- [x] Frontend: crear componente `LanguageSwitcher`
+- [x] Frontend: integrar `LanguageSwitcher` en `Navbar`
+- [x] Frontend: adaptar todas las páginas de auth al hook `useTranslation()`
+- [x] Frontend: sincronizar preferencia de idioma con backend (usuario autenticado)
+- [x] Frontend: agregar mock de i18n en `setup.ts` para tests
+- [x] Frontend: crear test para `LanguageSwitcher`
+- [x] ✅ Verificar: la app cambia de idioma completamente al seleccionar ES/EN
 
 ---
 

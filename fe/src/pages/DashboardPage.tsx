@@ -6,6 +6,7 @@
  */
 
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/Button";
 
@@ -16,17 +17,16 @@ import { Button } from "@/components/ui/Button";
  */
 export function DashboardPage() {
   const { user } = useAuth();
+  const { t, i18n } = useTranslation();
 
   return (
     <div className="space-y-6">
       {/* ¿Qué? Saludo personalizado con el nombre del usuario. */}
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Bienvenido, {user?.first_name} {user?.last_name}
+          {t("dashboard.welcome", { name: `${user?.first_name} ${user?.last_name}` })}
         </h1>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          Panel de control de tu cuenta
-        </p>
+        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{t("dashboard.subtitle")}</p>
       </div>
 
       {/* ¿Qué? Tarjeta con información del perfil del usuario. */}
@@ -34,24 +34,30 @@ export function DashboardPage() {
       {/* ¿Impacto? El usuario puede verificar que su información es correcta. */}
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
         <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-          Información del perfil
+          {t("dashboard.profileTitle")}
         </h2>
 
         <dl className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:gap-4">
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Nombre</dt>
+            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">
+              {t("dashboard.labelName")}
+            </dt>
             <dd className="text-sm text-gray-900 dark:text-gray-100">
               {user?.first_name} {user?.last_name}
             </dd>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:gap-4">
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Correo</dt>
+            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">
+              {t("dashboard.labelEmail")}
+            </dt>
             <dd className="text-sm text-gray-900 dark:text-gray-100">{user?.email}</dd>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:gap-4">
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Estado</dt>
+            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">
+              {t("dashboard.labelStatus")}
+            </dt>
             <dd>
               {/*
                 ¿Qué? Badge de estado con texto explícito y aria-label complementario.
@@ -68,20 +74,27 @@ export function DashboardPage() {
                     ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
                     : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
                 }`}
-                aria-label={`Estado de la cuenta: ${user?.is_active ? "Activo" : "Inactivo"}`}
+                aria-label={t("dashboard.accountStatus", {
+                  status: user?.is_active
+                    ? t("dashboard.statusActive")
+                    : t("dashboard.statusInactive"),
+                })}
               >
-                {user?.is_active ? "Activo" : "Inactivo"}
+                {user?.is_active ? t("dashboard.statusActive") : t("dashboard.statusInactive")}
               </span>
             </dd>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:gap-4">
             <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">
-              Miembro desde
+              {t("dashboard.labelMemberSince")}
             </dt>
             <dd className="text-sm text-gray-900 dark:text-gray-100">
+              {/* ¿Qué? Fecha formateada según el idioma activo de la app. */}
+              {/* ¿Para qué? Un usuario en inglés ve "January 15, 2025", en español "15 de enero de 2025". */}
+              {/* ¿Impacto? Mejora la consistencia cultural de la interfaz. */}
               {user?.created_at
-                ? new Date(user.created_at).toLocaleDateString("es-CO", {
+                ? new Date(user.created_at).toLocaleDateString(i18n.language, {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -97,7 +110,7 @@ export function DashboardPage() {
         <div className="mt-6 flex justify-end border-t border-gray-200 pt-4 dark:border-gray-700">
           <Link to="/change-password">
             <Button variant="secondary" size="sm">
-              Cambiar contraseña
+              {t("dashboard.changePasswordButton")}
             </Button>
           </Link>
         </div>

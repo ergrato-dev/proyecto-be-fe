@@ -8,6 +8,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Lock, KeyRound, ShieldCheck } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { InputField } from "@/components/ui/InputField";
 import { Button } from "@/components/ui/Button";
@@ -21,6 +22,7 @@ import { PasswordStrengthIndicator } from "@/components/ui/PasswordStrengthIndic
  */
 export function ChangePasswordPage() {
   const { changePassword } = useAuth();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     current_password: "",
@@ -48,21 +50,21 @@ export function ChangePasswordPage() {
     const newErrors: Record<string, string> = {};
 
     if (!formData.current_password) {
-      newErrors.current_password = "La contraseña actual es obligatoria";
+      newErrors.current_password = t("auth.changePassword.validation.currentRequired");
     }
 
     if (formData.new_password.length < 8) {
-      newErrors.new_password = "Mínimo 8 caracteres";
+      newErrors.new_password = t("auth.register.validation.passwordMin");
     } else if (!/[A-Z]/.test(formData.new_password)) {
-      newErrors.new_password = "Debe incluir al menos una mayúscula";
+      newErrors.new_password = t("auth.register.validation.passwordUppercase");
     } else if (!/[a-z]/.test(formData.new_password)) {
-      newErrors.new_password = "Debe incluir al menos una minúscula";
+      newErrors.new_password = t("auth.register.validation.passwordLowercase");
     } else if (!/\d/.test(formData.new_password)) {
-      newErrors.new_password = "Debe incluir al menos un número";
+      newErrors.new_password = t("auth.register.validation.passwordNumber");
     }
 
     if (formData.new_password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Las contraseñas no coinciden";
+      newErrors.confirmPassword = t("auth.register.validation.passwordsMismatch");
     }
 
     setErrors(newErrors);
@@ -82,10 +84,10 @@ export function ChangePasswordPage() {
         current_password: formData.current_password,
         new_password: formData.new_password,
       });
-      setSuccess("Contraseña actualizada exitosamente");
+      setSuccess(t("auth.changePassword.successMessage"));
       setFormData({ current_password: "", new_password: "", confirmPassword: "" });
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Error al cambiar contraseña";
+      const message = err instanceof Error ? err.message : t("auth.changePassword.errorDefault");
       setGeneralError(message);
     } finally {
       setIsLoading(false);
@@ -96,10 +98,10 @@ export function ChangePasswordPage() {
     <div className="mx-auto max-w-md">
       <div className="mb-6">
         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Cambiar contraseña
+          {t("auth.changePassword.title")}
         </h1>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          Ingresa tu contraseña actual y elige una nueva
+          {t("auth.changePassword.subtitle")}
         </p>
       </div>
 
@@ -117,7 +119,7 @@ export function ChangePasswordPage() {
 
         <form onSubmit={handleSubmit} noValidate>
           <InputField
-            label="Contraseña actual"
+            label={t("auth.changePassword.currentPassword")}
             name="current_password"
             type="password"
             value={formData.current_password}
@@ -129,11 +131,11 @@ export function ChangePasswordPage() {
           />
 
           <InputField
-            label="Nueva contraseña"
+            label={t("auth.changePassword.newPassword")}
             name="new_password"
             type="password"
             value={formData.new_password}
-            placeholder="Mínimo 8 caracteres"
+            placeholder={t("common.passwordPlaceholder")}
             autoComplete="new-password"
             icon={<KeyRound className="h-5 w-5" />}
             error={errors.new_password}
@@ -146,11 +148,11 @@ export function ChangePasswordPage() {
           <PasswordStrengthIndicator password={formData.new_password} />
 
           <InputField
-            label="Confirmar nueva contraseña"
+            label={t("auth.changePassword.confirmPassword")}
             name="confirmPassword"
             type="password"
             value={formData.confirmPassword}
-            placeholder="Repite la nueva contraseña"
+            placeholder={t("common.passwordPlaceholder")}
             autoComplete="new-password"
             icon={<ShieldCheck className="h-5 w-5" />}
             error={errors.confirmPassword}
@@ -162,10 +164,10 @@ export function ChangePasswordPage() {
           {/* ¿Impacto? Botones alineados a la derecha según reglas de diseño. */}
           <div className="mt-2 flex justify-end gap-3">
             <Link to="/dashboard">
-              <Button variant="secondary">Cancelar</Button>
+              <Button variant="secondary">{t("common.cancel")}</Button>
             </Link>
             <Button type="submit" isLoading={isLoading}>
-              Guardar
+              {t("common.save")}
             </Button>
           </div>
         </form>

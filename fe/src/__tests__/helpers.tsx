@@ -21,6 +21,8 @@ export const mockUser: UserResponse = {
   first_name: "Test",
   last_name: "User",
   is_active: true,
+  is_email_verified: false,
+  locale: "es",
   created_at: "2026-01-01T00:00:00Z",
   updated_at: "2026-01-01T00:00:00Z",
 };

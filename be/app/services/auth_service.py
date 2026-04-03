@@ -490,3 +490,55 @@ def verify_email(db: Session, token: str) -> None:
     # ¿Impacto? OWASP A09: información útil para investigar activaciones auténticas vs fraudulentas.
     log_email_verified(user_id=str(user.id))
 
+
+def update_user_locale(db: Session, user: User, locale: str) -> User:
+    """Actualiza el idioma preferido (locale) del usuario en la base de datos.
+
+    ¿Qué? Cambia la columna `locale` del usuario al valor proporcionado.
+    ¿Para qué? Persistir la preferencia de idioma en la BD, de forma que se restaure
+              al iniciar sesión desde cualquier dispositivo.
+              Esta función es parte del sistema de i18n (internacionalización).
+    ¿Impacto? El cliente guarda el locale también en localStorage — este endpoint
+              sincroniza ambas fuentes. Si el usuario inicia sesión en otro dispositivo,
+              el response del login incluirá `locale` y el frontend lo aplicará.
+
+    Concepto i18n pedagógico:
+        - La BD es la fuente de verdad para la preferencia del usuario autenticado.
+        - localStorage es la fuente de verdad para usuarios anónimos y como cache rápido.
+        - Al iniciar sesión: BD → localStorage (la BD "gana").
+        - Al cambiar idioma: localStorage + BD (ambas se actualizan).
+
+    Args:
+        db: Sesión de base de datos.
+        user: Instancia del usuario cuyo locale se va a actualizar.
+        locale: Código del nuevo idioma ("es" o "en"). Ya validado por el schema Pydantic.
+
+    Returns:
+        El usuario actualizado con el nuevo locale.
+
+    Raises:
+        HTTPException 400: Si el locale no es válido (aunque Pydantic ya lo valida antes).
+    """
+    # ¿Qué? Validación defensiva de los valores permitidos.
+    # ¿Para qué? Aunque UpdateLocaleRequest ya valida con Pydantic, es buena práctica
+    #            validar también en la capa de servicio (defense in depth).
+    # ¿Impacto? OWASP A03: Never trust input — aunque el schema lo validó, el servicio
+    #            no asume nada. Si se llama directamente (sin pasar por el endpoint), también es seguro.
+    supported_locales = ("es", "en")
+    if locale not in supported_locales:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Locale '{locale}' no está soportado. Usa: {', '.join(supported_locales)}",
+        )
+
+    # ¿Qué? Actualizar la columna locale del usuario.
+    # ¿Para qué? Persistir la preferencia de idioma en la base de datos.
+    # ¿Impacto? db.commit() escribe el cambio en PostgreSQL de forma permanente.
+    #           db.refresh(user) actualiza el objeto en memoria con los valores de la BD.
+    user.locale = locale
+    db.commit()
+    db.refresh(user)
+
+    return user
+
+

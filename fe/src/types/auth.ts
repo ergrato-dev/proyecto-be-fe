@@ -86,6 +86,12 @@ export interface UserResponse {
   first_name: string;
   last_name: string;
   is_active: boolean;
+  is_email_verified: boolean;
+  // ¿Qué? Idioma preferido del usuario (i18n locale).
+  // ¿Para qué? Al iniciar sesión, el frontend lee este campo para aplicar el idioma guardado.
+  // ¿Impacto? Conecta la preferencia de idioma de la BD con el motor i18next del frontend.
+  //           Valores posibles: "es" (español, por defecto) | "en" (inglés).
+  locale: string;
   created_at: string;
   updated_at: string;
 }

@@ -898,3 +898,113 @@ class TestEmailVerification:
 
         assert response.status_code == 400
         assert "utilizado" in response.json()["detail"].lower()
+
+
+# ════════════════════════════════════════════════════════════
+# 🌐 TESTS DE LOCALE — PATCH /api/v1/users/me/locale
+# ════════════════════════════════════════════════════════════
+
+
+class TestUpdateLocale:
+    """Tests para el endpoint de actualización de preferencia de idioma.
+
+    ¿Qué? Verifica el flujo de cambio de locale del usuario autenticado.
+    ¿Para qué? Asegurar que solo locales válidos son aceptados y que la
+              preferencia se persiste correctamente en la base de datos.
+    ¿Impacto? Si falla, el sistema i18n no puede sincronizar la preferencia de idioma
+             entre dispositivos del mismo usuario.
+    """
+
+    URL = "/api/v1/users/me/locale"
+
+    def test_update_locale_to_en(
+        self, client: TestClient, auth_headers: dict[str, str]
+    ) -> None:
+        """PATCH /me/locale con locale="en" → 200 + usuario con locale actualizado.
+
+        ¿Qué? Cambia el locale del usuario de "es" (por defecto) a "en".
+        ¿Para qué? Confirmar el happy path del cambio de idioma.
+        ¿Impacto? Es el flujo principal cuando el usuario selecciona "English".
+        """
+        response = client.patch(
+            self.URL,
+            json={"locale": "en"},
+            headers=auth_headers,
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["locale"] == "en"
+
+    def test_update_locale_to_es(
+        self, client: TestClient, auth_headers: dict[str, str]
+    ) -> None:
+        """PATCH /me/locale con locale="es" → 200 + usuario con locale="es".
+
+        ¿Qué? Cambia el locale a español (idioma por defecto del sistema).
+        ¿Para qué? Confirmar que el retorno al idioma por defecto funciona.
+        ¿Impacto? Un usuario que cambió a inglés y quiere volver a español.
+        """
+        response = client.patch(
+            self.URL,
+            json={"locale": "es"},
+            headers=auth_headers,
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["locale"] == "es"
+
+    def test_update_locale_invalid_value(
+        self, client: TestClient, auth_headers: dict[str, str]
+    ) -> None:
+        """PATCH /me/locale con locale no soportado → 422.
+
+        ¿Qué? Intenta establecer "fr" (francés) como locale — no soportado.
+        ¿Para qué? Verificar que la validación de Pydantic rechaza valores inválidos.
+        ¿Impacto? Sin validación, podrían guardarse locales que el frontend no puede manejar.
+        """
+        response = client.patch(
+            self.URL,
+            json={"locale": "fr"},
+            headers=auth_headers,
+        )
+
+        assert response.status_code == 422
+
+    def test_update_locale_no_auth(self, client: TestClient) -> None:
+        """PATCH /me/locale sin token → 401.
+
+        ¿Qué? Intenta cambiar el locale sin autenticación.
+        ¿Para qué? Verificar que el endpoint es protegido.
+        ¿Impacto? Sin protección, cualquiera podría modificar el locale de un usuario.
+        """
+        response = client.patch(
+            self.URL,
+            json={"locale": "en"},
+        )
+
+        assert response.status_code == 401
+
+    def test_update_locale_persists(
+        self, client: TestClient, auth_headers: dict[str, str]
+    ) -> None:
+        """PATCH a "en" + GET /me → locale="en" persiste en la BD.
+
+        ¿Qué? Cambia el locale y luego consulta el perfil para verificar persistencia.
+        ¿Para qué? Confirmar que el cambio se guarda en la BD (no solo en memoria).
+        ¿Impacto? Sin persistencia, el idioma se perdería en cada recarga.
+        """
+        # Paso 1: Cambiar locale a "en".
+        patch_response = client.patch(
+            self.URL,
+            json={"locale": "en"},
+            headers=auth_headers,
+        )
+        assert patch_response.status_code == 200
+
+        # Paso 2: Consultar el perfil — locale debe ser "en".
+        get_response = client.get("/api/v1/users/me", headers=auth_headers)
+        assert get_response.status_code == 200
+        assert get_response.json()["locale"] == "en"
+

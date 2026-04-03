@@ -106,3 +106,21 @@ export async function getMe(): Promise<UserResponse> {
   const response = await api.get<UserResponse>(`${USERS_PREFIX}/me`);
   return response.data;
 }
+
+/**
+ * ¿Qué? Actualiza el idioma preferido del usuario en el backend (i18n).
+ * ¿Para qué? Enviar PATCH /api/v1/users/me/locale con el nuevo locale.
+ *           Sincroniza la preferencia de idioma entre localStorage (cliente) y la BD (servidor).
+ * ¿Impacto? Al iniciar sesión desde otro dispositivo, el response incluirá
+ *           el locale guardado y el frontend aplicará el idioma correcto automáticamente.
+ *           Si falla (error de red o token expirado), el cambio en la UI ya se aplicó
+ *           — el frontend no debe revertirlo por este error.
+ *
+ * Concepto i18n pedagógico:
+ *   Esta función es el puente entre el frontend (i18next + localStorage) y el backend (BD).
+ *   El contrato es simple: { locale: "es" } o { locale: "en" }.
+ */
+export async function updateLocale(locale: string): Promise<UserResponse> {
+  const response = await api.patch<UserResponse>(`${USERS_PREFIX}/me/locale`, { locale });
+  return response.data;
+}

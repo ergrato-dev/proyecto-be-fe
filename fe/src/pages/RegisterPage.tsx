@@ -8,6 +8,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User, Mail, MailCheck, Lock, KeyRound } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { InputField } from "@/components/ui/InputField";
@@ -23,6 +24,7 @@ import { PasswordStrengthIndicator } from "@/components/ui/PasswordStrengthIndic
 export function RegisterPage() {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -52,7 +54,7 @@ export function RegisterPage() {
     const newErrors: Record<string, string> = {};
 
     if (!formData.email) {
-      newErrors.email = "El correo es obligatorio";
+      newErrors.email = t("auth.register.validation.emailRequired");
     }
 
     // ¿Qué? Validar que el correo de confirmación coincida con el principal.
@@ -60,31 +62,31 @@ export function RegisterPage() {
     // ¿Impacto? Previene registros con errores tipográficos que bloquearían la cuenta
     //           (el email de verificación llegaría a una dirección incorrecta).
     if (!formData.confirmEmail) {
-      newErrors.confirmEmail = "Debes confirmar tu correo electrónico";
+      newErrors.confirmEmail = t("auth.register.validation.confirmEmailRequired");
     } else if (formData.email !== formData.confirmEmail) {
-      newErrors.confirmEmail = "Los correos electrónicos no coinciden";
+      newErrors.confirmEmail = t("auth.register.validation.emailsMismatch");
     }
 
     if (!formData.first_name || formData.first_name.trim().length < 2) {
-      newErrors.first_name = "El nombre debe tener al menos 2 caracteres";
+      newErrors.first_name = t("auth.register.validation.firstNameMin");
     }
 
     if (!formData.last_name || formData.last_name.trim().length < 2) {
-      newErrors.last_name = "El apellido debe tener al menos 2 caracteres";
+      newErrors.last_name = t("auth.register.validation.lastNameMin");
     }
 
     if (formData.password.length < 8) {
-      newErrors.password = "Mínimo 8 caracteres";
+      newErrors.password = t("auth.register.validation.passwordMin");
     } else if (!/[A-Z]/.test(formData.password)) {
-      newErrors.password = "Debe incluir al menos una mayúscula";
+      newErrors.password = t("auth.register.validation.passwordUppercase");
     } else if (!/[a-z]/.test(formData.password)) {
-      newErrors.password = "Debe incluir al menos una minúscula";
+      newErrors.password = t("auth.register.validation.passwordLowercase");
     } else if (!/\d/.test(formData.password)) {
-      newErrors.password = "Debe incluir al menos un número";
+      newErrors.password = t("auth.register.validation.passwordNumber");
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Las contraseñas no coinciden";
+      newErrors.confirmPassword = t("auth.register.validation.passwordsMismatch");
     }
 
     setErrors(newErrors);
@@ -107,7 +109,7 @@ export function RegisterPage() {
       });
       navigate("/dashboard", { replace: true });
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Error al registrar usuario";
+      const message = err instanceof Error ? err.message : t("auth.register.errorDefault");
       setGeneralError(message);
     } finally {
       setIsLoading(false);
@@ -115,7 +117,7 @@ export function RegisterPage() {
   };
 
   return (
-    <AuthLayout title="Crear cuenta" subtitle="Completa tus datos para registrarte">
+    <AuthLayout title={t("auth.register.title")} subtitle={t("auth.register.subtitle")}>
       {generalError && (
         <div className="mb-4">
           <Alert type="error" message={generalError} onClose={() => setGeneralError(null)} />
@@ -128,7 +130,7 @@ export function RegisterPage() {
         {/* ¿Impacto? El backend almacena ambos campos por separado en la BD. */}
         <div className="grid grid-cols-2 gap-3">
           <InputField
-            label="Nombres"
+            label={t("common.firstName")}
             name="first_name"
             type="text"
             value={formData.first_name}
@@ -140,7 +142,7 @@ export function RegisterPage() {
           />
 
           <InputField
-            label="Apellidos"
+            label={t("common.lastName")}
             name="last_name"
             type="text"
             value={formData.last_name}
@@ -153,11 +155,11 @@ export function RegisterPage() {
         </div>
 
         <InputField
-          label="Correo electrónico"
+          label={t("common.email")}
           name="email"
           type="email"
           value={formData.email}
-          placeholder="correo@ejemplo.com"
+          placeholder={t("common.emailPlaceholder")}
           autoComplete="email"
           icon={<Mail className="h-5 w-5" />}
           error={errors.email}
@@ -170,11 +172,11 @@ export function RegisterPage() {
         {/* ¿Impacto? Evita el error clásico de registrarse con un typo en el email — */}
         {/*            lo que impediría recibir el enlace de verificación. */}
         <InputField
-          label="Confirmar correo electrónico"
+          label={t("auth.register.confirmEmail")}
           name="confirmEmail"
           type="email"
           value={formData.confirmEmail}
-          placeholder="Repite tu correo"
+          placeholder={t("common.emailPlaceholder")}
           autoComplete="off"
           icon={<MailCheck className="h-5 w-5" />}
           error={errors.confirmEmail}
@@ -183,11 +185,11 @@ export function RegisterPage() {
         />
 
         <InputField
-          label="Contraseña"
+          label={t("common.password")}
           name="password"
           type="password"
           value={formData.password}
-          placeholder="Mínimo 8 caracteres"
+          placeholder={t("common.passwordPlaceholder")}
           autoComplete="new-password"
           icon={<Lock className="h-5 w-5" />}
           error={errors.password}
@@ -200,11 +202,11 @@ export function RegisterPage() {
         <PasswordStrengthIndicator password={formData.password} />
 
         <InputField
-          label="Confirmar contraseña"
+          label={t("auth.register.confirmPassword")}
           name="confirmPassword"
           type="password"
           value={formData.confirmPassword}
-          placeholder="Repite tu contraseña"
+          placeholder={t("common.passwordPlaceholder")}
           autoComplete="new-password"
           icon={<KeyRound className="h-5 w-5" />}
           error={errors.confirmPassword}
@@ -214,18 +216,18 @@ export function RegisterPage() {
 
         <div className="mt-2 flex justify-end">
           <Button type="submit" fullWidth isLoading={isLoading}>
-            Crear cuenta
+            {t("auth.register.submit")}
           </Button>
         </div>
       </form>
 
       <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-        ¿Ya tienes cuenta?{" "}
+        {t("auth.register.haveAccount")}{" "}
         <Link
           to="/login"
           className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
         >
-          Iniciar sesión
+          {t("auth.register.loginLink")}
         </Link>
       </p>
     </AuthLayout>

@@ -9,6 +9,7 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { KeyRound, ShieldCheck } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { InputField } from "@/components/ui/InputField";
@@ -22,6 +23,7 @@ import { Alert } from "@/components/ui/Alert";
  */
 export function ResetPasswordPage() {
   const { resetPassword } = useAuth();
+  const { t } = useTranslation();
   // ¿Qué? Lee el token del query param de la URL.
   // ¿Para qué? El enlace del email tiene formato: /reset-password?token=<uuid>.
   // ¿Impacto? Sin el token, no se puede completar el reset.
@@ -47,22 +49,22 @@ export function ResetPasswordPage() {
     const newErrors: Record<string, string> = {};
 
     if (!token) {
-      setGeneralError("Token de recuperación no encontrado en la URL");
+      setGeneralError(t("auth.resetPassword.tokenMissing"));
       return false;
     }
 
     if (formData.new_password.length < 8) {
-      newErrors.new_password = "Mínimo 8 caracteres";
+      newErrors.new_password = t("auth.register.validation.passwordMin");
     } else if (!/[A-Z]/.test(formData.new_password)) {
-      newErrors.new_password = "Debe incluir al menos una mayúscula";
+      newErrors.new_password = t("auth.register.validation.passwordUppercase");
     } else if (!/[a-z]/.test(formData.new_password)) {
-      newErrors.new_password = "Debe incluir al menos una minúscula";
+      newErrors.new_password = t("auth.register.validation.passwordLowercase");
     } else if (!/\d/.test(formData.new_password)) {
-      newErrors.new_password = "Debe incluir al menos un número";
+      newErrors.new_password = t("auth.register.validation.passwordNumber");
     }
 
     if (formData.new_password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Las contraseñas no coinciden";
+      newErrors.confirmPassword = t("auth.register.validation.passwordsMismatch");
     }
 
     setErrors(newErrors);
@@ -82,10 +84,10 @@ export function ResetPasswordPage() {
         token,
         new_password: formData.new_password,
       });
-      setSuccess("Contraseña restablecida exitosamente. Ya puedes iniciar sesión.");
+      setSuccess(t("auth.resetPassword.successMessage"));
       setFormData({ new_password: "", confirmPassword: "" });
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Error al restablecer contraseña";
+      const message = err instanceof Error ? err.message : t("auth.resetPassword.errorDefault");
       setGeneralError(message);
     } finally {
       setIsLoading(false);
@@ -95,17 +97,14 @@ export function ResetPasswordPage() {
   // ¿Qué? Si no hay token en la URL, mostrar mensaje de error.
   if (!token) {
     return (
-      <AuthLayout title="Enlace inválido">
-        <Alert
-          type="error"
-          message="El enlace de recuperación es inválido o ha expirado. Solicita uno nuevo."
-        />
+      <AuthLayout title={t("auth.resetPassword.invalidLinkTitle")}>
+        <Alert type="error" message={t("auth.resetPassword.invalidLinkMessage")} />
         <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
           <Link
             to="/forgot-password"
             className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
           >
-            Solicitar nuevo enlace
+            {t("auth.resetPassword.requestNewLink")}
           </Link>
         </p>
       </AuthLayout>
@@ -113,10 +112,7 @@ export function ResetPasswordPage() {
   }
 
   return (
-    <AuthLayout
-      title="Restablecer contraseña"
-      subtitle="Elige una nueva contraseña para tu cuenta"
-    >
+    <AuthLayout title={t("auth.resetPassword.title")} subtitle={t("auth.resetPassword.subtitle")}>
       {success && (
         <div className="mb-4">
           <Alert type="success" message={success} />
@@ -131,11 +127,11 @@ export function ResetPasswordPage() {
       {!success ? (
         <form onSubmit={handleSubmit} noValidate>
           <InputField
-            label="Nueva contraseña"
+            label={t("auth.changePassword.newPassword")}
             name="new_password"
             type="password"
             value={formData.new_password}
-            placeholder="Mínimo 8 caracteres"
+            placeholder={t("common.passwordPlaceholder")}
             autoComplete="new-password"
             icon={<KeyRound className="h-5 w-5" />}
             error={errors.new_password}
@@ -143,11 +139,11 @@ export function ResetPasswordPage() {
           />
 
           <InputField
-            label="Confirmar nueva contraseña"
+            label={t("auth.changePassword.confirmPassword")}
             name="confirmPassword"
             type="password"
             value={formData.confirmPassword}
-            placeholder="Repite la nueva contraseña"
+            placeholder={t("common.passwordPlaceholder")}
             autoComplete="new-password"
             icon={<ShieldCheck className="h-5 w-5" />}
             error={errors.confirmPassword}
@@ -156,14 +152,14 @@ export function ResetPasswordPage() {
 
           <div className="mt-2 flex justify-end">
             <Button type="submit" fullWidth isLoading={isLoading}>
-              Restablecer contraseña
+              {t("auth.resetPassword.submit")}
             </Button>
           </div>
         </form>
       ) : (
         <div className="flex justify-end">
           <Link to="/login">
-            <Button>Ir al inicio de sesión</Button>
+            <Button>{t("auth.resetPassword.loginLink")}</Button>
           </Link>
         </div>
       )}

@@ -1,23 +1,29 @@
 /**
  * Archivo: components/layout/Navbar.tsx
- * Descripción: Barra de navegación superior con logo, toggle de tema y logout.
- * ¿Para qué? Proveer navegación consistente y acceso al toggle dark/light en toda la app.
- * ¿Impacto? Sin navbar, el usuario no tendría forma de cerrar sesión ni cambiar tema.
+ * Descripción: Barra de navegación superior con logo, selector de idioma, toggle de tema y logout.
+ * ¿Para qué? Proveer navegación consistente y acceso al toggle dark/light y cambio de idioma.
+ * ¿Impacto? Sin navbar, el usuario no tendría forma de cerrar sesión, cambiar tema ni idioma.
  */
 
 import { Link, useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 
 /**
- * ¿Qué? Barra de navegación con logo, nombre de usuario, toggle de tema y logout.
+ * ¿Qué? Barra de navegación con logo, nombre de usuario, toggle de tema, selector de idioma y logout.
  * ¿Para qué? Presente en todas las páginas autenticadas (Dashboard, ChangePassword, etc.).
  * ¿Impacto? Diseño: fondo sólido (sin degradado), bordes sutiles, botones a la derecha.
  */
 export function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  // ¿Qué? Hook de traducción para los textos de la navbar.
+  // ¿Para qué? Los textos "Salir" / "Sign out", "NN Auth" son traducibles.
+  // ¿Impacto? Al cambiar idioma, la navbar se actualiza automáticamente sin recarga.
+  const { t } = useTranslation();
 
   /**
    * ¿Qué? Handler de logout — cierra sesión y redirige al login.
@@ -47,13 +53,18 @@ export function Navbar() {
           to={isAuthenticated ? "/dashboard" : "/login"}
           className="text-xl font-bold tracking-tight text-gray-900 dark:text-white"
         >
-          NN Auth
+          {t("nav.brand")}
         </Link>
 
-        {/* ¿Qué? Acciones de la derecha: info del usuario, toggle de tema, logout. */}
-        {/* ¿Para qué? Agrupar acciones secundarias y el toggle de tema juntos. */}
+        {/* ¿Qué? Acciones de la derecha: info del usuario, toggle de tema, selector de idioma y logout. */}
+        {/* ¿Para qué? Agrupar acciones secundarias y los controles de preferencias juntos. */}
         {/* ¿Impacto? Botones alineados a la derecha según las reglas de diseño. */}
         <div className="flex items-center gap-3">
+          {/* ¿Qué? Selector de idioma accesible con Español / English. */}
+          {/* ¿Para qué? Permite cambiar el idioma de toda la interfaz sin recargar. */}
+          {/* ¿Impacto? Usa i18n.changeLanguage() → todos los componentes se actualizan al instante. */}
+          <LanguageSwitcher />
+
           <ThemeToggle />
 
           {isAuthenticated && user && (
@@ -63,13 +74,13 @@ export function Navbar() {
                 {user.first_name} {user.last_name}
               </span>
 
-              {/* ¿Qué? Botón de cerrar sesión con icono de Lucide. */}
+              {/* ¿Qué? Botón de cerrar sesión con icono de Lucide y texto traducible. */}
               <button
                 onClick={handleLogout}
                 className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
               >
                 <LogOut className="h-4 w-4" aria-hidden="true" />
-                Salir
+                {t("nav.logout")}
               </button>
             </>
           )}
