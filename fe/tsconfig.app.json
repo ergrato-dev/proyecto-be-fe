@@ -25,7 +25,6 @@
     "noUncheckedSideEffectImports": true,
 
     /* Alias de paths — permite usar @/ en lugar de rutas relativas largas */
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }

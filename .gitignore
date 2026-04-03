@@ -92,3 +92,20 @@ docker-volumes/
 *.log
 *.tmp
 *.bak
+
+# ────────────────────────────
+# 🚀 Deploy / VPS (no versionar — configuraciones del servidor)
+# ────────────────────────────
+deploy/
+
+# ────────────────────────────
+# 🎭 Demo mode (no versionar — lógica de usuarios temporales y rate limiting)
+# ────────────────────────────
+# Backend demo: rate limiting estricto, IP ban, usuarios temporales 15 min
+be/app/demo/
+be/requirements.demo.txt
+be/.env.demo
+
+# Frontend demo: página de creación de usuario demo
+fe/src/pages/demo/
+fe/.env.demo
