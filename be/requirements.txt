@@ -1,54 +1,88 @@
 # ========================
 # NN Auth System — Dependencias del Backend
 # ========================
-# ¿Qué? Lista de todas las dependencias Python del backend.
-# ¿Para qué? Permitir la instalación reproducible del proyecto con `pip install -r requirements.txt`.
-# ¿Impacto? Sin este archivo, cada desarrollador tendría que adivinar qué paquetes instalar
-#           y en qué versiones, causando inconsistencias entre entornos.
+# ¿Qué? Lista de todas las dependencias Python del backend con versiones exactas.
+# ¿Para qué? Garantizar instalaciones 100% reproducibles y sin CVEs activos.
+# ¿Impacto? Versiones sin pinear (>=, ~=, *, ^) permiten que pip instale automáticamente
+#           versiones futuras con regresiones o vulnerabilidades. Versiones exactas (==)
+#           aseguran que todos los entornos ejecuten EXACTAMENTE el mismo código auditado.
+#
+# REGLA DE ORO — PROHIBIDO en este archivo:
+#   ✗  fastapi>=0.115.0   (permite cualquier versión futura, incluso con CVEs)
+#   ✗  fastapi~=0.115.0   (permite actualizaciones de parche no auditadas)
+#   ✗  fastapi            (sin versión = ruleta rusa)
+#   ✓  fastapi==0.135.1   (única versión auditada y aprobada)
+#
+# Para actualizar una dependencia:
+#   1. Revisar changelog y CVEs de la nueva versión
+#   2. Actualizar la versión aquí
+#   3. Ejecutar `pip install -r requirements.txt` y `.venv/bin/pip-audit`
+#   4. Ejecutar `pytest -v` para confirmar que los tests siguen pasando
+#   5. Commit con mensaje: "chore(deps): upgrade <paquete> X.Y.Z → A.B.C"
 
 # ────────────────────────────
 # 🚀 Framework y servidor
 # ────────────────────────────
-fastapi>=0.115.0            # Framework web async de alto rendimiento
-uvicorn[standard]>=0.32.0   # Servidor ASGI para ejecutar FastAPI
-python-multipart>=0.0.18    # Soporte para form data (requerido por OAuth2PasswordRequestForm)
+fastapi==0.135.1            # Framework web async de alto rendimiento
+uvicorn[standard]==0.42.0   # Servidor ASGI para ejecutar FastAPI
+python-multipart==0.0.22    # Soporte para form data (requerido por OAuth2PasswordRequestForm)
 
 # ────────────────────────────
 # 🗄️ Base de datos y ORM
 # ────────────────────────────
-sqlalchemy>=2.0.0           # ORM para interactuar con PostgreSQL
-alembic>=1.14.0             # Migraciones de base de datos versionadas
-psycopg2-binary>=2.9.0      # Driver PostgreSQL para Python
+sqlalchemy==2.0.48          # ORM para interactuar con PostgreSQL
+alembic==1.18.4             # Migraciones de base de datos versionadas
+psycopg2-binary==2.9.11     # Driver PostgreSQL para Python
 
 # ────────────────────────────
 # 📋 Validación y configuración
 # ────────────────────────────
-pydantic>=2.0.0             # Validación de datos y schemas (ya incluido con FastAPI)
-pydantic-settings>=2.0.0    # Cargar configuración desde variables de entorno (.env)
-email-validator>=2.0.0      # Validación de emails (requerido por Pydantic EmailStr)
+pydantic==2.12.5            # Validación de datos y schemas (ya incluido con FastAPI)
+pydantic-settings==2.13.1   # Cargar configuración desde variables de entorno (.env)
+email-validator==2.3.0      # Validación de emails (requerido por Pydantic EmailStr)
 
 # ────────────────────────────
 # 🔐 Seguridad y autenticación
 # ────────────────────────────
-python-jose[cryptography]>=3.3.0  # Creación y verificación de tokens JWT
-passlib[bcrypt]>=1.7.0            # Hashing seguro de contraseñas con bcrypt
-bcrypt>=4.0.0,<4.1.0              # Backend de bcrypt — fijado <4.1 por compatibilidad con passlib
+python-jose[cryptography]==3.5.0  # Creación y verificación de tokens JWT
+passlib[bcrypt]==1.7.4            # Hashing seguro de contraseñas con bcrypt
+bcrypt==4.0.1                     # Backend de bcrypt — fijado en 4.0.1 por compatibilidad con passlib
 
 # ────────────────────────────
 # 📧 Email
 # ────────────────────────────
-resend>=2.25.0              # SDK oficial de Resend para envío de emails transaccionales
+resend==2.25.0              # SDK oficial de Resend para envío de emails transaccionales
 
 # ────────────────────────────
 # 🧪 Testing
 # ────────────────────────────
-pytest>=8.0.0               # Framework principal de testing
-pytest-asyncio>=0.24.0      # Soporte para tests asíncronos
-httpx>=0.27.0               # Cliente HTTP async para tests de integración con FastAPI
-pytest-cov>=6.0.0           # Medir cobertura de código
+pytest==9.0.2               # Framework principal de testing
+pytest-asyncio==1.3.0       # Soporte para tests asíncronos
+httpx==0.28.1               # Cliente HTTP async para tests de integración con FastAPI
+pytest-cov==7.0.0           # Medir cobertura de código
 
 # ────────────────────────────
 # 🔍 Linting y formateo
 # ────────────────────────────
-ruff>=0.8.0                 # Linter + formatter ultrarrápido para Python
-slowapi>=0.1.9              # Rate limiting para FastAPI — previene ataques de fuerza bruta (OWASP A04)
+ruff==0.15.7                # Linter + formatter ultrarrápido para Python
+slowapi==0.1.9              # Rate limiting para FastAPI — previene ataques de fuerza bruta (OWASP A04)
+
+# ─────────────────────────────────────────────────────────
+# 🛡️ Pins de seguridad — dependencias transitivas con CVEs
+# ─────────────────────────────────────────────────────────
+# ¿Qué? Pins explícitos de paquetes transitivos que presentaron CVEs activos.
+# ¿Para qué? Neutralizar vulnerabilidades en dependencias de dependencias
+#            que pip podría instalar en versiones vulnerables sin estos pins.
+# ¿Impacto? Sin estas líneas, una instalación limpia podría traer versiones
+#           comprometidas aunque todos los paquetes directos estén sanos.
+#
+# Auditado con: pip-audit (resultado: "No known vulnerabilities found")
+# Fecha de auditoría: 2026-04-04
+#
+cryptography==46.0.6        # FIX: CVE-2026-34073 (estaba en 46.0.5 — operaciones criptográficas comprometidas)
+ecdsa==0.19.2               # FIX: CVE-2026-33936 (estaba en 0.19.1 — timing attack en firmas ECDSA)
+                            #      CVE-2024-23342 (timing attack — corregido parcialmente en 0.19.2)
+                            #      Nota: dep transitiva de python-jose; nuestro código usa el backend
+                            #      'cryptography' para JWT, por lo que la exposición real es mínima.
+pygments==2.20.0            # FIX: CVE-2026-4539 (estaba en 2.19.2 — ReDoS en lexer de código)
+requests==2.33.0            # FIX: CVE-2026-25645 (estaba en 2.32.5 — header injection en requests)

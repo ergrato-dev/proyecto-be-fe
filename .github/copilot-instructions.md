@@ -207,7 +207,94 @@ yarn install       # ← PROHIBIDO
 
 Si algún tutorial o documentación sugiere `npm`, **reemplazar** por el equivalente `pnpm`.
 
-### 4.3 Variables de entorno
+### 4.3 Versiones de dependencias — PINEAR SIEMPRE (REGLA DE ORO)
+
+> **"Una versión no pineada es una vulnerabilidad en espera de manifestarse."**
+
+**PROHIBIDO** usar rangos de versión en `requirements.txt` ni en `package.json`:
+
+| Operador          | Significado               | Por qué está prohibido                        |
+| ----------------- | ------------------------- | --------------------------------------------- |
+| `^1.2.3`          | cualquier `1.x.x` ≥ 1.2.3 | Permite instalar 1.99.0 con CVEs desconocidos |
+| `~1.2.3`          | cualquier `1.2.x` ≥ 1.2.3 | Permite parches que rompen compatibilidad     |
+| `>=1.2.3`         | cualquier versión ≥ 1.2.3 | Sin límite superior — completamente inseguro  |
+| `>1.2.3`          | cualquier versión > 1.2.3 | Ídem — sin límite superior                    |
+| `*`               | cualquier versión         | La peor opción — literalmente ruleta rusa     |
+| ` ` (sin versión) | última disponible         | Sin trazabilidad ni reproducibilidad          |
+
+**OBLIGATORIO** usar versiones exactas en todo momento:
+
+```python
+# ✅ CORRECTO — requirements.txt
+fastapi==0.135.1
+sqlalchemy==2.0.48
+cryptography==46.0.6
+
+# ❌ INCORRECTO — requirements.txt
+fastapi>=0.115.0     # ← PROHIBIDO
+sqlalchemy~=2.0.0    # ← PROHIBIDO
+cryptography         # ← PROHIBIDO (sin versión)
+```
+
+```json
+// ✅ CORRECTO — package.json
+{
+  "dependencies": {
+    "axios": "1.13.5",
+    "react": "19.2.4"
+  }
+}
+
+// ❌ INCORRECTO — package.json
+{
+  "dependencies": {
+    "axios": "^1.13.5",
+    "react": "~19.2.4",
+    "lodash": "*"
+  }
+}
+```
+
+**Flujo obligatorio al agregar o actualizar una dependencia:**
+
+```bash
+# Python
+pip install "paquete==X.Y.Z"          # Instalar versión exacta y auditada
+pip-audit                              # Verificar que no hay CVEs activos
+# Luego actualizar requirements.txt manualmente con ==X.Y.Z
+
+# Node.js — SIEMPRE con @X.Y.Z
+pnpm add paquete@X.Y.Z                 # pnpm respeta la versión exacta
+pnpm audit                             # Verificar CVEs
+# pnpm.overrides en package.json para dependencias transitivas con CVEs
+```
+
+**Dependencias transitivas vulnerables → usar `pnpm.overrides`:**
+
+```json
+// package.json
+{
+  "pnpm": {
+    "overrides": {
+      "vulnerable-pkg@<safe_version": "safe_version"
+    }
+  }
+}
+```
+
+**Herramientas de auditoría de CVEs:**
+
+```bash
+# Backend
+pip install pip-audit
+pip-audit                              # Audita todas las deps del venv activo
+
+# Frontend
+pnpm audit                             # Audita deps del node_modules
+pnpm audit --audit-level=high          # Solo reporta severidad high/critical
+```
+
+### 4.4 Variables de entorno
 
 - **NUNCA** hardcodear credenciales, URLs de base de datos, secrets, o configuración sensible
 - Usar archivos `.env` (no versionados en git)
@@ -631,6 +718,8 @@ cd fe && pnpm format             # Formatear código
 - [ ] ¿El commit sigue Conventional Commits con What/For/Impact?
 - [ ] ¿Las variables sensibles están en `.env` y no hardcodeadas?
 - [ ] ¿El `.env.example` se actualizó si se agregaron nuevas variables?
+- [ ] **Si se agregó/actualizó una dependencia:** ¿`pip-audit` / `pnpm audit` no reporta CVEs?
+- [ ] **Si se agregó/actualizó una dependencia:** ¿La versión es exacta (`==` / sin `^` ni `~`) en `requirements.txt` / `package.json`?
 
 ---
 
