@@ -308,4 +308,19 @@ Este proyecto es de naturaleza **exclusivamente educativa**, desarrollado como e
 
 ## 📄 Licencia
 
-Proyecto educativo — SENA. Uso exclusivamente académico.
+[![CC BY-NC-SA 4.0](https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Este proyecto está licenciado bajo **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**.
+
+**Puedes:**
+
+- ✅ Compartir — copiar y redistribuir el material en cualquier medio o formato
+- ✅ Adaptar — remezclar, transformar y crear a partir del material (forks educativos permitidos)
+
+**Bajo las siguientes condiciones:**
+
+- 📝 **Atribución** — Debes dar crédito apropiado, enlazar la licencia e indicar si se realizaron cambios.
+- 🚫 **No Comercial** — No puedes usar el material con fines comerciales.
+- 🔄 **Compartir Igual** — Si remezclas o transformas el material, debes distribuir tus contribuciones bajo la misma licencia.
+
+Consulta el archivo [LICENSE](./LICENSE) o visita [creativecommons.org/licenses/by-nc-sa/4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) para más información.
