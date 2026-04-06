@@ -10,6 +10,13 @@
 /* ¿Impacto? Es la única línea necesaria para activar TailwindCSS 4 (detección automática). */
 @import "tailwindcss";
 
+/* ¿Qué? Activa dark mode basado en la clase `.dark` en el elemento <html>.
+   ¿Para qué? En Tailwind v4 el default es media query (prefers-color-scheme).
+             Esta directiva indica que dark: aplica cuando un ancestro tiene clase .dark.
+   ¿Impacto? Sin esto, el toggle del ThemeToggle agrega la clase pero los estilos
+             dark: nunca se activan — el botón parece no funcionar. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ============================================================================
    TEMA PERSONALIZADO — NN Auth System
    ¿Qué? Variables CSS personalizadas para colores, tipografía y transiciones.

@@ -7,7 +7,7 @@
  *           sin ser detectado hasta que el usuario lo reporte.
  */
 
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi, beforeEach } from "vitest";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";

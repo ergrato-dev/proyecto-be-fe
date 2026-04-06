@@ -125,6 +125,7 @@ export function ChangePasswordPage() {
             value={formData.current_password}
             placeholder="••••••••"
             autoComplete="current-password"
+            autoFocus
             icon={<Lock className="h-5 w-5" />}
             error={errors.current_password}
             onChange={handleChange}

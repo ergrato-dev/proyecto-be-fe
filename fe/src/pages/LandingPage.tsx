@@ -8,6 +8,9 @@
 
 import { Link } from "react-router-dom";
 import { ShieldCheck, KeyRound, Mail, RefreshCw, Lock, UserCheck, ArrowRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 // ─────────────────────────────────────────────────────────────
 // LOGO COMPONENT
@@ -73,72 +76,20 @@ export function NNAuthLogo({ size = 36 }: NNAuthLogoProps) {
 // ─────────────────────────────────────────────────────────────
 
 /**
- * ¿Qué? Lista de características del sistema para renderizar dinámicamente.
- * ¿Para qué? Centralizar el contenido en un solo lugar facilita agregar o quitar features.
- * ¿Impacto? Cambiar aquí actualiza automáticamente la sección de features en la UI.
+ * ¿Qué? Iconos y claves de traducción para las características del sistema.
+ * ¿Para qué? Separar la estructura de datos del texto traducido — el texto se resuelve en runtime.
+ * ¿Impacto? Al cambiar de idioma, los textos se actualizan automáticamente sin recargar.
  */
-const features = [
-  {
-    icon: UserCheck,
-    title: "Registro seguro",
-    description:
-      "Validación de datos en tiempo real. Las contraseñas se almacenan hasheadas con bcrypt — nunca en texto plano.",
-  },
-  {
-    icon: KeyRound,
-    title: "Autenticación JWT",
-    description:
-      "Access tokens de 15 min y refresh tokens de 7 días. Stateless, eficiente y estándar en la industria.",
-  },
-  {
-    icon: Mail,
-    title: "Verificación de email",
-    description:
-      "Confirma la identidad antes de activar la cuenta. Enlace de un solo uso enviado automáticamente al registro.",
-  },
-  {
-    icon: Lock,
-    title: "Cambio de contraseña",
-    description:
-      "El usuario autenticado puede cambiar su contraseña ingresando la actual. Validación estricta en el backend.",
-  },
-  {
-    icon: RefreshCw,
-    title: "Recuperación por email",
-    description: "Flujo completo de forgot/reset con token de un solo uso y expiración de 1 hora.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Seguridad OWASP",
-    description:
-      "Diseñado con seguridad primero: sin SQL injection, sin XSS, CORS configurado e inputs validados con Pydantic.",
-  },
-] as const;
+const featureIcons = [UserCheck, KeyRound, Mail, Lock, RefreshCw, ShieldCheck] as const;
+const featureKeys = ["register", "jwt", "email", "password", "recovery", "security"] as const;
 
 /**
- * ¿Qué? Pasos del flujo principal que el usuario verá en "¿Cómo funciona?".
- * ¿Para qué? Mostrar el recorrido de uso de forma visual y ordenada.
- * ¿Impacto? Ayuda al usuario a entender el sistema antes de registrarse.
+ * ¿Qué? Números y claves de traducción para los pasos del flujo principal.
+ * ¿Para qué? Igual que featureIcons — estructura sin texto hardcodeado.
+ * ¿Impacto? El texto de "¿Cómo funciona?" cambia de idioma sin necesidad de duplicar arrays.
  */
-const steps = [
-  {
-    number: "01",
-    title: "Crea tu cuenta",
-    description:
-      "Registra tu email y contraseña. Recibirás un correo para verificar y activar tu cuenta.",
-  },
-  {
-    number: "02",
-    title: "Inicia sesión",
-    description:
-      "Autentícate con tus credenciales. El sistema emitirá un access token y un refresh token.",
-  },
-  {
-    number: "03",
-    title: "Accede al sistema",
-    description: "Con tu sesión activa, gestiona tu perfil y contraseña desde el dashboard.",
-  },
-] as const;
+const stepNumbers = ["01", "02", "03"] as const;
+const stepKeys = ["step1", "step2", "step3"] as const;
 
 /**
  * ¿Qué? Tecnologías usadas en el proyecto para mostrar en la sección de stack.
@@ -174,12 +125,14 @@ const techStack = [
  * ¿Impacto? Primera impresión del sistema — define confianza, claridad y propuesta de valor.
  */
 export function LandingPage() {
+  const { t } = useTranslation();
+
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
       {/* ══════════════════════════════════════════════════════
           HEADER — navegación sticky con logo y acciones
           ══════════════════════════════════════════════════════ */}
-      <header className="sticky top-0 z-50 border-b border-gray-800 bg-gray-950">
+      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
         <nav
           className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4"
           aria-label="Navegación principal"
@@ -191,7 +144,7 @@ export function LandingPage() {
             aria-label="NN Auth System — ir al inicio"
           >
             <NNAuthLogo size={32} />
-            <span className="text-lg font-semibold tracking-tight text-gray-100">
+            <span className="text-lg font-semibold tracking-tight text-gray-900 dark:text-gray-100">
               NN <span className="text-blue-500">Auth</span> System
             </span>
           </Link>
@@ -199,11 +152,17 @@ export function LandingPage() {
           {/* Acciones */}
           <ul className="m-0 flex list-none items-center gap-2 p-0">
             <li>
+              <LanguageSwitcher />
+            </li>
+            <li>
+              <ThemeToggle />
+            </li>
+            <li>
               <Link
                 to="/login"
-                className="rounded-lg px-4 py-2 text-sm font-medium text-gray-300 transition-colors duration-200 hover:bg-gray-800 hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               >
-                Iniciar sesión
+                {t("landing.nav.login")}
               </Link>
             </li>
             <li>
@@ -211,7 +170,7 @@ export function LandingPage() {
                 to="/register"
                 className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
               >
-                Registrarse
+                {t("landing.nav.register")}
               </Link>
             </li>
           </ul>
@@ -223,7 +182,7 @@ export function LandingPage() {
             HERO — propuesta de valor principal
             ══════════════════════════════════════════════════════ */}
         <section
-          className="border-b border-gray-800 px-6 py-28 text-center"
+          className="border-b border-gray-200 px-6 py-28 text-center dark:border-gray-800"
           aria-labelledby="hero-heading"
         >
           <div className="mx-auto max-w-3xl">
@@ -232,13 +191,16 @@ export function LandingPage() {
               <NNAuthLogo size={72} />
             </div>
 
-            <h1 id="hero-heading" className="mb-5 text-5xl font-bold tracking-tight text-gray-100">
-              Autenticación segura, <span className="text-blue-500">lista para producción</span>
+            <h1
+              id="hero-heading"
+              className="mb-5 text-5xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
+            >
+              {t("landing.hero.title")}{" "}
+              <span className="text-blue-500">{t("landing.hero.titleHighlight")}</span>
             </h1>
 
-            <p className="mb-10 text-xl leading-relaxed text-gray-400">
-              Registro, login, verificación de email, cambio y recuperación de contraseña. Un
-              sistema completo construido con FastAPI, React y las mejores prácticas de seguridad.
+            <p className="mb-10 text-xl leading-relaxed text-gray-600 dark:text-gray-400">
+              {t("landing.hero.subtitle")}
             </p>
 
             {/* ¿Por qué justify-center? Los botones CTA en el hero son el punto focal,
@@ -248,14 +210,14 @@ export function LandingPage() {
                 to="/register"
                 className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-7 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
               >
-                Comenzar ahora
+                {t("landing.hero.ctaPrimary")}
                 <ArrowRight size={18} aria-hidden="true" />
               </Link>
               <Link
                 to="/login"
-                className="inline-flex items-center gap-2 rounded-lg border border-gray-700 px-7 py-3 text-base font-medium text-gray-300 transition-colors duration-200 hover:border-gray-500 hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500"
+                className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-7 py-3 text-base font-medium text-gray-700 transition-colors duration-200 hover:border-gray-400 hover:text-gray-900 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500"
               >
-                Iniciar sesión
+                {t("landing.hero.ctaSecondary")}
               </Link>
             </div>
           </div>
@@ -264,35 +226,43 @@ export function LandingPage() {
         {/* ══════════════════════════════════════════════════════
             FEATURES — tarjetas de características del sistema
             ══════════════════════════════════════════════════════ */}
-        <section className="border-b border-gray-800 px-6 py-20" aria-labelledby="features-heading">
+        <section
+          className="border-b border-gray-200 px-6 py-20 dark:border-gray-800"
+          aria-labelledby="features-heading"
+        >
           <div className="mx-auto max-w-6xl">
             <header className="mb-12 text-center">
-              <h2 id="features-heading" className="text-3xl font-bold text-gray-100">
-                Características del sistema
+              <h2
+                id="features-heading"
+                className="text-3xl font-bold text-gray-900 dark:text-gray-100"
+              >
+                {t("landing.features.title")}
               </h2>
-              <p className="mt-3 text-gray-400">
-                Todo lo necesario para un sistema de autenticación robusto y educativo.
+              <p className="mt-3 text-gray-600 dark:text-gray-400">
+                {t("landing.features.subtitle")}
               </p>
             </header>
 
             {/* Grid con 6 tarjetas — 1 col mobile, 2 tablet, 3 desktop */}
             <ul className="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3">
-              {features.map((feature) => {
-                const Icon = feature.icon;
+              {featureKeys.map((key, i) => {
+                const Icon = featureIcons[i];
                 return (
-                  <li key={feature.title}>
-                    <article className="h-full rounded-xl border border-gray-800 bg-gray-900 p-6 transition-colors duration-200 hover:border-gray-700">
+                  <li key={key}>
+                    <article className="h-full rounded-xl border border-gray-200 bg-gray-50 p-6 transition-colors duration-200 hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700">
                       {/* Ícono con fondo sutil */}
                       <div
-                        className="mb-4 inline-flex rounded-lg bg-gray-800 p-3"
+                        className="mb-4 inline-flex rounded-lg bg-gray-100 p-3 dark:bg-gray-800"
                         aria-hidden="true"
                       >
                         <Icon size={22} className="text-blue-500" />
                       </div>
-                      <h3 className="mb-2 text-base font-semibold text-gray-100">
-                        {feature.title}
+                      <h3 className="mb-2 text-base font-semibold text-gray-900 dark:text-gray-100">
+                        {t(`landing.features.${key}.title`)}
                       </h3>
-                      <p className="text-sm leading-relaxed text-gray-400">{feature.description}</p>
+                      <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                        {t(`landing.features.${key}.description`)}
+                      </p>
                     </article>
                   </li>
                 );
@@ -304,22 +274,27 @@ export function LandingPage() {
         {/* ══════════════════════════════════════════════════════
             HOW IT WORKS — flujo en 3 pasos
             ══════════════════════════════════════════════════════ */}
-        <section className="border-b border-gray-800 px-6 py-20" aria-labelledby="how-heading">
+        <section
+          className="border-b border-gray-200 px-6 py-20 dark:border-gray-800"
+          aria-labelledby="how-heading"
+        >
           <div className="mx-auto max-w-6xl">
             <header className="mb-14 text-center">
-              <h2 id="how-heading" className="text-3xl font-bold text-gray-100">
-                ¿Cómo funciona?
+              <h2 id="how-heading" className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                {t("landing.howItWorks.title")}
               </h2>
-              <p className="mt-3 text-gray-400">Tres pasos para empezar a usar el sistema.</p>
+              <p className="mt-3 text-gray-600 dark:text-gray-400">
+                {t("landing.howItWorks.subtitle")}
+              </p>
             </header>
 
             <ol className="m-0 grid list-none grid-cols-1 gap-10 p-0 sm:grid-cols-3">
-              {steps.map((step, index) => (
-                <li key={step.number} className="relative">
+              {stepKeys.map((key, index) => (
+                <li key={stepNumbers[index]} className="relative">
                   {/* Línea conectora entre pasos (solo visible en desktop, entre items) */}
-                  {index < steps.length - 1 && (
+                  {index < stepKeys.length - 1 && (
                     <div
-                      className="absolute top-7 left-full hidden h-px w-full -translate-x-5 bg-gray-800 sm:block"
+                      className="absolute top-7 left-full hidden h-px w-full -translate-x-5 bg-gray-200 dark:bg-gray-800 sm:block"
                       aria-hidden="true"
                     />
                   )}
@@ -327,14 +302,16 @@ export function LandingPage() {
                   <div className="flex flex-col items-center text-center">
                     {/* Número del paso con estilo de badge */}
                     <div
-                      className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-blue-800 bg-blue-950 text-xl font-bold text-blue-400"
+                      className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-blue-300 bg-blue-50 text-xl font-bold text-blue-600 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-400"
                       aria-hidden="true"
                     >
-                      {step.number}
+                      {stepNumbers[index]}
                     </div>
-                    <h3 className="mb-2 text-lg font-semibold text-gray-100">{step.title}</h3>
-                    <p className="max-w-xs text-sm leading-relaxed text-gray-400">
-                      {step.description}
+                    <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
+                      {t(`landing.howItWorks.${key}.title`)}
+                    </h3>
+                    <p className="max-w-xs text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                      {t(`landing.howItWorks.${key}.description`)}
                     </p>
                   </div>
                 </li>
@@ -346,22 +323,28 @@ export function LandingPage() {
         {/* ══════════════════════════════════════════════════════
             TECH STACK — badges de tecnologías
             ══════════════════════════════════════════════════════ */}
-        <section className="border-b border-gray-800 px-6 py-20" aria-labelledby="stack-heading">
+        <section
+          className="border-b border-gray-200 px-6 py-20 dark:border-gray-800"
+          aria-labelledby="stack-heading"
+        >
           <div className="mx-auto max-w-4xl text-center">
-            <h2 id="stack-heading" className="mb-3 text-3xl font-bold text-gray-100">
-              Stack tecnológico
+            <h2
+              id="stack-heading"
+              className="mb-3 text-3xl font-bold text-gray-900 dark:text-gray-100"
+            >
+              {t("landing.techStack.title")}
             </h2>
-            <p className="mb-10 text-gray-400">
-              Herramientas modernas, tipadas y probadas en la industria.
+            <p className="mb-10 text-gray-600 dark:text-gray-400">
+              {t("landing.techStack.subtitle")}
             </p>
 
             <ul
               className="m-0 flex list-none flex-wrap justify-center gap-3 p-0"
-              aria-label="Tecnologías del proyecto"
+              aria-label={t("landing.techStack.ariaLabel")}
             >
               {techStack.map((tech) => (
                 <li key={tech}>
-                  <span className="rounded-full border border-gray-700 bg-gray-900 px-4 py-1.5 text-sm text-gray-300">
+                  <span className="rounded-full border border-gray-300 bg-gray-100 px-4 py-1.5 text-sm text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
                     {tech}
                   </span>
                 </li>
@@ -375,11 +358,14 @@ export function LandingPage() {
             ══════════════════════════════════════════════════════ */}
         <section className="px-6 py-28 text-center" aria-labelledby="cta-heading">
           <div className="mx-auto max-w-2xl">
-            <h2 id="cta-heading" className="mb-5 text-4xl font-bold text-gray-100">
-              Listo para comenzar
+            <h2
+              id="cta-heading"
+              className="mb-5 text-4xl font-bold text-gray-900 dark:text-gray-100"
+            >
+              {t("landing.cta.title")}
             </h2>
-            <p className="mb-10 text-lg text-gray-400">
-              Crea tu cuenta y explora el sistema de autenticación completo. Aprende implementando.
+            <p className="mb-10 text-lg text-gray-600 dark:text-gray-400">
+              {t("landing.cta.subtitle")}
             </p>
 
             <div className="flex justify-center">
@@ -387,7 +373,7 @@ export function LandingPage() {
                 to="/register"
                 className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-8 py-3.5 text-base font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
               >
-                Crear cuenta gratis
+                {t("landing.cta.button")}
                 <ArrowRight size={18} aria-hidden="true" />
               </Link>
             </div>
@@ -398,7 +384,7 @@ export function LandingPage() {
       {/* ══════════════════════════════════════════════════════
           FOOTER — información del proyecto
           ══════════════════════════════════════════════════════ */}
-      <footer className="border-t border-gray-800 px-6 py-8">
+      <footer className="border-t border-gray-200 px-6 py-8 dark:border-gray-800">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-5">
           {/* Fila superior: logo + nombre y crédito */}
           <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row">
@@ -406,44 +392,47 @@ export function LandingPage() {
               <NNAuthLogo size={24} />
               <span className="text-sm text-gray-500">NN Auth System</span>
             </div>
-            <p className="text-sm text-gray-600">
-              Proyecto educativo — SENA &middot; {new Date().getFullYear()}
+            <p className="text-sm text-gray-500 dark:text-gray-600">
+              {t("landing.footer.credit")} &middot; {new Date().getFullYear()}
             </p>
           </div>
 
           {/* Fila inferior: enlaces legales */}
-          <nav aria-label="Aviso legal" className="w-full border-t border-gray-800 pt-4">
+          <nav
+            aria-label="Aviso legal"
+            className="w-full border-t border-gray-200 pt-4 dark:border-gray-800"
+          >
             <ul className="m-0 flex list-none flex-wrap justify-center gap-x-6 gap-y-2 p-0">
               <li>
                 <Link
                   to="/terminos-de-uso"
-                  className="text-xs text-gray-600 transition-colors hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+                  className="rounded text-xs text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 >
-                  Términos de uso
+                  {t("landing.footer.terms")}
                 </Link>
               </li>
               <li>
                 <Link
                   to="/privacidad"
-                  className="text-xs text-gray-600 transition-colors hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+                  className="rounded text-xs text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 >
-                  Política de privacidad
+                  {t("landing.footer.privacy")}
                 </Link>
               </li>
               <li>
                 <Link
                   to="/cookies"
-                  className="text-xs text-gray-600 transition-colors hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+                  className="rounded text-xs text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 >
-                  Política de cookies
+                  {t("landing.footer.cookies")}
                 </Link>
               </li>
               <li>
                 <Link
                   to="/contacto"
-                  className="text-xs text-gray-600 transition-colors hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+                  className="rounded text-xs text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 >
-                  Contacto
+                  {t("landing.footer.contact")}
                 </Link>
               </li>
             </ul>

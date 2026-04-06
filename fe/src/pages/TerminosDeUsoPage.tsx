@@ -43,19 +43,19 @@ export function TerminosDeUsoPage() {
   return (
     <LegalLayout title="Términos de Uso" lastUpdated="2026-02-01" version="1.0">
       {/* ── Introducción ───────────────────────────────────── */}
-      <p className="text-sm leading-relaxed text-gray-400">
+      <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
         Los presentes Términos de Uso regulan el acceso y la utilización del servicio{" "}
-        <strong className="text-gray-300">NN Auth System</strong> (en adelante, «el Servicio»),
+        <strong className="text-gray-700 dark:text-gray-300">NN Auth System</strong> (en adelante, «el Servicio»),
         operado por{" "}
-        <strong className="text-gray-300">
+        <strong className="text-gray-700 dark:text-gray-300">
           {RESPONSABLE.nombre} — {RESPONSABLE.nit}
         </strong>
         , con domicilio en {RESPONSABLE.domicilio}.
       </p>
-      <p className="text-sm leading-relaxed text-gray-400">
+      <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
         Al acceder o registrarse en el Servicio, el usuario acepta íntegramente estos Términos. Si
         no está de acuerdo, debe abstenerse de usar el Servicio. De conformidad con el{" "}
-        <strong className="text-gray-300">artículo 45 de la Ley 1480 de 2011</strong>, estos
+        <strong className="text-gray-700 dark:text-gray-300">artículo 45 de la Ley 1480 de 2011</strong>, estos
         términos se ponen a disposición antes de celebrar el contrato electrónico.
       </p>
 
@@ -72,7 +72,7 @@ export function TerminosDeUsoPage() {
           transacciones comerciales ni almacena información financiera de ningún tipo.
         </p>
         <p>
-          Conforme a la <strong className="text-gray-300">Ley 527 de 1999</strong> (artículos 10 y
+          Conforme a la <strong className="text-gray-700 dark:text-gray-300">Ley 527 de 1999</strong> (artículos 10 y
           14), la aceptación de estos Términos mediante clic o acción equivalente tiene plena
           validez jurídica como mensaje de datos.
         </p>
@@ -101,7 +101,7 @@ export function TerminosDeUsoPage() {
       <LegalSection id="uso-aceptable" number="3" heading="Uso Aceptable">
         <p>
           El usuario se compromete a usar el Servicio exclusivamente con fines lícitos y conforme a
-          estos Términos. Son conductas <strong className="text-gray-300">prohibidas</strong>:
+          estos Términos. Son conductas <strong className="text-gray-700 dark:text-gray-300">prohibidas</strong>:
         </p>
         <ul className="ml-4 mt-2 list-disc space-y-2">
           <li>
@@ -135,7 +135,7 @@ export function TerminosDeUsoPage() {
         <p>
           El código fuente, diseño, logotipos, textos y demás elementos del Servicio son propiedad
           del operador o de sus autores, protegidos por la{" "}
-          <strong className="text-gray-300">Ley 23 de 1982</strong> sobre derechos de autor y la
+          <strong className="text-gray-700 dark:text-gray-300">Ley 23 de 1982</strong> sobre derechos de autor y la
           Decisión Andina 351 de la CAN. Queda prohibida su reproducción total o parcial sin
           autorización expresa.
         </p>
@@ -154,8 +154,8 @@ export function TerminosDeUsoPage() {
           >
             Política de Privacidad
           </a>
-          , la cual cumple con la <strong className="text-gray-300">Ley 1581 de 2012</strong> y el{" "}
-          <strong className="text-gray-300">Decreto 1377 de 2013</strong>. Al registrarse, el
+          , la cual cumple con la <strong className="text-gray-700 dark:text-gray-300">Ley 1581 de 2012</strong> y el{" "}
+          <strong className="text-gray-700 dark:text-gray-300">Decreto 1377 de 2013</strong>. Al registrarse, el
           usuario otorga autorización expresa para el tratamiento de sus datos conforme a dicha
           política.
         </p>
@@ -171,7 +171,7 @@ export function TerminosDeUsoPage() {
         <p>
           En todo caso, la responsabilidad del operador estará limitada al monto máximo permitido
           por la legislación colombiana vigente, en particular la{" "}
-          <strong className="text-gray-300">Ley 1480 de 2011</strong>.
+          <strong className="text-gray-700 dark:text-gray-300">Ley 1480 de 2011</strong>.
         </p>
       </LegalSection>
 
@@ -185,7 +185,7 @@ export function TerminosDeUsoPage() {
         <p>
           Para cambios sustanciales, el operador notificará mediante el correo electrónico
           registrado por el usuario, con al menos{" "}
-          <strong className="text-gray-300">15 días de antelación</strong>, conforme al artículo 54
+          <strong className="text-gray-700 dark:text-gray-300">15 días de antelación</strong>, conforme al artículo 54
           de la Ley 1480 de 2011.
         </p>
       </LegalSection>
@@ -193,14 +193,14 @@ export function TerminosDeUsoPage() {
       <LegalSection id="ley-aplicable" number="8" heading="Ley Aplicable y Jurisdicción">
         <p>
           Estos Términos se rigen por las leyes de la{" "}
-          <strong className="text-gray-300">República de Colombia</strong>. Cualquier controversia
+          <strong className="text-gray-700 dark:text-gray-300">República de Colombia</strong>. Cualquier controversia
           derivada de su interpretación o ejecución será resuelta por los tribunales competentes con
           sede en Bogotá D.C., previa instancia de conciliación ante un Centro de Conciliación
           autorizado por el Ministerio de Justicia y del Derecho.
         </p>
         <p>
           Para contratos electrónicos celebrados con consumidores colombianos, también aplican las
-          disposiciones de la <strong className="text-gray-300">Ley 527 de 1999</strong> sobre
+          disposiciones de la <strong className="text-gray-700 dark:text-gray-300">Ley 527 de 1999</strong> sobre
           mensajes de datos y comercio electrónico.
         </p>
       </LegalSection>
@@ -213,11 +213,11 @@ export function TerminosDeUsoPage() {
         <address className="not-italic">
           <ul className="mt-2 space-y-1">
             <li>
-              <strong className="text-gray-300">Empresa:</strong> {RESPONSABLE.nombre} —{" "}
+              <strong className="text-gray-700 dark:text-gray-300">Empresa:</strong> {RESPONSABLE.nombre} —{" "}
               {RESPONSABLE.nit}
             </li>
             <li>
-              <strong className="text-gray-300">Correo electrónico:</strong>{" "}
+              <strong className="text-gray-700 dark:text-gray-300">Correo electrónico:</strong>{" "}
               <a
                 href={`mailto:${RESPONSABLE.email}`}
                 className="text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
@@ -226,7 +226,7 @@ export function TerminosDeUsoPage() {
               </a>
             </li>
             <li>
-              <strong className="text-gray-300">Domicilio:</strong> {RESPONSABLE.domicilio}
+              <strong className="text-gray-700 dark:text-gray-300">Domicilio:</strong> {RESPONSABLE.domicilio}
             </li>
           </ul>
         </address>

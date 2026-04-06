@@ -32,6 +32,12 @@ interface InputFieldProps {
    *  ¿Impacto? Previene el error silencioso más común: copiar un dato incorrecto
    *            y pegarlo dos veces — el error solo se detectaría al intentar acceder. */
   disablePaste?: boolean;
+  /** ¿Qué? Mueve el foco del teclado a este campo al montar el formulario.
+   *  ¿Para qué? El usuario puede empezar a escribir de inmediato sin hacer clic.
+   *             Solo debe usarse en el PRIMER campo de cada formulario.
+   *  ¿Impacto? Mejora la UX (menos clics) y la accesibilidad — los usuarios de
+   *             teclado/lector de pantalla llegan directamente al punto de entrada. */
+  autoFocus?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -51,6 +57,7 @@ export function InputField({
   autoComplete,
   icon,
   disablePaste = false,
+  autoFocus = false,
   onChange,
 }: InputFieldProps) {
   // ¿Qué? Estado para mostrar/ocultar contraseña.
@@ -95,6 +102,7 @@ export function InputField({
           value={value}
           placeholder={placeholder}
           autoComplete={autoComplete}
+          autoFocus={autoFocus}
           onChange={onChange}
           aria-invalid={!!error}
           aria-describedby={error ? `${name}-error` : undefined}

@@ -22,7 +22,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Mail, MessageSquare, User, Send, CheckCircle, AlertCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { NNAuthLogo } from "@/pages/LandingPage";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 // ─────────────────────────────────────────────────────────────
 // CONSTANTES — correos ficticios del proyecto educativo
@@ -40,15 +43,15 @@ const CONTACT_INFO = {
   horario: "Lunes a viernes, 8:00 am – 5:00 pm (hora Colombia)",
 } as const;
 
-/** Opciones del selector de asunto — mapeo valor → etiqueta legible. */
-const SUBJECT_OPTIONS = [
-  { value: "", label: "— Selecciona un asunto —" },
-  { value: "consulta-general", label: "Consulta general" },
-  { value: "soporte-tecnico", label: "Soporte técnico" },
-  { value: "derechos-datos", label: "Ejercer derechos (Ley 1581/2012 — Habeas Data)" },
-  { value: "sistema-autenticacion", label: "Sistema de autenticación" },
-  { value: "bugs-errores", label: "Reporte de bugs o errores" },
-  { value: "otro", label: "Otro" },
+/** Claves de i18n para las opciones del selector de asunto. */
+const SUBJECT_KEYS = [
+  { value: "", i18nKey: "placeholder" },
+  { value: "consulta-general", i18nKey: "general" },
+  { value: "soporte-tecnico", i18nKey: "support" },
+  { value: "derechos-datos", i18nKey: "dataRights" },
+  { value: "sistema-autenticacion", i18nKey: "authSystem" },
+  { value: "bugs-errores", i18nKey: "bugs" },
+  { value: "otro", i18nKey: "other" },
 ] as const;
 
 // ─────────────────────────────────────────────────────────────
@@ -80,28 +83,28 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
  * ¿Qué? Función que valida todos los campos del formulario de contacto.
- * ¿Para qué? Detectar errores antes de "enviar" y mostrarlos al usuario con
- *            mensajes descriptivos en español.
+ * ¿Para qué? Detectar errores antes de "enviar" y mostrarlos al usuario.
  * ¿Impacto? Validación en el cliente previene envíos incompletos y mejora la UX.
  *           No reemplaza la validación del servidor en una implementación real.
+ * @param t - Función de traducción para los mensajes de error.
  */
-function validateForm(data: ContactFormData): ContactFormErrors {
+function validateForm(data: ContactFormData, t: (key: string) => string): ContactFormErrors {
   const errors: ContactFormErrors = {};
 
   if (data.name.trim().length < 3) {
-    errors.name = "El nombre debe tener al menos 3 caracteres.";
+    errors.name = t("contact.form.name.error");
   }
   if (!EMAIL_REGEX.test(data.email.trim())) {
-    errors.email = "Ingresa una dirección de correo electrónico válida.";
+    errors.email = t("contact.form.email.error");
   }
   if (!data.subject) {
-    errors.subject = "Selecciona un asunto para tu mensaje.";
+    errors.subject = t("contact.form.subject.error");
   }
   if (data.message.trim().length < 20) {
-    errors.message = "El mensaje debe tener al menos 20 caracteres.";
+    errors.message = t("contact.form.message.error");
   }
   if (!data.acceptsPrivacy) {
-    errors.acceptsPrivacy = "Debes aceptar la Política de Privacidad para continuar.";
+    errors.acceptsPrivacy = t("contact.form.privacy.error");
   }
 
   return errors;
@@ -130,12 +133,12 @@ const INITIAL_FORM: ContactFormData = {
  */
 function fieldInputCls(error?: string): string {
   const base =
-    "w-full rounded-lg border bg-gray-900 px-4 py-2.5 text-sm text-gray-100 " +
-    "placeholder-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 " +
+    "w-full rounded-lg border bg-white dark:bg-gray-900 px-4 py-2.5 text-sm text-gray-900 dark:text-gray-100 " +
+    "placeholder-gray-400 dark:placeholder-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 " +
     "disabled:cursor-not-allowed disabled:opacity-50 ";
   return error
-    ? base + "border-red-700 focus:ring-red-500/30"
-    : base + "border-gray-700 focus:border-blue-500 focus:ring-blue-500/20";
+    ? base + "border-red-400 dark:border-red-700 focus:ring-red-500/30"
+    : base + "border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500/20";
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -144,6 +147,7 @@ function fieldInputCls(error?: string): string {
 
 interface ContactSuccessPanelProps {
   readonly onReset: () => void;
+  readonly t: (key: string) => string;
 }
 
 /**
@@ -151,29 +155,27 @@ interface ContactSuccessPanelProps {
  * ¿Para qué? Proveer feedback claro al usuario de que su mensaje fue "enviado".
  * ¿Impacto? Extraído de ContactPage para reducir la complejidad cognitiva del componente.
  */
-function ContactSuccessPanel({ onReset }: ContactSuccessPanelProps) {
+function ContactSuccessPanel({ onReset, t }: ContactSuccessPanelProps) {
   return (
     <div
-      className="flex flex-col items-center gap-4 rounded-xl border border-green-800 bg-green-950/40 px-8 py-12 text-center"
+      className="flex flex-col items-center gap-4 rounded-xl border border-green-300 bg-green-50 dark:border-green-800 dark:bg-green-950/40 px-8 py-12 text-center"
       role="status"
       aria-live="polite"
     >
-      <CheckCircle size={48} className="text-green-500" aria-hidden="true" />
+      <CheckCircle size={48} className="text-green-600 dark:text-green-500" aria-hidden="true" />
       <div>
-        <p className="text-lg font-semibold text-green-300">Mensaje enviado correctamente</p>
-        <p className="mt-2 text-sm text-green-500">
-          (Simulación — no se envió ningún correo real.)
-          <br />
-          En producción, responderíamos en un plazo máximo de <strong>10 días hábiles</strong> para
-          consultas o <strong>15 días hábiles</strong> para reclamos, conforme a la Ley 1581 de
-          2012.
+        <p className="text-lg font-semibold text-green-800 dark:text-green-300">
+          {t("contact.success.title")}
+        </p>
+        <p className="mt-2 text-sm text-green-700 dark:text-green-500">
+          {t("contact.success.body")}
         </p>
       </div>
       <button
         onClick={onReset}
-        className="mt-2 rounded-lg border border-green-700 px-4 py-2 text-sm text-green-400 transition-colors hover:bg-green-900/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+        className="mt-2 rounded-lg border border-green-400 dark:border-green-700 px-4 py-2 text-sm text-green-700 dark:text-green-400 transition-colors hover:bg-green-100 dark:hover:bg-green-900/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
       >
-        Enviar otro mensaje
+        {t("contact.success.reset")}
       </button>
     </div>
   );
@@ -193,6 +195,7 @@ interface ContactFormFieldsProps {
   ) => void;
   readonly onCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   readonly onSubmit: (e: React.SyntheticEvent) => void;
+  readonly t: (key: string, opts?: Record<string, unknown>) => string;
 }
 
 /**
@@ -209,18 +212,19 @@ function ContactFormFields({
   onChange,
   onCheckboxChange,
   onSubmit,
+  t,
 }: ContactFormFieldsProps) {
   return (
-    <form onSubmit={onSubmit} noValidate aria-label="Formulario de contacto">
+    <form onSubmit={onSubmit} noValidate aria-label={t("contact.form.heading")}>
       {/* Mensaje de error general del envío */}
       {submitResult === "error" && (
         <div
-          className="mb-5 flex items-start gap-3 rounded-lg border border-red-800 bg-red-950/40 px-4 py-3 text-sm text-red-300"
+          className="mb-5 flex items-start gap-3 rounded-lg border border-red-300 bg-red-50 dark:border-red-800 dark:bg-red-950/40 px-4 py-3 text-sm text-red-700 dark:text-red-300"
           role="alert"
           aria-live="assertive"
         >
           <AlertCircle size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
-          Hubo un error al procesar tu mensaje. Por favor intenta de nuevo.
+          {t("contact.form.errorBanner")}
         </div>
       )}
 
@@ -228,10 +232,10 @@ function ContactFormFields({
       <div className="mb-5">
         <label
           htmlFor="contact-name"
-          className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-300"
+          className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300"
         >
           <User size={14} aria-hidden="true" />
-          Nombre completo
+          {t("contact.form.name.label")}
           <span className="text-red-500" aria-hidden="true">
             *
           </span>
@@ -242,8 +246,9 @@ function ContactFormFields({
           type="text"
           value={formData.name}
           onChange={onChange}
-          placeholder="Ej. Ana García"
+          placeholder={t("contact.form.name.placeholder")}
           autoComplete="name"
+          autoFocus
           required
           aria-required="true"
           aria-invalid={errors.name ? "true" : "false"}
@@ -252,7 +257,7 @@ function ContactFormFields({
           className={fieldInputCls(errors.name)}
         />
         {errors.name && (
-          <p id="error-name" className="mt-1.5 text-xs text-red-400" role="alert">
+          <p id="error-name" className="mt-1.5 text-xs text-red-600 dark:text-red-400" role="alert">
             {errors.name}
           </p>
         )}
@@ -262,10 +267,10 @@ function ContactFormFields({
       <div className="mb-5">
         <label
           htmlFor="contact-email"
-          className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-300"
+          className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300"
         >
           <Mail size={14} aria-hidden="true" />
-          Correo electrónico de respuesta
+          {t("contact.form.email.label")}
           <span className="text-red-500" aria-hidden="true">
             *
           </span>
@@ -276,7 +281,7 @@ function ContactFormFields({
           type="email"
           value={formData.email}
           onChange={onChange}
-          placeholder="tu-correo@ejemplo.com"
+          placeholder={t("contact.form.email.placeholder")}
           autoComplete="email"
           required
           aria-required="true"
@@ -285,11 +290,15 @@ function ContactFormFields({
           disabled={isSubmitting}
           className={fieldInputCls(errors.email)}
         />
-        <p id="hint-email" className="mt-1 text-xs text-gray-600">
-          Usaremos este correo únicamente para responderte. No envíes datos sensibles.
+        <p id="hint-email" className="mt-1 text-xs text-gray-500 dark:text-gray-600">
+          {t("contact.form.email.hint")}
         </p>
         {errors.email && (
-          <p id="error-email" className="mt-1.5 text-xs text-red-400" role="alert">
+          <p
+            id="error-email"
+            className="mt-1.5 text-xs text-red-600 dark:text-red-400"
+            role="alert"
+          >
             {errors.email}
           </p>
         )}
@@ -297,8 +306,11 @@ function ContactFormFields({
 
       {/* Campo: Asunto (select) */}
       <div className="mb-5">
-        <label htmlFor="contact-subject" className="mb-1.5 block text-sm font-medium text-gray-300">
-          Asunto{" "}
+        <label
+          htmlFor="contact-subject"
+          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          {t("contact.form.subject.label")}{" "}
           <span className="text-red-500" aria-hidden="true">
             *
           </span>
@@ -313,21 +325,27 @@ function ContactFormFields({
           aria-invalid={errors.subject ? "true" : "false"}
           aria-describedby={errors.subject ? "error-subject" : undefined}
           disabled={isSubmitting}
-          className={`${fieldInputCls(errors.subject)} ${formData.subject ? "text-gray-100" : "text-gray-600"}`}
+          className={`${fieldInputCls(errors.subject)} ${formData.subject ? "text-gray-900 dark:text-gray-100" : "text-gray-400 dark:text-gray-600"}`}
         >
-          {SUBJECT_OPTIONS.map((opt) => (
+          {SUBJECT_KEYS.map((opt) => (
             <option
               key={opt.value}
               value={opt.value}
               disabled={opt.value === ""}
-              className="bg-gray-900 text-gray-100"
+              className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
             >
-              {opt.label}
+              {opt.value === ""
+                ? t("contact.form.subject.placeholder")
+                : t(`contact.form.subject.options.${opt.i18nKey}`)}
             </option>
           ))}
         </select>
         {errors.subject && (
-          <p id="error-subject" className="mt-1.5 text-xs text-red-400" role="alert">
+          <p
+            id="error-subject"
+            className="mt-1.5 text-xs text-red-600 dark:text-red-400"
+            role="alert"
+          >
             {errors.subject}
           </p>
         )}
@@ -337,10 +355,10 @@ function ContactFormFields({
       <div className="mb-5">
         <label
           htmlFor="contact-message"
-          className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-300"
+          className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300"
         >
           <MessageSquare size={14} aria-hidden="true" />
-          Mensaje
+          {t("contact.form.message.label")}
           <span className="text-red-500" aria-hidden="true">
             *
           </span>
@@ -351,7 +369,7 @@ function ContactFormFields({
           value={formData.message}
           onChange={onChange}
           rows={5}
-          placeholder="Describe detalladamente tu consulta, reporte o solicitud..."
+          placeholder={t("contact.form.message.placeholder")}
           required
           aria-required="true"
           aria-invalid={errors.message ? "true" : "false"}
@@ -359,31 +377,29 @@ function ContactFormFields({
           disabled={isSubmitting}
           className={`resize-y ${fieldInputCls(errors.message)}`}
         />
-        {/* Contador de caracteres — feedback visual del mínimo requerido */}
         <p
           id="hint-message"
           className={`mt-1 text-xs ${
             formData.message.trim().length < 20 && formData.message.length > 0
-              ? "text-amber-500"
-              : "text-gray-600"
+              ? "text-amber-600 dark:text-amber-500"
+              : "text-gray-500 dark:text-gray-600"
           }`}
           aria-live="polite"
         >
-          {formData.message.trim().length} / 20 caracteres mínimos
+          {t("contact.form.message.hint", { count: formData.message.trim().length })}
         </p>
         {errors.message && (
-          <p id="error-message" className="mt-1.5 text-xs text-red-400" role="alert">
+          <p
+            id="error-message"
+            className="mt-1.5 text-xs text-red-600 dark:text-red-400"
+            role="alert"
+          >
             {errors.message}
           </p>
         )}
       </div>
 
       {/* Campo: Aceptar Política de Privacidad (checkbox obligatorio) */}
-      {/* ¿Qué? Autorización expresa del titular conforme a Ley 1581/2012 Art. 9. */}
-      {/* ¿Para qué? Recolectar nombre y email implica tratar datos personales — */}
-      {/*           se requiere consentimiento previo e informado. */}
-      {/* ¿Impacto? Sin este checkbox, el formulario violaría el principio de */}
-      {/*           autorización (Art. 4.c, Ley 1581/2012). */}
       <div className="mb-6">
         <div className="flex items-start gap-3">
           <input
@@ -397,36 +413,42 @@ function ContactFormFields({
             aria-invalid={errors.acceptsPrivacy ? "true" : "false"}
             aria-describedby={errors.acceptsPrivacy ? "error-privacy" : undefined}
             disabled={isSubmitting}
-            className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-gray-600 bg-gray-900 text-blue-600 focus:ring-2 focus:ring-blue-500/30 disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-900 text-blue-600 focus:ring-2 focus:ring-blue-500/30 disabled:cursor-not-allowed disabled:opacity-50"
           />
-          <label htmlFor="contact-privacy" className="cursor-pointer text-sm text-gray-400">
-            He leído y acepto la{" "}
+          <label
+            htmlFor="contact-privacy"
+            className="cursor-pointer text-sm text-gray-600 dark:text-gray-400"
+          >
+            {t("contact.form.privacy.label")}{" "}
             <Link
               to="/privacidad"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+              className="text-blue-600 dark:text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
             >
-              Política de Privacidad y Tratamiento de Datos Personales
+              {t("contact.form.privacy.link")}
             </Link>{" "}
-            (Ley 1581 de 2012). Autorizo que mis datos sean utilizados únicamente para responder mi
-            solicitud.
+            {t("contact.form.privacy.labelSuffix")}
           </label>
         </div>
         {errors.acceptsPrivacy && (
-          <p id="error-privacy" className="mt-1.5 pl-7 text-xs text-red-400" role="alert">
+          <p
+            id="error-privacy"
+            className="mt-1.5 pl-7 text-xs text-red-600 dark:text-red-400"
+            role="alert"
+          >
             {errors.acceptsPrivacy}
           </p>
         )}
       </div>
 
-      {/* ¿Qué? Botón de envío alineado a la derecha — regla de diseño del proyecto. */}
+      {/* Botón de envío alineado a la derecha */}
       <div className="flex justify-end">
         <button
           type="submit"
           disabled={isSubmitting}
           aria-busy={isSubmitting}
-          aria-label={isSubmitting ? "Enviando mensaje..." : "Enviar mensaje"}
+          aria-label={isSubmitting ? t("contact.form.submitting") : t("contact.form.submit")}
           className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? (
@@ -451,12 +473,12 @@ function ContactFormFields({
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                 />
               </svg>
-              Enviando...
+              {t("contact.form.submitting")}
             </>
           ) : (
             <>
               <Send size={15} aria-hidden="true" />
-              Enviar mensaje
+              {t("contact.form.submit")}
             </>
           )}
         </button>
@@ -464,7 +486,6 @@ function ContactFormFields({
     </form>
   );
 }
-
 // ─────────────────────────────────────────────────────────────
 // PAGE COMPONENT
 // ─────────────────────────────────────────────────────────────
@@ -479,6 +500,8 @@ function ContactFormFields({
  *           (reclamos) y Decreto 1377/2013 Art. 13 (información del responsable).
  */
 export function ContactPage() {
+  const { t } = useTranslation();
+
   // ¿Qué? Estado del formulario — un objeto con todos los campos.
   const [formData, setFormData] = useState<ContactFormData>(INITIAL_FORM);
   // ¿Qué? Errores de validación por campo.
@@ -529,7 +552,7 @@ export function ContactPage() {
     setSubmitResult(null);
 
     // Validar todos los campos
-    const validationErrors = validateForm(formData);
+    const validationErrors = validateForm(formData, t);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       // Desplazar al primer error visible
@@ -561,11 +584,11 @@ export function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
       {/* ══════════════════════════════════════════════════════
           HEADER — navegación de retorno y wordmark
           ══════════════════════════════════════════════════════ */}
-      <header className="border-b border-gray-800 bg-gray-950">
+      <header className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           {/* Logo / wordmark */}
           <Link
@@ -574,72 +597,71 @@ export function ContactPage() {
             aria-label="NN Auth System — volver al inicio"
           >
             <NNAuthLogo size={28} />
-            <span className="text-sm font-semibold tracking-tight text-gray-300">
+            <span className="text-sm font-semibold tracking-tight text-gray-700 dark:text-gray-300">
               NN <span className="text-blue-500">Auth</span> System
             </span>
           </Link>
 
-          {/* Botón de retorno */}
-          <Link
-            to="/"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-400 transition-colors duration-200 hover:bg-gray-800 hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-          >
-            <ArrowLeft size={15} aria-hidden="true" />
-            Volver al inicio
-          </Link>
+          {/* Selector de idioma + toggle de tema + botón de retorno */}
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+            <ThemeToggle />
+            <Link
+              to="/"
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            >
+              <ArrowLeft size={15} aria-hidden="true" />
+              {t("contact.nav.backToHome")}
+            </Link>
+          </div>
         </div>
       </header>
 
       <main>
         <div className="mx-auto max-w-5xl px-6 py-14">
-          {/* ══════════════════════════════════════════════════════
-              TÍTULO DE LA PÁGINA
-              ══════════════════════════════════════════════════════ */}
+          {/* Título de la página */}
           <div className="mb-10">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-100">
-              Formulario de Contacto
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+              {t("contact.title")}
             </h1>
-            <p className="mt-2 text-gray-500">
-              Envíanos tu consulta, reporte o solicitud. Respondemos en los plazos establecidos por
-              la Ley 1581 de 2012.
-            </p>
+            <p className="mt-2 text-gray-600 dark:text-gray-500">{t("contact.subtitle")}</p>
           </div>
-          {/* ══════════════════════════════════════════════════════
-              AVISO EDUCATIVO — visible y prominente
-              ══════════════════════════════════════════════════════ */}
+
+          {/* Aviso educativo */}
           <div
-            className="mb-10 flex gap-3 rounded-xl border border-amber-800 bg-amber-950/40 px-5 py-4"
+            className="mb-10 flex gap-3 rounded-xl border border-amber-300 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/40 px-5 py-4"
             role="note"
-            aria-label="Aviso educativo"
+            aria-label={t("contact.eduNotice.title")}
           >
-            <AlertCircle size={20} className="mt-0.5 shrink-0 text-amber-500" aria-hidden="true" />
-            <div className="text-sm text-amber-300">
-              <p className="font-semibold">Proyecto educativo — SENA</p>
-              <p className="mt-1 text-amber-400">
-                Este formulario es <strong>demostrativo</strong>. Los mensajes{" "}
-                <strong>no se envían a ningún servidor real</strong> y los datos que ingreses{" "}
-                <strong>no se almacenan</strong>. Los correos de contacto son ficticios. En una
-                implementación real, el formulario enviaría los datos a{" "}
-                <code className="rounded bg-amber-900/50 px-1 font-mono text-xs">
+            <AlertCircle
+              size={20}
+              className="mt-0.5 shrink-0 text-amber-600 dark:text-amber-500"
+              aria-hidden="true"
+            />
+            <div className="text-sm text-amber-800 dark:text-amber-300">
+              <p className="font-semibold">{t("contact.eduNotice.title")}</p>
+              <p className="mt-1 text-amber-700 dark:text-amber-400">
+                {t("contact.eduNotice.body")}{" "}
+                <code className="rounded bg-amber-200/60 dark:bg-amber-900/50 px-1 font-mono text-xs">
                   POST /api/v1/contact
-                </code>{" "}
-                en el backend.
+                </code>
               </p>
             </div>
-          </div>{" "}
-          {/* ══════════════════════════════════════════════════════
-              GRID — formulario (izquierda) + info de contacto (derecha)
-              ══════════════════════════════════════════════════════ */}
+          </div>
+
+          {/* Grid — formulario + info de contacto */}
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
-            {/* ── FORMULARIO ──────────────────────────────────── */}
+            {/* Formulario */}
             <section className="lg:col-span-2" aria-labelledby="form-heading">
-              <h2 id="form-heading" className="mb-6 text-lg font-semibold text-gray-100">
-                Enviar mensaje
+              <h2
+                id="form-heading"
+                className="mb-6 text-lg font-semibold text-gray-900 dark:text-gray-100"
+              >
+                {t("contact.form.heading")}
               </h2>
 
-              {/* Condicional: panel de éxito vs. formulario */}
               {submitResult === "success" ? (
-                <ContactSuccessPanel onReset={() => setSubmitResult(null)} />
+                <ContactSuccessPanel onReset={() => setSubmitResult(null)} t={t} />
               ) : (
                 <ContactFormFields
                   formData={formData}
@@ -649,69 +671,64 @@ export function ContactPage() {
                   onChange={handleChange}
                   onCheckboxChange={handleCheckboxChange}
                   onSubmit={handleSubmit}
+                  t={t}
                 />
               )}
             </section>
 
-            {/* ── INFORMACIÓN DE CONTACTO ──────────────────────── */}
+            {/* Información de contacto */}
             <aside className="space-y-6" aria-labelledby="contact-info-heading">
-              <h2 id="contact-info-heading" className="text-lg font-semibold text-gray-100">
-                Información de contacto
+              <h2
+                id="contact-info-heading"
+                className="text-lg font-semibold text-gray-900 dark:text-gray-100"
+              >
+                {t("contact.info.heading")}
               </h2>
 
-              {/* ¿Qué? Canal principal de contacto — formulario de esta página. */}
-              {/* ¿Para qué? Por política antispam no se publican buzones de correo. */}
-              {/* ¿Impacto? Evita que scrapers recolecten direcciones de email para spam. */}
-              <div className="rounded-lg border border-blue-800/40 bg-blue-950/30 p-4 text-sm text-blue-300">
-                <p className="font-semibold text-blue-200">📬 Canal principal de contacto</p>
-                <p className="mt-1 text-xs text-blue-400">
-                  Por política antispam no publicamos buzones de correo electrónico. Usa el
-                  formulario de esta página para enviarnos tu mensaje — te responderemos dentro de
-                  los plazos legales indicados abajo.
+              <div className="rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-800/40 dark:bg-blue-950/30 p-4 text-sm text-blue-800 dark:text-blue-300">
+                <p className="font-semibold text-blue-900 dark:text-blue-200">
+                  {t("contact.info.antiSpam.title")}
+                </p>
+                <p className="mt-1 text-xs text-blue-700 dark:text-blue-400">
+                  {t("contact.info.antiSpam.body")}
                 </p>
               </div>
 
-              {/* Información adicional */}
               <dl className="space-y-3 text-sm">
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Teléfono
+                  <dt className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-600">
+                    {t("contact.info.phone")}
                   </dt>
-                  <dd className="mt-1 text-gray-400">{CONTACT_INFO.telefono}</dd>
+                  <dd className="mt-1 text-gray-700 dark:text-gray-400">{CONTACT_INFO.telefono}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Domicilio
+                  <dt className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-600">
+                    {t("contact.info.address")}
                   </dt>
-                  <dd className="mt-1 text-gray-400">{CONTACT_INFO.direccion}</dd>
+                  <dd className="mt-1 text-gray-700 dark:text-gray-400">
+                    {CONTACT_INFO.direccion}
+                  </dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Horario de atención
+                  <dt className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-600">
+                    {t("contact.info.hours")}
                   </dt>
-                  <dd className="mt-1 text-gray-400">{CONTACT_INFO.horario}</dd>
+                  <dd className="mt-1 text-gray-700 dark:text-gray-400">{CONTACT_INFO.horario}</dd>
                 </div>
               </dl>
 
-              {/* Plazos de respuesta — referencia legal */}
-              <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
+              <div className="rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900/60 p-4">
                 <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
-                  Plazos de respuesta (Ley 1581/2012)
+                  {t("contact.info.deadlines.title")}
                 </p>
                 <ul className="space-y-2 text-sm">
-                  <li className="flex items-start gap-2 text-gray-400">
+                  <li className="flex items-start gap-2 text-gray-700 dark:text-gray-400">
                     <span className="mt-0.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500" />
-                    <span>
-                      <strong className="text-gray-300">Consultas:</strong> 10 días hábiles (Art.
-                      14, Ley 1581/2012)
-                    </span>
+                    <span>{t("contact.info.deadlines.queries")}</span>
                   </li>
-                  <li className="flex items-start gap-2 text-gray-400">
+                  <li className="flex items-start gap-2 text-gray-700 dark:text-gray-400">
                     <span className="mt-0.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500" />
-                    <span>
-                      <strong className="text-gray-300">Reclamos:</strong> 15 días hábiles (Art. 15,
-                      Ley 1581/2012)
-                    </span>
+                    <span>{t("contact.info.deadlines.claims")}</span>
                   </li>
                 </ul>
               </div>
@@ -720,12 +737,9 @@ export function ContactPage() {
         </div>
       </main>
 
-      {/* ══════════════════════════════════════════════════════
-          FOOTER — crédito mínimo
-          ══════════════════════════════════════════════════════ */}
-      <footer className="border-t border-gray-800 px-6 py-6">
-        <p className="text-center text-xs text-gray-600">
-          NN Auth System — Proyecto educativo SENA &middot; {new Date().getFullYear()}
+      <footer className="border-t border-gray-200 px-6 py-6 dark:border-gray-800">
+        <p className="text-center text-xs text-gray-500 dark:text-gray-600">
+          NN Auth System — {t("contact.footer.credit")} &middot; {new Date().getFullYear()}
         </p>
       </footer>
     </div>

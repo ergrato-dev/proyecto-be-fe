@@ -7,6 +7,7 @@
  */
 
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 
 /**
  * ¿Qué? Props del AuthLayout — título, subtítulo y children.
@@ -16,6 +17,8 @@ interface AuthLayoutProps {
   children: React.ReactNode;
   title: string;
   subtitle?: string;
+  /** ¿Qué? Amplía el card a max-w-xl para formularios con más campos (ej: registro). */
+  wide?: boolean;
 }
 
 /**
@@ -23,11 +26,12 @@ interface AuthLayoutProps {
  * ¿Para qué? Diseño mobile-first: el card ocupa el ancho completo en móvil y se centra en desktop.
  * ¿Impacto? Consistencia visual: todos los formularios de auth tienen el mismo look.
  */
-export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
+export function AuthLayout({ children, title, subtitle, wide = false }: AuthLayoutProps) {
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-950">
-      {/* ¿Qué? Header mínimo con toggle de tema en la esquina superior derecha. */}
-      <div className="flex justify-end p-4">
+      {/* ¿Qué? Header mínimo con selector de idioma y toggle de tema. */}
+      <div className="flex justify-end gap-2 p-4">
+        <LanguageSwitcher />
         <ThemeToggle />
       </div>
 
@@ -41,10 +45,10 @@ export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
                   la navegación antes de llegar al formulario. Con <main>, salta
                   directamente con un atajo de teclado.
       */}
-      <main className="flex flex-1 items-center justify-center px-4 pb-12">
-        <div className="w-full max-w-md">
+      <main className="flex flex-1 items-center justify-center px-4 pb-8">
+        <div className={`w-full ${wide ? "max-w-xl" : "max-w-md"}`}>
           {/* ¿Qué? Logo y título de la app centrados. */}
-          <div className="mb-8 text-center">
+          <div className="mb-5 text-center">
             <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
               NN Auth
             </h1>

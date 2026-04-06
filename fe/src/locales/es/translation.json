@@ -46,8 +46,14 @@
         "passwordUppercase": "Debe incluir al menos una mayúscula",
         "passwordLowercase": "Debe incluir al menos una minúscula",
         "passwordNumber": "Debe incluir al menos un número",
-        "passwordsMismatch": "Las contraseñas no coinciden"
-      }
+        "passwordsMismatch": "Las contraseñas no coinciden",
+        "termsRequired": "Debes aceptar los términos de uso",
+        "privacyRequired": "Debes aceptar la política de privacidad",
+        "cookiesRequired": "Debes aceptar la política de cookies"
+      },
+      "acceptTerms": "He leído y acepto los <link>Términos de uso</link>",
+      "acceptPrivacy": "He leído y acepto la <link>Política de privacidad</link>",
+      "acceptCookies": "He leído y acepto la <link>Política de cookies</link>"
     },
     "changePassword": {
       "title": "Cambiar contraseña",
@@ -122,5 +128,159 @@
     "selector": "Idioma",
     "es": "Español",
     "en": "English"
+  },
+  "legal": {
+    "backToHome": "Volver al inicio",
+    "footerCredit": "Proyecto educativo SENA"
+  },
+  "landing": {
+    "nav": {
+      "login": "Iniciar sesión",
+      "register": "Registrarse"
+    },
+    "hero": {
+      "title": "Autenticación segura,",
+      "titleHighlight": "lista para producción",
+      "subtitle": "Registro, login, verificación de email, cambio y recuperación de contraseña. Un sistema completo construido con FastAPI, React y las mejores prácticas de seguridad.",
+      "ctaPrimary": "Comenzar ahora",
+      "ctaSecondary": "Iniciar sesión"
+    },
+    "features": {
+      "title": "Características del sistema",
+      "subtitle": "Todo lo necesario para un sistema de autenticación robusto y educativo.",
+      "register": {
+        "title": "Registro seguro",
+        "description": "Validación de datos en tiempo real. Las contraseñas se almacenan hasheadas con bcrypt — nunca en texto plano."
+      },
+      "jwt": {
+        "title": "Autenticación JWT",
+        "description": "Access tokens de 15 min y refresh tokens de 7 días. Stateless, eficiente y estándar en la industria."
+      },
+      "email": {
+        "title": "Verificación de email",
+        "description": "Confirma la identidad antes de activar la cuenta. Enlace de un solo uso enviado automáticamente al registro."
+      },
+      "password": {
+        "title": "Cambio de contraseña",
+        "description": "El usuario autenticado puede cambiar su contraseña ingresando la actual. Validación estricta en el backend."
+      },
+      "recovery": {
+        "title": "Recuperación por email",
+        "description": "Flujo completo de forgot/reset con token de un solo uso y expiración de 1 hora."
+      },
+      "security": {
+        "title": "Seguridad OWASP",
+        "description": "Diseñado con seguridad primero: sin SQL injection, sin XSS, CORS configurado e inputs validados con Pydantic."
+      }
+    },
+    "howItWorks": {
+      "title": "¿Cómo funciona?",
+      "subtitle": "Tres pasos para empezar a usar el sistema.",
+      "step1": {
+        "title": "Crea tu cuenta",
+        "description": "Registra tu email y contraseña. Recibirás un correo para verificar y activar tu cuenta."
+      },
+      "step2": {
+        "title": "Inicia sesión",
+        "description": "Autentícate con tus credenciales. El sistema emitirá un access token y un refresh token."
+      },
+      "step3": {
+        "title": "Accede al sistema",
+        "description": "Con tu sesión activa, gestiona tu perfil y contraseña desde el dashboard."
+      }
+    },
+    "techStack": {
+      "title": "Stack tecnológico",
+      "subtitle": "Herramientas modernas, tipadas y probadas en la industria.",
+      "ariaLabel": "Tecnologías del proyecto"
+    },
+    "cta": {
+      "title": "Listo para comenzar",
+      "subtitle": "Crea tu cuenta y explora el sistema de autenticación completo. Aprende implementando.",
+      "button": "Crear cuenta gratis"
+    },
+    "footer": {
+      "credit": "Proyecto educativo — SENA",
+      "terms": "Términos de uso",
+      "privacy": "Política de privacidad",
+      "cookies": "Política de cookies",
+      "contact": "Contacto"
+    }
+  },
+  "contact": {
+    "nav": {
+      "backToHome": "Volver al inicio"
+    },
+    "title": "Formulario de Contacto",
+    "subtitle": "Envíanos tu consulta, reporte o solicitud. Respondemos en los plazos establecidos por la Ley 1581 de 2012.",
+    "eduNotice": {
+      "title": "Proyecto educativo — SENA",
+      "body": "Este formulario es demostrativo. Los mensajes no se envían a ningún servidor real y los datos que ingreses no se almacenan. Los correos de contacto son ficticios. En una implementación real, el formulario enviaría los datos a POST /api/v1/contact en el backend."
+    },
+    "form": {
+      "heading": "Enviar mensaje",
+      "name": {
+        "label": "Nombre completo",
+        "placeholder": "Ej. Ana García",
+        "error": "El nombre debe tener al menos 3 caracteres."
+      },
+      "email": {
+        "label": "Correo electrónico de respuesta",
+        "placeholder": "tu-correo@ejemplo.com",
+        "hint": "Usaremos este correo únicamente para responderte. No envíes datos sensibles.",
+        "error": "Ingresa una dirección de correo electrónico válida."
+      },
+      "subject": {
+        "label": "Asunto",
+        "placeholder": "— Selecciona un asunto —",
+        "error": "Selecciona un asunto para tu mensaje.",
+        "options": {
+          "general": "Consulta general",
+          "support": "Soporte técnico",
+          "dataRights": "Ejercer derechos (Ley 1581/2012 — Habeas Data)",
+          "authSystem": "Sistema de autenticación",
+          "bugs": "Reporte de bugs o errores",
+          "other": "Otro"
+        }
+      },
+      "message": {
+        "label": "Mensaje",
+        "placeholder": "Describe detalladamente tu consulta, reporte o solicitud...",
+        "hint": "{{count}} / 20 caracteres mínimos",
+        "error": "El mensaje debe tener al menos 20 caracteres."
+      },
+      "privacy": {
+        "label": "He leído y acepto la",
+        "link": "Política de Privacidad y Tratamiento de Datos Personales",
+        "labelSuffix": "(Ley 1581 de 2012). Autorizo que mis datos sean utilizados únicamente para responder mi solicitud.",
+        "error": "Debes aceptar la Política de Privacidad para continuar."
+      },
+      "submit": "Enviar mensaje",
+      "submitting": "Enviando...",
+      "errorBanner": "Hubo un error al procesar tu mensaje. Por favor intenta de nuevo."
+    },
+    "success": {
+      "title": "Mensaje enviado correctamente",
+      "body": "(Simulación — no se envió ningún correo real.) En producción, responderíamos en un plazo máximo de 10 días hábiles para consultas o 15 días hábiles para reclamos, conforme a la Ley 1581 de 2012.",
+      "reset": "Enviar otro mensaje"
+    },
+    "info": {
+      "heading": "Información de contacto",
+      "antiSpam": {
+        "title": "📬 Canal principal de contacto",
+        "body": "Por política antispam no publicamos buzones de correo electrónico. Usa el formulario de esta página para enviarnos tu mensaje — te responderemos dentro de los plazos legales indicados abajo."
+      },
+      "phone": "Teléfono",
+      "address": "Domicilio",
+      "hours": "Horario de atención",
+      "deadlines": {
+        "title": "Plazos de respuesta (Ley 1581/2012)",
+        "queries": "Consultas: 10 días hábiles (Art. 14, Ley 1581/2012)",
+        "claims": "Reclamos: 15 días hábiles (Art. 15, Ley 1581/2012)"
+      }
+    },
+    "footer": {
+      "credit": "Proyecto educativo SENA"
+    }
   }
 }

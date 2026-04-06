@@ -133,6 +133,7 @@ export function ResetPasswordPage() {
             value={formData.new_password}
             placeholder={t("common.passwordPlaceholder")}
             autoComplete="new-password"
+            autoFocus
             icon={<KeyRound className="h-5 w-5" />}
             error={errors.new_password}
             onChange={handleChange}

@@ -83,15 +83,15 @@ export function PoliticaCookiesPage() {
   return (
     <LegalLayout title="Política de Uso de Cookies" lastUpdated="2026-02-01" version="1.0">
       {/* ── Introducción ───────────────────────────────────── */}
-      <p className="text-sm leading-relaxed text-gray-400">
+      <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
         Esta política explica qué son las cookies, cuáles utiliza{" "}
-        <strong className="text-gray-300">NN Auth System</strong>, con qué finalidad y cómo puede el
+        <strong className="text-gray-700 dark:text-gray-300">NN Auth System</strong>, con qué finalidad y cómo puede el
         usuario gestionarlas o inhabilitarlas.
       </p>
-      <p className="text-sm leading-relaxed text-gray-400">
+      <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
         En la medida en que las cookies almacenen o accedan a datos personales, su tratamiento se
-        rige por la <strong className="text-gray-300">Ley 1581 de 2012</strong> y el{" "}
-        <strong className="text-gray-300">Decreto 1377 de 2013</strong>, así como por nuestra{" "}
+        rige por la <strong className="text-gray-700 dark:text-gray-300">Ley 1581 de 2012</strong> y el{" "}
+        <strong className="text-gray-700 dark:text-gray-300">Decreto 1377 de 2013</strong>, así como por nuestra{" "}
         <a
           href="/privacidad"
           className="text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
@@ -107,7 +107,7 @@ export function PoliticaCookiesPage() {
         <p>
           Las cookies son pequeños archivos de texto que un sitio web almacena en el dispositivo del
           usuario a través del navegador, conforme al estándar{" "}
-          <strong className="text-gray-300">RFC 6265</strong>. Permiten que el sitio recuerde
+          <strong className="text-gray-700 dark:text-gray-300">RFC 6265</strong>. Permiten que el sitio recuerde
           información entre páginas o visitas (como el estado de sesión o las preferencias).
         </p>
         <p>
@@ -127,30 +127,30 @@ export function PoliticaCookiesPage() {
         {/* Categorías de cookies */}
         <div className="mt-4 space-y-4">
           {/* Categoría — Funcionales/Autenticación */}
-          <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
+          <div className="rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900 p-4">
             <h3 className="mb-1 text-sm font-semibold text-blue-400">
               Cookies Funcionales de Autenticación
             </h3>
             <p>
-              Son <strong className="text-gray-300">estrictamente necesarias</strong> para que el
+              Son <strong className="text-gray-700 dark:text-gray-300">estrictamente necesarias</strong> para que el
               servicio funcione. Sin ellas, el usuario no puede iniciar sesión ni mantener su sesión
               activa. No requieren consentimiento adicional conforme al principio de necesidad de la
               Ley 1581/2012.
             </p>
             <p className="mt-2">
               Almacenan los tokens JWT (access y refresh) de forma segura, con los atributos{" "}
-              <code className="rounded bg-gray-800 px-1 text-xs text-blue-300">HttpOnly</code>,{" "}
-              <code className="rounded bg-gray-800 px-1 text-xs text-blue-300">Secure</code> y{" "}
-              <code className="rounded bg-gray-800 px-1 text-xs text-blue-300">
+              <code className="rounded bg-gray-100 dark:bg-gray-800 px-1 text-xs text-blue-600 dark:text-blue-300">HttpOnly</code>,{" "}
+              <code className="rounded bg-gray-100 dark:bg-gray-800 px-1 text-xs text-blue-600 dark:text-blue-300">Secure</code> y{" "}
+              <code className="rounded bg-gray-100 dark:bg-gray-800 px-1 text-xs text-blue-600 dark:text-blue-300">
                 SameSite=Strict
               </code>{" "}
               para prevenir ataques XSS y CSRF, conforme a las recomendaciones del{" "}
-              <strong className="text-gray-300">OWASP Top 10</strong>.
+              <strong className="text-gray-700 dark:text-gray-300">OWASP Top 10</strong>.
             </p>
           </div>
 
           {/* Categoría — Preferencias */}
-          <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
+          <div className="rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900 p-4">
             <h3 className="mb-1 text-sm font-semibold text-blue-400">Cookies de Preferencias</h3>
             <p>
               Guardan configuraciones del usuario (como el tema visual dark/light) para personalizar
@@ -165,18 +165,18 @@ export function PoliticaCookiesPage() {
         <p>
           A continuación se describen todas las cookies establecidas por el Servicio, conforme al
           deber de información del{" "}
-          <strong className="text-gray-300">Decreto 1377 de 2013, artículo 13</strong>:
+          <strong className="text-gray-700 dark:text-gray-300">Decreto 1377 de 2013, artículo 13</strong>:
         </p>
 
         {/* Tabla de cookies — responsive con scroll horizontal en móvil */}
-        <div className="mt-4 overflow-x-auto rounded-lg border border-gray-800">
+        <div className="mt-4 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
           <table className="w-full text-sm">
-            <thead className="bg-gray-900">
+            <thead className="bg-gray-100 dark:bg-gray-900">
               <tr>
                 {(["Nombre", "Finalidad", "Duración", "Tipo"] as const).map((header) => (
                   <th
                     key={header}
-                    className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400"
+                    className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400"
                     scope="col"
                   >
                     {header}
@@ -186,15 +186,15 @@ export function PoliticaCookiesPage() {
             </thead>
             <tbody className="divide-y divide-gray-800">
               {SERVICE_COOKIES.map((cookie) => (
-                <tr key={cookie.name} className="bg-gray-950 hover:bg-gray-900 transition-colors">
+                <tr key={cookie.name} className="bg-white dark:bg-gray-950 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
                   <td className="px-4 py-3">
-                    <code className="rounded bg-gray-800 px-1.5 py-0.5 text-xs text-blue-300">
+                    <code className="rounded bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 text-xs text-blue-600 dark:text-blue-300">
                       {cookie.name}
                     </code>
                   </td>
-                  <td className="px-4 py-3 text-gray-400">{cookie.purpose}</td>
-                  <td className="whitespace-nowrap px-4 py-3 text-gray-400">{cookie.duration}</td>
-                  <td className="whitespace-nowrap px-4 py-3 text-gray-400">{cookie.type}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{cookie.purpose}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-gray-600 dark:text-gray-400">{cookie.duration}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-gray-600 dark:text-gray-400">{cookie.type}</td>
                 </tr>
               ))}
             </tbody>
@@ -205,24 +205,24 @@ export function PoliticaCookiesPage() {
       <LegalSection id="seguridad-cookies" number="4" heading="Seguridad de las Cookies">
         <p>
           Los tokens almacenados en cookies están protegidos con los siguientes atributos de
-          seguridad definidos en el <strong className="text-gray-300">RFC 6265bis</strong> y
+          seguridad definidos en el <strong className="text-gray-700 dark:text-gray-300">RFC 6265bis</strong> y
           recomendados por el OWASP:
         </p>
         <ul className="ml-4 mt-2 list-disc space-y-2">
           <li>
-            <strong className="text-gray-300">HttpOnly</strong> — la cookie no es accesible desde
+            <strong className="text-gray-700 dark:text-gray-300">HttpOnly</strong> — la cookie no es accesible desde
             JavaScript del lado del cliente, previniendo ataques XSS (Cross-Site Scripting).
           </li>
           <li>
-            <strong className="text-gray-300">Secure</strong> — la cookie solo se transmite por
+            <strong className="text-gray-700 dark:text-gray-300">Secure</strong> — la cookie solo se transmite por
             conexiones HTTPS, evitando interceptación en redes no seguras.
           </li>
           <li>
-            <strong className="text-gray-300">SameSite=Strict</strong> — la cookie no se envía en
+            <strong className="text-gray-700 dark:text-gray-300">SameSite=Strict</strong> — la cookie no se envía en
             solicitudes cruzadas de sitios, mitigando ataques CSRF.
           </li>
           <li>
-            <strong className="text-gray-300">Path=/</strong> — la cookie aplica a todas las rutas
+            <strong className="text-gray-700 dark:text-gray-300">Path=/</strong> — la cookie aplica a todas las rutas
             del servicio.
           </li>
         </ul>
@@ -236,24 +236,24 @@ export function PoliticaCookiesPage() {
         </p>
         <ul className="ml-4 mt-2 list-disc space-y-2">
           <li>
-            <strong className="text-gray-300">Google Chrome:</strong> Configuración → Privacidad y
+            <strong className="text-gray-700 dark:text-gray-300">Google Chrome:</strong> Configuración → Privacidad y
             seguridad → Cookies y otros datos de sitios.
           </li>
           <li>
-            <strong className="text-gray-300">Mozilla Firefox:</strong> Opciones → Privacidad y
+            <strong className="text-gray-700 dark:text-gray-300">Mozilla Firefox:</strong> Opciones → Privacidad y
             seguridad → Cookies y datos del sitio.
           </li>
           <li>
-            <strong className="text-gray-300">Microsoft Edge:</strong> Configuración → Privacidad,
+            <strong className="text-gray-700 dark:text-gray-300">Microsoft Edge:</strong> Configuración → Privacidad,
             búsqueda y servicios → Cookies.
           </li>
           <li>
-            <strong className="text-gray-300">Safari:</strong> Preferencias → Privacidad → Gestionar
+            <strong className="text-gray-700 dark:text-gray-300">Safari:</strong> Preferencias → Privacidad → Gestionar
             datos del sitio web.
           </li>
         </ul>
         <p>
-          <strong className="text-gray-300">Advertencia:</strong> bloquear las cookies funcionales
+          <strong className="text-gray-700 dark:text-gray-300">Advertencia:</strong> bloquear las cookies funcionales
           de autenticación impide el inicio de sesión en el Servicio y el acceso a rutas protegidas,
           ya que son técnicamente necesarias para la gestión de la sesión.
         </p>
@@ -265,7 +265,7 @@ export function PoliticaCookiesPage() {
         heading="Sin Rastreo Publicitario ni Cookies de Terceros"
       >
         <p>
-          NN Auth System <strong className="text-gray-300">no utiliza</strong> cookies de terceros,
+          NN Auth System <strong className="text-gray-700 dark:text-gray-300">no utiliza</strong> cookies de terceros,
           pixels de seguimiento, scripts de análisis externo (como Google Analytics) ni ninguna
           tecnología destinada al rastreo del comportamiento del usuario con fines comerciales o
           publicitarios.
@@ -273,7 +273,7 @@ export function PoliticaCookiesPage() {
         <p>
           No se realizan perfiles de usuario basados en el historial de navegación ni se comparte
           información de comportamiento con redes de publicidad, conforme al principio de{" "}
-          <strong className="text-gray-300">finalidad</strong> (Art. 4.b, Ley 1581/2012).
+          <strong className="text-gray-700 dark:text-gray-300">finalidad</strong> (Art. 4.b, Ley 1581/2012).
         </p>
       </LegalSection>
 
@@ -293,7 +293,7 @@ export function PoliticaCookiesPage() {
           </a>{" "}
           del Servicio, que regula los derechos del titular, las finalidades del tratamiento y los
           plazos de conservación, conforme a la{" "}
-          <strong className="text-gray-300">Ley 1581 de 2012</strong>.
+          <strong className="text-gray-700 dark:text-gray-300">Ley 1581 de 2012</strong>.
         </p>
       </LegalSection>
 

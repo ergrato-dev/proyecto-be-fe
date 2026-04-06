@@ -9,7 +9,10 @@
 
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { NNAuthLogo } from "@/pages/LandingPage";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 // ─────────────────────────────────────────────────────────────
 // TYPES
@@ -38,12 +41,14 @@ interface LegalLayoutProps {
  * ¿Impacto? Cambios de diseño en el wrapper legal solo requieren editar este componente.
  */
 export function LegalLayout({ title, lastUpdated, version, children }: LegalLayoutProps) {
+  const { t } = useTranslation();
+
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
       {/* ══════════════════════════════════════════════════════
           HEADER — navegación de retorno y wordmark
           ══════════════════════════════════════════════════════ */}
-      <header className="border-b border-gray-800 bg-gray-950">
+      <header className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
           {/* Logo / wordmark — enlace al inicio */}
           <Link
@@ -52,19 +57,23 @@ export function LegalLayout({ title, lastUpdated, version, children }: LegalLayo
             aria-label="NN Auth System — volver al inicio"
           >
             <NNAuthLogo size={28} />
-            <span className="text-sm font-semibold tracking-tight text-gray-300">
+            <span className="text-sm font-semibold tracking-tight text-gray-700 dark:text-gray-300">
               NN <span className="text-blue-500">Auth</span> System
             </span>
           </Link>
 
-          {/* Botón de retorno a la página principal */}
-          <Link
-            to="/"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-400 transition-colors duration-200 hover:bg-gray-800 hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-          >
-            <ArrowLeft size={15} aria-hidden="true" />
-            Volver al inicio
-          </Link>
+          {/* Botón de retorno a la página principal + selector de idioma + toggle de tema */}
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+            <ThemeToggle />
+            <Link
+              to="/"
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            >
+              <ArrowLeft size={15} aria-hidden="true" />
+              {t("legal.backToHome")}
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -74,8 +83,11 @@ export function LegalLayout({ title, lastUpdated, version, children }: LegalLayo
       <main>
         <article className="mx-auto max-w-4xl px-6 py-14" aria-labelledby="legal-title">
           {/* Metadatos del documento */}
-          <header className="mb-10 border-b border-gray-800 pb-8">
-            <h1 id="legal-title" className="mb-3 text-3xl font-bold tracking-tight text-gray-100">
+          <header className="mb-10 border-b border-gray-200 pb-8 dark:border-gray-800">
+            <h1
+              id="legal-title"
+              className="mb-3 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
+            >
               {title}
             </h1>
             <p className="text-sm text-gray-500">
@@ -92,10 +104,9 @@ export function LegalLayout({ title, lastUpdated, version, children }: LegalLayo
       {/* ══════════════════════════════════════════════════════
           FOOTER — crédito mínimo
           ══════════════════════════════════════════════════════ */}
-      <footer className="border-t border-gray-800 px-6 py-6">
-        <p className="text-center text-xs text-gray-600">
-          NN Auth System — Proyecto educativo SENA &middot;{" "}
-          {new Date().getFullYear()}
+      <footer className="border-t border-gray-200 px-6 py-6 dark:border-gray-800">
+        <p className="text-center text-xs text-gray-500 dark:text-gray-600">
+          NN Auth System — {t("legal.footerCredit")} &middot; {new Date().getFullYear()}
         </p>
       </footer>
     </div>
@@ -128,11 +139,11 @@ export function LegalSection({ id, number, heading, children }: LegalSectionProp
     <section id={id} aria-labelledby={`${id}-heading`}>
       <h2
         id={`${id}-heading`}
-        className="mb-4 flex items-baseline gap-3 text-lg font-semibold text-gray-100"
+        className="mb-4 flex items-baseline gap-3 text-lg font-semibold text-gray-900 dark:text-gray-100"
       >
         {/* Número de sección con estilo badge sutil */}
         <span
-          className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-blue-800 bg-blue-950 text-xs font-bold text-blue-400"
+          className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-blue-300 bg-blue-50 text-xs font-bold text-blue-600 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-400"
           aria-hidden="true"
         >
           {number}
@@ -141,7 +152,9 @@ export function LegalSection({ id, number, heading, children }: LegalSectionProp
       </h2>
 
       {/* Contenido de la sección con tipografía legible */}
-      <div className="space-y-3 pl-10 text-sm leading-relaxed text-gray-400">{children}</div>
+      <div className="space-y-3 pl-10 text-sm leading-relaxed text-gray-700 dark:text-gray-400">
+        {children}
+      </div>
     </section>
   );
 }

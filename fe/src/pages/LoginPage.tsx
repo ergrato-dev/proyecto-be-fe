@@ -88,6 +88,7 @@ export function LoginPage() {
           value={formData.email}
           placeholder={t("common.emailPlaceholder")}
           autoComplete="email"
+          autoFocus
           icon={<Mail className="h-5 w-5" />}
           onChange={handleChange}
         />
