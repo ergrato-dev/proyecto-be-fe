@@ -102,10 +102,43 @@ export function LegalLayout({ title, lastUpdated, version, children }: LegalLayo
       </main>
 
       {/* ══════════════════════════════════════════════════════
-          FOOTER — crédito mínimo
+          FOOTER — nav entre páginas legales + crédito
           ══════════════════════════════════════════════════════ */}
-      <footer className="border-t border-gray-200 px-6 py-6 dark:border-gray-800">
-        <p className="text-center text-xs text-gray-500 dark:text-gray-600">
+      <footer className="border-t border-gray-200 px-6 py-5 dark:border-gray-800">
+        {/* ¿Qué? Navegación entre las páginas legales y la de contacto.
+            ¿Para qué? Evitar que el usuario tenga que volver al inicio para llegar
+                       a otro documento legal — acceso directo en un solo clic.
+            ¿Impacto? Mejora la UX; también es una buena práctica legal (GDPR, Ley 1581). */}
+        <nav
+          className="mb-3 flex flex-wrap justify-center gap-x-5 gap-y-1"
+          aria-label="Páginas legales"
+        >
+          <Link
+            to="/terminos-de-uso"
+            className="text-xs text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-500 dark:hover:text-gray-300"
+          >
+            {t("landing.footer.terms")}
+          </Link>
+          <Link
+            to="/privacidad"
+            className="text-xs text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-500 dark:hover:text-gray-300"
+          >
+            {t("landing.footer.privacy")}
+          </Link>
+          <Link
+            to="/cookies"
+            className="text-xs text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-500 dark:hover:text-gray-300"
+          >
+            {t("landing.footer.cookies")}
+          </Link>
+          <Link
+            to="/contacto"
+            className="text-xs text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-500 dark:hover:text-gray-300"
+          >
+            {t("landing.footer.contact")}
+          </Link>
+        </nav>
+        <p className="text-center text-xs text-gray-400 dark:text-gray-600">
           NN Auth System — {t("legal.footerCredit")} &middot; {new Date().getFullYear()}
         </p>
       </footer>
