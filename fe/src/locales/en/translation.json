@@ -131,7 +131,241 @@
   },
   "legal": {
     "backToHome": "Back to home",
-    "footerCredit": "SENA educational project"
+    "footerCredit": "SENA educational project",
+    "terms": {
+      "title": "Terms of Use",
+      "intro1": "These Terms of Use govern access to and use of the <strong>NN Auth System</strong> service (hereinafter, \"the Service\"), operated by <strong>{{responsable}} — {{nit}}</strong>, headquartered in {{domicilio}}.",
+      "intro2": "By accessing or registering for the Service, the user fully accepts these Terms. If you disagree, you must refrain from using the Service. In accordance with <strong>Article 45 of Law 1480 of 2011</strong>, these terms are made available prior to entering into the electronic contract.",
+      "s1": {
+        "heading": "Purpose of the Service",
+        "p1": "NN Auth System is an educational authentication platform offering user registration, JWT token login, password change and recovery, and email verification.",
+        "p2": "The Service is educational in nature (SENA Project) and does not process commercial transactions or store any financial information.",
+        "p3": "Pursuant to <strong>Law 527 of 1999</strong> (Articles 10 and 14), acceptance of these Terms via click or equivalent action has full legal validity as a data message."
+      },
+      "s2": {
+        "heading": "Registration and User Account",
+        "p1": "To access the Service's features, the user must create an account by providing: full name, email address, and password. The user declares that the information provided is truthful, complete, and up to date.",
+        "p2": "The user is responsible for maintaining the confidentiality of their credentials. Any use of the account with the user's credentials is their sole responsibility. In case of unauthorized use, the user must notify immediately at {{email}}.",
+        "p3": "Registration requires email verification via a link sent to the registered address. Until verified, access to protected features will be restricted."
+      },
+      "s3": {
+        "heading": "Acceptable Use",
+        "intro": "The user agrees to use the Service solely for lawful purposes in accordance with these Terms. The following are <strong>prohibited</strong>:",
+        "li1": "Attempting to access other users' accounts or performing brute-force attacks on the authentication system.",
+        "li2": "Providing false or third-party data without their express consent during registration.",
+        "li3": "Performing injection attacks (SQL, XSS, command injection) or any attempt to compromise the Service's integrity or availability.",
+        "li4": "Using automated tools to generate mass requests (DDoS attacks or abusive scraping).",
+        "li5": "Reproducing, modifying, or distributing the Service's source code without written authorization, except in the authorized academic context of the SENA Project.",
+        "closing": "Violation of these obligations may result in account suspension or termination, without prejudice to applicable legal actions."
+      },
+      "s4": {
+        "heading": "Intellectual Property",
+        "p1": "The source code, design, logos, texts, and other elements of the Service are the property of the operator or its authors, protected by <strong>Law 23 of 1982</strong> on copyright and Andean Decision 351 of the CAN. Reproduction in whole or in part without express authorization is prohibited.",
+        "p2": "In the SENA Project context, apprentices and instructors may use the code for strictly academic purposes, citing the original source."
+      },
+      "s5": {
+        "heading": "Processing of Personal Data",
+        "p1": "The processing of personal data collected by the Service is governed by our <privacyLink>Privacy Policy</privacyLink>, which complies with <strong>Law 1581 of 2012</strong> and <strong>Decree 1377 of 2013</strong>. By registering, the user grants express authorization for data processing in accordance with that policy."
+      },
+      "s6": {
+        "heading": "Limitation of Liability",
+        "p1": "The Service is provided \"as is\" for educational purposes. The operator does not guarantee uninterrupted availability or freedom from errors. Under no circumstances shall the operator be liable for indirect damages, lost profits, or data loss arising from the use or inability to use the Service.",
+        "p2": "In any case, the operator's liability shall be limited to the maximum amount permitted by applicable Colombian law, particularly <strong>Law 1480 of 2011</strong>."
+      },
+      "s7": {
+        "heading": "Modifications",
+        "p1": "The operator reserves the right to modify these Terms at any time. Modifications take effect upon publication on the Service. Continued use of the Service after publication of changes implies acceptance of the new Terms.",
+        "p2": "For substantial changes, the operator will notify via the user's registered email with at least <strong>15 days' notice</strong>, pursuant to Article 54 of Law 1480 of 2011."
+      },
+      "s8": {
+        "heading": "Applicable Law and Jurisdiction",
+        "p1": "These Terms are governed by the laws of the <strong>Republic of Colombia</strong>. Any dispute arising from their interpretation or execution shall be resolved by competent courts seated in Bogotá D.C., after prior conciliation proceedings before a center authorized by the Ministry of Justice.",
+        "p2": "For electronic contracts with Colombian consumers, the provisions of <strong>Law 527 of 1999</strong> on data messages and e-commerce also apply."
+      },
+      "s9": {
+        "heading": "Contact",
+        "intro": "For any inquiry, complaint, or exercise of rights related to these Terms, you may contact the operator through:",
+        "companyLabel": "Company:",
+        "emailLabel": "Email:",
+        "domicilioLabel": "Address:"
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy and Personal Data Processing",
+      "intro1": "In compliance with <strong>Law 1581 of 2012</strong> —General Personal Data Protection Regime— and its regulatory <strong>Decree 1377 of 2013</strong>, the company <strong>{{responsable}} — {{nit}}</strong> (hereinafter, \"the Controller\") informs the data subject about the conditions governing the processing of their personal information in the <strong>NN Auth System</strong> service.",
+      "intro2": "This policy applies to all personal data collected through the Service and defines the rights and mechanisms available to the data subject to exercise them before the Controller or before the <strong>Superintendencia de Industria y Comercio (SIC)</strong> as the supervisory authority.",
+      "s1": {
+        "heading": "Data Controller",
+        "intro": "Personal data will be processed under the responsibility of:",
+        "companyLabel": "Legal name:",
+        "nitLabel": "Tax ID:",
+        "domicilioLabel": "Address:",
+        "contactLabel": "Personal data contact channel:",
+        "phoneLabel": "Phone:"
+      },
+      "s2": {
+        "heading": "Personal Data Collected",
+        "intro": "The Controller collects only the data necessary for Service operation, in accordance with the <strong>purpose</strong> principle (Art. 4.b, Law 1581/2012) and the <strong>necessity</strong> principle (Art. 4.d, Law 1581/2012):",
+        "li1": "<strong>Full name</strong> — first and last name of the registered user.",
+        "li2": "<strong>Email address</strong> — used as a unique identifier and communication channel (account verification, password recovery).",
+        "li3": "<strong>Hashed password</strong> — stored only as a bcrypt hash; never in plain text. The Controller cannot recover or view the original password.",
+        "li4": "<strong>IP address and session data</strong> — automatically recorded in server logs for technical and security reasons, pursuant to Decree 1078 of 2015.",
+        "li5": "<strong>Registration date and time</strong> — technical metadata automatically generated at account creation.",
+        "noCollect": "<strong>Sensitive data is not collected</strong> (Art. 5, Law 1581/2012) such as racial origin, sexual orientation, biometric data, health data, or political affiliation."
+      },
+      "s3": {
+        "heading": "Purposes of Processing",
+        "intro": "Personal data is processed solely for the following purposes, pursuant to <strong>Article 13 of Decree 1377 of 2013</strong>:",
+        "li1": "<strong>Authentication and security:</strong> verifying user identity and managing Service access via JWT tokens.",
+        "li2": "<strong>Service communications:</strong> sending account verification and password recovery emails.",
+        "li3": "<strong>Account maintenance:</strong> allowing users to update their profile and manage their password.",
+        "li4": "<strong>Security and audit:</strong> detecting and preventing unauthorized access, fraud, or Service abuse.",
+        "li5": "<strong>Educational purpose:</strong> demonstrating authentication best practices in the SENA Project context.",
+        "closing": "Data <strong>will not be used</strong> for commercial profiling, targeted advertising, or sold/transferred to third parties for commercial purposes."
+      },
+      "s4": {
+        "heading": "Authorization of the Data Subject",
+        "p1": "In accordance with <strong>Article 9 of Law 1581 of 2012</strong> and <strong>Article 7 of Decree 1377 of 2013</strong>, personal data processing requires prior, express, and informed authorization from the data subject.",
+        "p2": "Said authorization is obtained at the time of registration, when the user accepts this Privacy Policy and Terms of Use. Authorization is electronically recorded with a timestamp pursuant to <strong>Law 527 of 1999</strong>.",
+        "p3": "The data subject may revoke their authorization at any time through the channels described in the <rightsLink>Rights of the Data Subject</rightsLink> section, without retroactive effect."
+      },
+      "s5": {
+        "heading": "Rights of the Data Subject (Art. 8, Law 1581/2012)",
+        "intro": "The personal data subject has the following rights, exercisable at any time and free of charge:",
+        "li1": "<strong>Know</strong> the personal data held in the Controller's databases and the information related to its processing.",
+        "li2": "<strong>Update and correct</strong> data when inaccurate, incomplete, or outdated.",
+        "li3": "<strong>Delete (right to be forgotten)</strong> data when no longer necessary for the purposes that justified processing, or when the retention period has expired, unless legally required to retain it.",
+        "li4": "<strong>Revoke authorization</strong> for data processing, pursuant to Article 9 of Law 1581/2012.",
+        "li5": "<strong>Free access</strong> to personal data that has been processed (at least once per calendar month, or whenever substantial modifications are made).",
+        "li6": "<strong>File complaints</strong> with the SIC for violations of Law 1581/2012 (after first filing a query/claim directly with the Controller).",
+        "procedure": "To exercise these rights, the data subject must send a written request to <emailLink>{{email}}</emailLink> including: full name, ID number, clear description of the request, and supporting documents if applicable.",
+        "timeframe": "The Controller will respond within a maximum of <strong>10 business days</strong> (queries, Art. 14 Law 1581/2012) or <strong>15 business days</strong> (claims, Art. 15 Law 1581/2012), extendable by an equal period in justified cases."
+      },
+      "s6": {
+        "heading": "Data Retention Period",
+        "intro": "Personal data will be retained for as long as the account remains active and for an additional period of <strong>5 years</strong> after account cancellation, for the purpose of:",
+        "li1": "Complying with legal obligations to retain electronic records.",
+        "li2": "Resolving disputes or claims arising from Service use.",
+        "li3": "Complying with orders from judicial or administrative authorities.",
+        "closing": "After that period, data will be irreversibly deleted or anonymized, unless the law requires longer retention."
+      },
+      "s7": {
+        "heading": "Transfers and Transmissions",
+        "intro": "Personal data is <strong>not transferred or transmitted</strong> to third parties for commercial purposes. It may be shared only in the following cases, pursuant to <strong>Article 26 of Law 1581/2012</strong>:",
+        "li1": "<strong>Data processors</strong> (technical infrastructure providers), who are contractually bound to comply with Law 1581/2012.",
+        "li2": "<strong>Competent authorities</strong> (judicial, prosecutorial, administrative) when there is a legal order or official requirement.",
+        "li3": "<strong>Third parties with express authorization</strong> from the data subject, with prior free and informed consent."
+      },
+      "s8": {
+        "heading": "Security Measures",
+        "intro": "The Controller implements technical, organizational, and administrative measures to protect personal data against unauthorized access, alteration, loss, or destruction, in compliance with the <strong>security</strong> principle (Art. 4.g, Law 1581/2012):",
+        "li1": "Password hashing with <strong>bcrypt</strong> — passwords are never stored in plain text.",
+        "li2": "Encrypted communications via <strong>HTTPS/TLS</strong>.",
+        "li3": "Short-lived JWT tokens (15 minutes) and refresh tokens with 7-day expiration.",
+        "li4": "Role-based access controls and strict input validation (Pydantic).",
+        "li5": "Design following <strong>OWASP Top 10</strong> recommendations."
+      },
+      "s9": {
+        "heading": "National Database Registry (RNBD)",
+        "p1": "Pursuant to <strong>Decree 886 of 2014</strong> and <strong>Decree 090 of 2018</strong>, databases containing personal data must be registered in the National Database Registry administered by the SIC.",
+        "p2": "The NN Auth System user database is registered (or in the process of registration) in the RNBD, with the information required by Article 4 of Decree 886 of 2014.",
+        "p3": "For more information about the RNBD, visit the SIC portal: <sicLink>www.sic.gov.co</sicLink>."
+      },
+      "s10": {
+        "heading": "Supervisory Authority",
+        "p1": "The <strong>Superintendencia de Industria y Comercio (SIC)</strong> is the national authority responsible for overseeing compliance with Law 1581 of 2012 in Colombia. A data subject who believes their rights have been violated may file a complaint with the SIC, after first filing a direct claim with the Controller (Art. 15, Law 1581/2012).",
+        "portalLabel": "Website:",
+        "phoneLabel": "Toll-free line:",
+        "addressLabel": "Address:"
+      },
+      "s11": {
+        "heading": "Effective Date and Modifications",
+        "p1": "This policy enters into force on <strong>February 1, 2026</strong>. The Controller reserves the right to update it when necessary to adapt to regulatory or Service changes.",
+        "p2": "All modifications will be published on this page and communicated to the data subject by email with at least <strong>10 business days' notice</strong>. Continued use of the Service after publication implies acceptance of the changes.",
+        "p3": "For inquiries about this Policy, contact us at: <emailLink>{{email}}</emailLink>."
+      }
+    },
+    "cookies": {
+      "title": "Cookies Policy",
+      "intro1": "This policy explains what cookies are, which cookies <strong>NN Auth System</strong> uses, their purpose, and how users can manage or disable them.",
+      "intro2": "To the extent that cookies store or access personal data, their processing is governed by <strong>Law 1581 of 2012</strong> and <strong>Decree 1377 of 2013</strong>, as well as our <privacyLink>Privacy Policy</privacyLink>.",
+      "s1": {
+        "heading": "What Are Cookies?",
+        "p1": "Cookies are small text files that a website stores on the user's device through the browser, in accordance with the <strong>RFC 6265</strong> standard. They allow the site to remember information between pages or visits (such as session state or preferences).",
+        "p2": "Not every cookie involves tracking user activity. Some cookies are strictly necessary for the Service to function, without which the site cannot operate properly."
+      },
+      "s2": {
+        "heading": "Types of Cookies Used by the Service",
+        "p1": "NN Auth System uses only first-party cookies. It does not integrate third-party cookies, advertising networks, external behavior analytics, or advertising tracking tools.",
+        "authCategory": {
+          "title": "Functional Authentication Cookies",
+          "p1": "These are <strong>strictly necessary</strong> for the Service to function. Without them, users cannot log in or maintain their session. They do not require additional consent pursuant to Law 1581/2012's necessity principle.",
+          "p2": "They store JWT tokens (access and refresh) securely, with the <code>HttpOnly</code>, <code>Secure</code>, and <code>SameSite=Strict</code> attributes to prevent XSS and CSRF attacks, following <strong>OWASP Top 10</strong> recommendations."
+        },
+        "prefCategory": {
+          "title": "Preference Cookies",
+          "p1": "These save user settings (such as the dark/light visual theme) to personalize the experience without reconfiguring on each visit. They do not include personally identifiable data."
+        }
+      },
+      "s3": {
+        "heading": "Detailed Cookie List",
+        "intro": "The following describes all cookies set by the Service, pursuant to the duty of information under <strong>Decree 1377 of 2013, Article 13</strong>:",
+        "tableHeaders": {
+          "name": "Name",
+          "purpose": "Purpose",
+          "duration": "Duration",
+          "type": "Type"
+        },
+        "cookies": {
+          "access_token": {
+            "purpose": "Stores the JWT access token that authenticates the user in each request. Without this cookie, the user cannot access protected routes.",
+            "duration": "15 minutes",
+            "type": "Functional / Authentication"
+          },
+          "refresh_token": {
+            "purpose": "Stores the refresh token that allows obtaining a new access_token without the user having to log in again.",
+            "duration": "7 days",
+            "type": "Functional / Authentication"
+          },
+          "theme_preference": {
+            "purpose": "Saves the user's theme preference (dark/light) to maintain it between sessions.",
+            "duration": "1 year",
+            "type": "Preferences"
+          }
+        }
+      },
+      "s4": {
+        "heading": "Cookie Security",
+        "intro": "Tokens stored in cookies are protected with the following security attributes defined in <strong>RFC 6265bis</strong> and recommended by OWASP:",
+        "li1": "<strong>HttpOnly</strong> — the cookie is not accessible from client-side JavaScript, preventing XSS (Cross-Site Scripting) attacks.",
+        "li2": "<strong>Secure</strong> — the cookie is only transmitted over HTTPS connections, preventing interception on insecure networks.",
+        "li3": "<strong>SameSite=Strict</strong> — the cookie is not sent in cross-site requests, mitigating CSRF attacks.",
+        "li4": "<strong>Path=/</strong> — the cookie applies to all Service routes."
+      },
+      "s5": {
+        "heading": "Cookie Management and Control by the User",
+        "intro": "Users can control, delete, or block Service cookies through their browser settings. Below are the procedures for the most common browsers:",
+        "li1": "<strong>Google Chrome:</strong> Settings → Privacy and security → Cookies and other site data.",
+        "li2": "<strong>Mozilla Firefox:</strong> Options → Privacy & Security → Cookies and Site Data.",
+        "li3": "<strong>Microsoft Edge:</strong> Settings → Privacy, search, and services → Cookies.",
+        "li4": "<strong>Safari:</strong> Preferences → Privacy → Manage Website Data.",
+        "warning": "<strong>Warning:</strong> blocking functional authentication cookies prevents login to the Service and access to protected routes, as they are technically required for session management."
+      },
+      "s6": {
+        "heading": "No Advertising Tracking or Third-Party Cookies",
+        "p1": "NN Auth System <strong>does not use</strong> third-party cookies, tracking pixels, external analytics scripts (such as Google Analytics), or any technology intended for tracking user behavior for commercial or advertising purposes.",
+        "p2": "No user profiles are built based on browsing history, and no behavioral information is shared with advertising networks, in accordance with the <strong>purpose</strong> principle (Art. 4.b, Law 1581/2012)."
+      },
+      "s7": {
+        "heading": "Relationship with the Privacy Policy",
+        "p1": "When cookies store or process personal data (such as the user identifier encrypted in the JWT token), their processing is subject to the <privacyLink>Privacy Policy and Personal Data Processing</privacyLink> of the Service, which governs data subject rights, processing purposes, and retention periods, pursuant to <strong>Law 1581 of 2012</strong>."
+      },
+      "s8": {
+        "heading": "Updates to This Policy",
+        "p1": "This policy may be updated to reflect technical changes to the Service or regulatory adaptations. The \"last updated\" date at the top of the document indicates the current version.",
+        "p2": "For inquiries about cookie use in the Service, contact us at: <emailLink>legal@nn-company.co</emailLink>."
+      }
+    }
   },
   "landing": {
     "nav": { "login": "Sign in", "register": "Sign up" },

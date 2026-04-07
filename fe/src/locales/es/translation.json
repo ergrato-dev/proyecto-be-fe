@@ -131,7 +131,241 @@
   },
   "legal": {
     "backToHome": "Volver al inicio",
-    "footerCredit": "Proyecto educativo SENA"
+    "footerCredit": "Proyecto educativo SENA",
+    "terms": {
+      "title": "Términos de Uso",
+      "intro1": "Los presentes Términos de Uso regulan el acceso y la utilización del servicio <strong>NN Auth System</strong> (en adelante, «el Servicio»), operado por <strong>{{responsable}} — {{nit}}</strong>, con domicilio en {{domicilio}}.",
+      "intro2": "Al acceder o registrarse en el Servicio, el usuario acepta íntegramente estos Términos. Si no está de acuerdo, debe abstenerse de usar el Servicio. De conformidad con el <strong>artículo 45 de la Ley 1480 de 2011</strong>, estos términos se ponen a disposición antes de celebrar el contrato electrónico.",
+      "s1": {
+        "heading": "Objeto del Servicio",
+        "p1": "NN Auth System es una plataforma de autenticación educativa que ofrece funcionalidades de registro de usuarios, inicio de sesión con tokens JWT, cambio y recuperación de contraseña, y verificación de correo electrónico.",
+        "p2": "El Servicio es de carácter educativo (Proyecto SENA) y no procesa transacciones comerciales ni almacena información financiera de ningún tipo.",
+        "p3": "Conforme a la <strong>Ley 527 de 1999</strong> (artículos 10 y 14), la aceptación de estos Términos mediante clic o acción equivalente tiene plena validez jurídica como mensaje de datos."
+      },
+      "s2": {
+        "heading": "Registro y Cuenta de Usuario",
+        "p1": "Para acceder a las funcionalidades del Servicio, el usuario debe crear una cuenta proporcionando los siguientes datos: nombre completo, dirección de correo electrónico y contraseña. El usuario declara que los datos suministrados son verídicos, completos y actualizados.",
+        "p2": "El usuario es responsable de mantener la confidencialidad de sus credenciales de acceso. Cualquier uso de la cuenta con las credenciales del usuario es de su exclusiva responsabilidad. En caso de uso no autorizado, el usuario debe notificarlo inmediatamente a {{email}}.",
+        "p3": "El registro implica la verificación del correo electrónico mediante un enlace enviado al correo registrado. Mientras la cuenta no sea verificada, el acceso a funcionalidades protegidas estará restringido."
+      },
+      "s3": {
+        "heading": "Uso Aceptable",
+        "intro": "El usuario se compromete a usar el Servicio exclusivamente con fines lícitos y conforme a estos Términos. Son conductas <strong>prohibidas</strong>:",
+        "li1": "Intentar acceder a cuentas de otros usuarios o realizar pruebas de fuerza bruta sobre el sistema de autenticación.",
+        "li2": "Suministrar datos falsos o de terceros sin su consentimiento expreso durante el registro.",
+        "li3": "Realizar ataques de inyección (SQL, XSS, command injection) o cualquier intento de comprometer la integridad o disponibilidad del Servicio.",
+        "li4": "Usar herramientas automatizadas para generar solicitudes masivas (ataques DDoS o scraping abusivo).",
+        "li5": "Reproducir, modificar o distribuir el código fuente del Servicio sin autorización escrita, salvo en el contexto académico del Proyecto SENA autorizado.",
+        "closing": "El incumplimiento de estas obligaciones podrá derivar en la suspensión o cancelación de la cuenta, sin perjuicio de las acciones legales correspondientes."
+      },
+      "s4": {
+        "heading": "Propiedad Intelectual",
+        "p1": "El código fuente, diseño, logotipos, textos y demás elementos del Servicio son propiedad del operador o de sus autores, protegidos por la <strong>Ley 23 de 1982</strong> sobre derechos de autor y la Decisión Andina 351 de la CAN. Queda prohibida su reproducción total o parcial sin autorización expresa.",
+        "p2": "En el contexto del Proyecto SENA, los aprendices y docentes pueden utilizar el código con fines estrictamente académicos, citando la fuente original."
+      },
+      "s5": {
+        "heading": "Tratamiento de Datos Personales",
+        "p1": "El tratamiento de los datos personales recolectados por el Servicio se rige por nuestra <privacyLink>Política de Privacidad</privacyLink>, la cual cumple con la <strong>Ley 1581 de 2012</strong> y el <strong>Decreto 1377 de 2013</strong>. Al registrarse, el usuario otorga autorización expresa para el tratamiento de sus datos conforme a dicha política."
+      },
+      "s6": {
+        "heading": "Limitación de Responsabilidad",
+        "p1": "El Servicio se presta «tal como está» con fines educativos. El operador no garantiza disponibilidad ininterrumpida ni ausencia de errores. En ningún caso el operador será responsable por daños indirectos, lucro cesante o pérdida de datos derivados del uso o imposibilidad de uso del Servicio.",
+        "p2": "En todo caso, la responsabilidad del operador estará limitada al monto máximo permitido por la legislación colombiana vigente, en particular la <strong>Ley 1480 de 2011</strong>."
+      },
+      "s7": {
+        "heading": "Modificaciones",
+        "p1": "El operador se reserva el derecho de modificar estos Términos en cualquier momento. Las modificaciones surtirán efecto a partir de su publicación en el Servicio. El uso continuado del Servicio tras la publicación de cambios implica la aceptación de los nuevos Términos.",
+        "p2": "Para cambios sustanciales, el operador notificará mediante el correo electrónico registrado por el usuario, con al menos <strong>15 días de antelación</strong>, conforme al artículo 54 de la Ley 1480 de 2011."
+      },
+      "s8": {
+        "heading": "Ley Aplicable y Jurisdicción",
+        "p1": "Estos Términos se rigen por las leyes de la <strong>República de Colombia</strong>. Cualquier controversia derivada de su interpretación o ejecución será resuelta por los tribunales competentes con sede en Bogotá D.C., previa instancia de conciliación ante un Centro de Conciliación autorizado por el Ministerio de Justicia y del Derecho.",
+        "p2": "Para contratos electrónicos celebrados con consumidores colombianos, también aplican las disposiciones de la <strong>Ley 527 de 1999</strong> sobre mensajes de datos y comercio electrónico."
+      },
+      "s9": {
+        "heading": "Contacto",
+        "intro": "Para cualquier consulta, reclamación o ejercicio de derechos relacionados con estos Términos, puede comunicarse con el operador a través de:",
+        "companyLabel": "Empresa:",
+        "emailLabel": "Correo electrónico:",
+        "domicilioLabel": "Domicilio:"
+      }
+    },
+    "privacy": {
+      "title": "Política de Privacidad y Tratamiento de Datos Personales",
+      "intro1": "En cumplimiento de la <strong>Ley 1581 de 2012</strong> —Régimen General de Protección de Datos Personales— y el <strong>Decreto 1377 de 2013</strong> reglamentario, la empresa <strong>{{responsable}} — {{nit}}</strong> (en adelante, «el Responsable») informa al titular de los datos sobre las condiciones que rigen el tratamiento de su información personal en el servicio <strong>NN Auth System</strong>.",
+      "intro2": "Esta política aplica a todos los datos personales recolectados a través del Servicio y delimita los derechos y mecanismos de que dispone el titular para ejercerlos ante el Responsable o ante la <strong>Superintendencia de Industria y Comercio (SIC)</strong> como autoridad de vigilancia y control.",
+      "s1": {
+        "heading": "Responsable del Tratamiento",
+        "intro": "Los datos personales serán tratados bajo la responsabilidad de:",
+        "companyLabel": "Razón social:",
+        "nitLabel": "NIT:",
+        "domicilioLabel": "Domicilio:",
+        "contactLabel": "Canal de atención — datos personales:",
+        "phoneLabel": "Teléfono:"
+      },
+      "s2": {
+        "heading": "Datos Personales Recolectados",
+        "intro": "El Responsable recolecta exclusivamente los datos necesarios para el funcionamiento del Servicio, de conformidad con el principio de <strong>finalidad</strong> (Art. 4.b, Ley 1581/2012) y el principio de <strong>necesidad</strong> (Art. 4.d, Ley 1581/2012):",
+        "li1": "<strong>Nombre completo</strong> — nombre y apellido del usuario registrado.",
+        "li2": "<strong>Dirección de correo electrónico</strong> — utilizada como identificador único y canal de comunicación (verificación de cuenta, recuperación de contraseña).",
+        "li3": "<strong>Contraseña hasheada</strong> — almacenada únicamente como hash bcrypt; nunca en texto plano. El Responsable no puede recuperar ni ver la contraseña original.",
+        "li4": "<strong>Dirección IP y datos de sesión</strong> — registrados automáticamente en los logs del servidor por razones técnicas y de seguridad, conforme al Decreto 1078 de 2015.",
+        "li5": "<strong>Fecha y hora de registro</strong> — metadato técnico generado automáticamente en la creación de la cuenta.",
+        "noCollect": "<strong>No se recolectan</strong> datos sensibles (Art. 5, Ley 1581/2012) como origen racial, orientación sexual, datos biométricos, datos de salud ni afiliación política."
+      },
+      "s3": {
+        "heading": "Finalidad del Tratamiento",
+        "intro": "Los datos personales se tratan exclusivamente para las siguientes finalidades, conforme al <strong>artículo 13 del Decreto 1377 de 2013</strong>:",
+        "li1": "<strong>Autenticación y seguridad:</strong> verificar la identidad del usuario y gestionar el acceso al Servicio mediante tokens JWT.",
+        "li2": "<strong>Comunicaciones del servicio:</strong> enviar correos de verificación de cuenta y recuperación de contraseña.",
+        "li3": "<strong>Mantenimiento de la cuenta:</strong> permitir al usuario actualizar su perfil y gestionar su contraseña.",
+        "li4": "<strong>Seguridad y auditoría:</strong> detectar y prevenir accesos no autorizados, fraudes o abusos del Servicio.",
+        "li5": "<strong>Propósito educativo:</strong> demostración de buenas prácticas de autenticación en el contexto del Proyecto SENA.",
+        "closing": "Los datos <strong>no serán usados</strong> para perfilamiento comercial, publicidad dirigida ni vendidos/cedidos a terceros con fines comerciales."
+      },
+      "s4": {
+        "heading": "Autorización del Titular",
+        "p1": "De conformidad con el <strong>artículo 9 de la Ley 1581 de 2012</strong> y el <strong>artículo 7 del Decreto 1377 de 2013</strong>, el tratamiento de datos personales requiere autorización previa, expresa e informada del titular.",
+        "p2": "Dicha autorización se obtiene en el momento del registro, cuando el usuario acepta esta Política de Privacidad y los Términos de Uso. La autorización queda registrada electrónicamente con marca de tiempo (timestamp) conforme a la <strong>Ley 527 de 1999</strong>.",
+        "p3": "El titular puede revocar su autorización en cualquier momento mediante los canales indicados en la sección <rightsLink>Derechos del Titular</rightsLink> sin efecto retroactivo."
+      },
+      "s5": {
+        "heading": "Derechos del Titular (Art. 8, Ley 1581/2012)",
+        "intro": "El titular de los datos personales tiene los siguientes derechos, ejercibles en cualquier momento y de forma gratuita:",
+        "li1": "<strong>Conocer</strong> los datos personales que obran en las bases de datos del Responsable y la información relativa a su tratamiento.",
+        "li2": "<strong>Actualizar y rectificar</strong> sus datos cuando sean inexactos, incompletos o desactualizados.",
+        "li3": "<strong>Suprimir (derecho al olvido)</strong> sus datos cuando no sean necesarios para los fines que justificaron el tratamiento, o cuando haya vencido el plazo de conservación, salvo obligación legal de conservarlos.",
+        "li4": "<strong>Revocar la autorización</strong> para el tratamiento de sus datos, en los términos del artículo 9 de la Ley 1581/2012.",
+        "li5": "<strong>Acceder gratuitamente</strong> a sus datos personales que hayan sido objeto de tratamiento (al menos una vez por mes calendario, o cada vez que existan modificaciones sustanciales).",
+        "li6": "<strong>Presentar quejas</strong> ante la SIC por infracción a la Ley 1581/2012 y las normas concordantes (previa presentación de consulta/reclamo al Responsable).",
+        "procedure": "Para ejercer estos derechos, el titular debe remitir solicitud escrita al correo <emailLink>{{email}}</emailLink> indicando: nombre completo, documento de identidad, descripción clara de la solicitud y, en su caso, documentos que la acrediten.",
+        "timeframe": "El Responsable atenderá la solicitud en un plazo máximo de <strong>10 días hábiles</strong> (consultas, Art. 14 Ley 1581/2012) o <strong>15 días hábiles</strong> (reclamos, Art. 15 Ley 1581/2012), prorrogables por igual término en casos justificados."
+      },
+      "s6": {
+        "heading": "Tiempo de Conservación de los Datos",
+        "intro": "Los datos personales serán conservados durante el tiempo que la cuenta permanezca activa y por un período adicional de <strong>5 años</strong> a partir de la cancelación de la cuenta, con el fin de:",
+        "li1": "Atender obligaciones legales de conservación de registros electrónicos.",
+        "li2": "Resolver disputas o reclamaciones derivadas del uso del Servicio.",
+        "li3": "Dar cumplimiento a órdenes de autoridades judiciales o administrativas.",
+        "closing": "Transcurrido dicho plazo, los datos serán eliminados o anonimizados de forma irreversible, salvo que la ley exija conservarlos por más tiempo."
+      },
+      "s7": {
+        "heading": "Transferencias y Transmisiones",
+        "intro": "Los datos personales <strong>no son transferidos ni transmitidos</strong> a terceros con fines comerciales. Podrán compartirse únicamente en los siguientes casos, conforme al <strong>artículo 26 de la Ley 1581/2012</strong>:",
+        "li1": "<strong>Encargados del tratamiento</strong> (proveedores de infraestructura técnica), quienes quedan vinculados por contrato al cumplimiento de la Ley 1581/2012.",
+        "li2": "<strong>Autoridades competentes</strong> (judiciales, fiscales, administrativas) cuando medie orden legal o requerimiento oficial.",
+        "li3": "<strong>Terceros con autorización expresa</strong> del titular, previa solicitud y consentimiento libre e informado."
+      },
+      "s8": {
+        "heading": "Medidas de Seguridad",
+        "intro": "El Responsable adopta medidas técnicas, organizativas y administrativas para proteger los datos personales contra acceso no autorizado, alteración, pérdida o destrucción, en cumplimiento del principio de <strong>seguridad</strong> (Art. 4.g, Ley 1581/2012):",
+        "li1": "Hashing de contraseñas con <strong>bcrypt</strong> — las contraseñas nunca se almacenan en texto plano.",
+        "li2": "Comunicaciones cifradas con <strong>HTTPS/TLS</strong>.",
+        "li3": "Tokens JWT de corta duración (15 minutos) y refresh tokens con expiración de 7 días.",
+        "li4": "Controles de acceso por roles y validación estricta de entradas (Pydantic).",
+        "li5": "Diseño siguiendo las recomendaciones del <strong>OWASP Top 10</strong>."
+      },
+      "s9": {
+        "heading": "Registro Nacional de Bases de Datos (RNBD)",
+        "p1": "Conforme al <strong>Decreto 886 de 2014</strong> y el <strong>Decreto 090 de 2018</strong>, las bases de datos que contengan datos personales deben inscribirse en el Registro Nacional de Bases de Datos administrado por la SIC.",
+        "p2": "La base de datos de usuarios del NN Auth System está inscrita (o en proceso de inscripción) en el RNBD, con la información exigida por el artículo 4 del Decreto 886 de 2014.",
+        "p3": "Para mayor información sobre el RNBD, puede consultar el portal de la SIC: <sicLink>www.sic.gov.co</sicLink>."
+      },
+      "s10": {
+        "heading": "Autoridad de Control",
+        "p1": "La <strong>Superintendencia de Industria y Comercio (SIC)</strong> es la autoridad nacional encargada de velar por el cumplimiento de la Ley 1581 de 2012 en Colombia. El titular que considere vulnerados sus derechos puede presentar queja ante la SIC, previa presentación de reclamo directo al Responsable del Tratamiento (Art. 15, Ley 1581/2012).",
+        "portalLabel": "Portal web:",
+        "phoneLabel": "Línea gratuita:",
+        "addressLabel": "Dirección:"
+      },
+      "s11": {
+        "heading": "Vigencia y Modificaciones",
+        "p1": "Esta política entra en vigencia el <strong>1 de febrero de 2026</strong>. El Responsable se reserva el derecho de actualizarla cuando sea necesario para adaptarse a cambios normativos o en el Servicio.",
+        "p2": "Toda modificación será publicada en esta misma página y comunicada al titular mediante correo electrónico con al menos <strong>10 días hábiles de antelación</strong>. El uso continuado del Servicio tras la publicación implica la aceptación de los cambios.",
+        "p3": "Para consultas sobre esta Política, contáctenos en: <emailLink>{{email}}</emailLink>."
+      }
+    },
+    "cookies": {
+      "title": "Política de Uso de Cookies",
+      "intro1": "Esta política explica qué son las cookies, cuáles utiliza <strong>NN Auth System</strong>, con qué finalidad y cómo puede el usuario gestionarlas o inhabilitarlas.",
+      "intro2": "En la medida en que las cookies almacenen o accedan a datos personales, su tratamiento se rige por la <strong>Ley 1581 de 2012</strong> y el <strong>Decreto 1377 de 2013</strong>, así como por nuestra <privacyLink>Política de Privacidad</privacyLink>.",
+      "s1": {
+        "heading": "¿Qué Son las Cookies?",
+        "p1": "Las cookies son pequeños archivos de texto que un sitio web almacena en el dispositivo del usuario a través del navegador, conforme al estándar <strong>RFC 6265</strong>. Permiten que el sitio recuerde información entre páginas o visitas (como el estado de sesión o las preferencias).",
+        "p2": "No toda cookie implica seguimiento de la actividad del usuario. Existen cookies estrictamente necesarias para el funcionamiento del servicio, sin las cuales el sitio no puede operar correctamente."
+      },
+      "s2": {
+        "heading": "Tipos de Cookies que Utiliza el Servicio",
+        "p1": "NN Auth System utiliza únicamente cookies propias (first-party). No integra cookies de terceros, redes de publicidad, análisis de comportamiento externos ni herramientas de rastreo publicitario.",
+        "authCategory": {
+          "title": "Cookies Funcionales de Autenticación",
+          "p1": "Son <strong>estrictamente necesarias</strong> para que el servicio funcione. Sin ellas, el usuario no puede iniciar sesión ni mantener su sesión activa. No requieren consentimiento adicional conforme al principio de necesidad de la Ley 1581/2012.",
+          "p2": "Almacenan los tokens JWT (access y refresh) de forma segura, con los atributos <code>HttpOnly</code>, <code>Secure</code> y <code>SameSite=Strict</code> para prevenir ataques XSS y CSRF, conforme a las recomendaciones del <strong>OWASP Top 10</strong>."
+        },
+        "prefCategory": {
+          "title": "Cookies de Preferencias",
+          "p1": "Guardan configuraciones del usuario (como el tema visual dark/light) para personalizar la experiencia sin necesidad de reconfigurar en cada visita. No incluyen datos personales identificables."
+        }
+      },
+      "s3": {
+        "heading": "Listado Detallado de Cookies",
+        "intro": "A continuación se describen todas las cookies establecidas por el Servicio, conforme al deber de información del <strong>Decreto 1377 de 2013, artículo 13</strong>:",
+        "tableHeaders": {
+          "name": "Nombre",
+          "purpose": "Finalidad",
+          "duration": "Duración",
+          "type": "Tipo"
+        },
+        "cookies": {
+          "access_token": {
+            "purpose": "Almacena el token JWT de acceso que autentica al usuario en cada solicitud. Sin esta cookie, el usuario no puede acceder a rutas protegidas.",
+            "duration": "15 minutos",
+            "type": "Funcional / Autenticación"
+          },
+          "refresh_token": {
+            "purpose": "Almacena el token de renovación que permite obtener un nuevo access_token sin que el usuario deba iniciar sesión nuevamente.",
+            "duration": "7 días",
+            "type": "Funcional / Autenticación"
+          },
+          "theme_preference": {
+            "purpose": "Guarda la preferencia de tema del usuario (dark/light) para mantenerla entre sesiones.",
+            "duration": "1 año",
+            "type": "Preferencias"
+          }
+        }
+      },
+      "s4": {
+        "heading": "Seguridad de las Cookies",
+        "intro": "Los tokens almacenados en cookies están protegidos con los siguientes atributos de seguridad definidos en el <strong>RFC 6265bis</strong> y recomendados por el OWASP:",
+        "li1": "<strong>HttpOnly</strong> — la cookie no es accesible desde JavaScript del lado del cliente, previniendo ataques XSS (Cross-Site Scripting).",
+        "li2": "<strong>Secure</strong> — la cookie solo se transmite por conexiones HTTPS, evitando interceptación en redes no seguras.",
+        "li3": "<strong>SameSite=Strict</strong> — la cookie no se envía en solicitudes cruzadas de sitios, mitigando ataques CSRF.",
+        "li4": "<strong>Path=/</strong> — la cookie aplica a todas las rutas del servicio."
+      },
+      "s5": {
+        "heading": "Gestión y Control de Cookies por el Usuario",
+        "intro": "El usuario puede controlar, eliminar o bloquear las cookies del servicio a través de la configuración de su navegador. A continuación se indican los procedimientos para los navegadores más comunes:",
+        "li1": "<strong>Google Chrome:</strong> Configuración → Privacidad y seguridad → Cookies y otros datos de sitios.",
+        "li2": "<strong>Mozilla Firefox:</strong> Opciones → Privacidad y seguridad → Cookies y datos del sitio.",
+        "li3": "<strong>Microsoft Edge:</strong> Configuración → Privacidad, búsqueda y servicios → Cookies.",
+        "li4": "<strong>Safari:</strong> Preferencias → Privacidad → Gestionar datos del sitio web.",
+        "warning": "<strong>Advertencia:</strong> bloquear las cookies funcionales de autenticación impide el inicio de sesión en el Servicio y el acceso a rutas protegidas, ya que son técnicamente necesarias para la gestión de la sesión."
+      },
+      "s6": {
+        "heading": "Sin Rastreo Publicitario ni Cookies de Terceros",
+        "p1": "NN Auth System <strong>no utiliza</strong> cookies de terceros, pixels de seguimiento, scripts de análisis externo (como Google Analytics) ni ninguna tecnología destinada al rastreo del comportamiento del usuario con fines comerciales o publicitarios.",
+        "p2": "No se realizan perfiles de usuario basados en el historial de navegación ni se comparte información de comportamiento con redes de publicidad, conforme al principio de <strong>finalidad</strong> (Art. 4.b, Ley 1581/2012)."
+      },
+      "s7": {
+        "heading": "Relación con la Política de Privacidad",
+        "p1": "Cuando las cookies almacenan o procesan datos personales (como el identificador del usuario cifrado en el token JWT), su tratamiento está sujeto a la <privacyLink>Política de Privacidad y Tratamiento de Datos Personales</privacyLink> del Servicio, que regula los derechos del titular, las finalidades del tratamiento y los plazos de conservación, conforme a la <strong>Ley 1581 de 2012</strong>."
+      },
+      "s8": {
+        "heading": "Actualización de esta Política",
+        "p1": "Esta política puede ser actualizada para reflejar cambios técnicos en el Servicio o adaptaciones normativas. La fecha de «última actualización» al inicio del documento indica la versión vigente.",
+        "p2": "Para consultas sobre el uso de cookies en el Servicio, puede contactarnos en: <emailLink>legal@nn-company.co</emailLink>."
+      }
+    }
   },
   "landing": {
     "nav": {
