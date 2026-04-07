@@ -74,11 +74,7 @@ export function PoliticaPrivacidadPage() {
   );
 
   return (
-    <LegalLayout
-      title={t("legal.privacy.title")}
-      lastUpdated="2026-02-01"
-      version="1.0"
-    >
+    <LegalLayout title={t("legal.privacy.title")} lastUpdated="2026-02-01" version="1.0">
       {/* ── Introducción y base legal ─────────────────────── */}
       <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
         <Trans
@@ -98,19 +94,27 @@ export function PoliticaPrivacidadPage() {
         <address className="not-italic">
           <ul className="mt-2 space-y-1">
             <li>
-              <strong className="text-gray-700 dark:text-gray-300">{t("legal.privacy.s1.companyLabel")}</strong>{" "}
+              <strong className="text-gray-700 dark:text-gray-300">
+                {t("legal.privacy.s1.companyLabel")}
+              </strong>{" "}
               {RESPONSABLE.nombre}
             </li>
             <li>
-              <strong className="text-gray-700 dark:text-gray-300">{t("legal.privacy.s1.nitLabel")}</strong>{" "}
+              <strong className="text-gray-700 dark:text-gray-300">
+                {t("legal.privacy.s1.nitLabel")}
+              </strong>{" "}
               {RESPONSABLE.nit}
             </li>
             <li>
-              <strong className="text-gray-700 dark:text-gray-300">{t("legal.privacy.s1.domicilioLabel")}</strong>{" "}
+              <strong className="text-gray-700 dark:text-gray-300">
+                {t("legal.privacy.s1.domicilioLabel")}
+              </strong>{" "}
               {RESPONSABLE.domicilio}
             </li>
             <li>
-              <strong className="text-gray-700 dark:text-gray-300">{t("legal.privacy.s1.contactLabel")}</strong>{" "}
+              <strong className="text-gray-700 dark:text-gray-300">
+                {t("legal.privacy.s1.contactLabel")}
+              </strong>{" "}
               <a
                 href={`mailto:${RESPONSABLE.email}`}
                 className="text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
@@ -119,7 +123,9 @@ export function PoliticaPrivacidadPage() {
               </a>
             </li>
             <li>
-              <strong className="text-gray-700 dark:text-gray-300">{t("legal.privacy.s1.phoneLabel")}</strong>{" "}
+              <strong className="text-gray-700 dark:text-gray-300">
+                {t("legal.privacy.s1.phoneLabel")}
+              </strong>{" "}
               {RESPONSABLE.telefono}
             </li>
           </ul>
@@ -127,44 +133,90 @@ export function PoliticaPrivacidadPage() {
       </LegalSection>
 
       <LegalSection id="datos-recolectados" number="2" heading={t("legal.privacy.s2.heading")}>
-        <p><Trans i18nKey="legal.privacy.s2.intro" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.privacy.s2.intro" components={{ strong: S }} />
+        </p>
         <ul className="ml-4 mt-2 list-disc space-y-2">
-          <li><Trans i18nKey="legal.privacy.s2.li1" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s2.li2" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s2.li3" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s2.li4" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s2.li5" components={{ strong: S }} /></li>
+          <li>
+            <Trans i18nKey="legal.privacy.s2.li1" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s2.li2" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s2.li3" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s2.li4" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s2.li5" components={{ strong: S }} />
+          </li>
         </ul>
-        <p><Trans i18nKey="legal.privacy.s2.noCollect" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.privacy.s2.noCollect" components={{ strong: S }} />
+        </p>
       </LegalSection>
 
       <LegalSection id="finalidad" number="3" heading={t("legal.privacy.s3.heading")}>
-        <p><Trans i18nKey="legal.privacy.s3.intro" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.privacy.s3.intro" components={{ strong: S }} />
+        </p>
         <ul className="ml-4 mt-2 list-disc space-y-2">
-          <li><Trans i18nKey="legal.privacy.s3.li1" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s3.li2" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s3.li3" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s3.li4" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s3.li5" components={{ strong: S }} /></li>
+          <li>
+            <Trans i18nKey="legal.privacy.s3.li1" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s3.li2" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s3.li3" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s3.li4" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s3.li5" components={{ strong: S }} />
+          </li>
         </ul>
-        <p><Trans i18nKey="legal.privacy.s3.closing" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.privacy.s3.closing" components={{ strong: S }} />
+        </p>
       </LegalSection>
 
       <LegalSection id="autorizacion" number="4" heading={t("legal.privacy.s4.heading")}>
-        <p><Trans i18nKey="legal.privacy.s4.p1" components={{ strong: S }} /></p>
-        <p><Trans i18nKey="legal.privacy.s4.p2" components={{ strong: S }} /></p>
-        <p><Trans i18nKey="legal.privacy.s4.p3" components={{ rightsLink }} /></p>
+        <p>
+          <Trans i18nKey="legal.privacy.s4.p1" components={{ strong: S }} />
+        </p>
+        <p>
+          <Trans i18nKey="legal.privacy.s4.p2" components={{ strong: S }} />
+        </p>
+        <p>
+          <Trans i18nKey="legal.privacy.s4.p3" components={{ rightsLink }} />
+        </p>
       </LegalSection>
 
       <LegalSection id="derechos" number="5" heading={t("legal.privacy.s5.heading")}>
         <p>{t("legal.privacy.s5.intro")}</p>
         <ul className="ml-4 mt-2 list-disc space-y-2">
-          <li><Trans i18nKey="legal.privacy.s5.li1" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s5.li2" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s5.li3" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s5.li4" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s5.li5" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s5.li6" components={{ strong: S }} /></li>
+          <li>
+            <Trans i18nKey="legal.privacy.s5.li1" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s5.li2" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s5.li3" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s5.li4" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s5.li5" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s5.li6" components={{ strong: S }} />
+          </li>
         </ul>
         <p>
           <Trans
@@ -173,11 +225,15 @@ export function PoliticaPrivacidadPage() {
             components={{ emailLink }}
           />
         </p>
-        <p><Trans i18nKey="legal.privacy.s5.timeframe" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.privacy.s5.timeframe" components={{ strong: S }} />
+        </p>
       </LegalSection>
 
       <LegalSection id="conservacion" number="6" heading={t("legal.privacy.s6.heading")}>
-        <p><Trans i18nKey="legal.privacy.s6.intro" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.privacy.s6.intro" components={{ strong: S }} />
+        </p>
         <ul className="ml-4 mt-2 list-disc space-y-2">
           <li>{t("legal.privacy.s6.li1")}</li>
           <li>{t("legal.privacy.s6.li2")}</li>
@@ -187,36 +243,60 @@ export function PoliticaPrivacidadPage() {
       </LegalSection>
 
       <LegalSection id="transferencias" number="7" heading={t("legal.privacy.s7.heading")}>
-        <p><Trans i18nKey="legal.privacy.s7.intro" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.privacy.s7.intro" components={{ strong: S }} />
+        </p>
         <ul className="ml-4 mt-2 list-disc space-y-2">
-          <li><Trans i18nKey="legal.privacy.s7.li1" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s7.li2" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s7.li3" components={{ strong: S }} /></li>
+          <li>
+            <Trans i18nKey="legal.privacy.s7.li1" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s7.li2" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s7.li3" components={{ strong: S }} />
+          </li>
         </ul>
       </LegalSection>
 
       <LegalSection id="seguridad" number="8" heading={t("legal.privacy.s8.heading")}>
-        <p><Trans i18nKey="legal.privacy.s8.intro" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.privacy.s8.intro" components={{ strong: S }} />
+        </p>
         <ul className="ml-4 mt-2 list-disc space-y-2">
-          <li><Trans i18nKey="legal.privacy.s8.li1" components={{ strong: S }} /></li>
-          <li><Trans i18nKey="legal.privacy.s8.li2" components={{ strong: S }} /></li>
+          <li>
+            <Trans i18nKey="legal.privacy.s8.li1" components={{ strong: S }} />
+          </li>
+          <li>
+            <Trans i18nKey="legal.privacy.s8.li2" components={{ strong: S }} />
+          </li>
           <li>{t("legal.privacy.s8.li3")}</li>
           <li>{t("legal.privacy.s8.li4")}</li>
-          <li><Trans i18nKey="legal.privacy.s8.li5" components={{ strong: S }} /></li>
+          <li>
+            <Trans i18nKey="legal.privacy.s8.li5" components={{ strong: S }} />
+          </li>
         </ul>
       </LegalSection>
 
       <LegalSection id="rnbd" number="9" heading={t("legal.privacy.s9.heading")}>
-        <p><Trans i18nKey="legal.privacy.s9.p1" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.privacy.s9.p1" components={{ strong: S }} />
+        </p>
         <p>{t("legal.privacy.s9.p2")}</p>
-        <p><Trans i18nKey="legal.privacy.s9.p3" components={{ sicLink }} /></p>
+        <p>
+          <Trans i18nKey="legal.privacy.s9.p3" components={{ sicLink }} />
+        </p>
       </LegalSection>
 
       <LegalSection id="autoridad" number="10" heading={t("legal.privacy.s10.heading")}>
-        <p><Trans i18nKey="legal.privacy.s10.p1" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.privacy.s10.p1" components={{ strong: S }} />
+        </p>
         <address className="not-italic mt-2 space-y-1">
           <p>
-            <strong className="text-gray-700 dark:text-gray-300">{t("legal.privacy.s10.portalLabel")}</strong>{" "}
+            <strong className="text-gray-700 dark:text-gray-300">
+              {t("legal.privacy.s10.portalLabel")}
+            </strong>{" "}
             <a
               href="https://www.sic.gov.co"
               target="_blank"
@@ -227,19 +307,27 @@ export function PoliticaPrivacidadPage() {
             </a>
           </p>
           <p>
-            <strong className="text-gray-700 dark:text-gray-300">{t("legal.privacy.s10.phoneLabel")}</strong>{" "}
+            <strong className="text-gray-700 dark:text-gray-300">
+              {t("legal.privacy.s10.phoneLabel")}
+            </strong>{" "}
             01 8000 910 165
           </p>
           <p>
-            <strong className="text-gray-700 dark:text-gray-300">{t("legal.privacy.s10.addressLabel")}</strong>{" "}
+            <strong className="text-gray-700 dark:text-gray-300">
+              {t("legal.privacy.s10.addressLabel")}
+            </strong>{" "}
             Carrera 13 N° 27-00, Bogotá D.C.
           </p>
         </address>
       </LegalSection>
 
       <LegalSection id="vigencia" number="11" heading={t("legal.privacy.s11.heading")}>
-        <p><Trans i18nKey="legal.privacy.s11.p1" components={{ strong: S }} /></p>
-        <p><Trans i18nKey="legal.privacy.s11.p2" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.privacy.s11.p1" components={{ strong: S }} />
+        </p>
+        <p>
+          <Trans i18nKey="legal.privacy.s11.p2" components={{ strong: S }} />
+        </p>
         <p>
           <Trans
             i18nKey="legal.privacy.s11.p3"

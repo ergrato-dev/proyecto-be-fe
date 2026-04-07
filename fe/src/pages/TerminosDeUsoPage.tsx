@@ -60,7 +60,11 @@ export function TerminosDeUsoPage() {
       <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
         <Trans
           i18nKey="legal.terms.intro1"
-          values={{ responsable: RESPONSABLE.nombre, nit: RESPONSABLE.nit, domicilio: RESPONSABLE.domicilio }}
+          values={{
+            responsable: RESPONSABLE.nombre,
+            nit: RESPONSABLE.nit,
+            domicilio: RESPONSABLE.domicilio,
+          }}
           components={{ strong: S }}
         />
       </p>
@@ -73,7 +77,9 @@ export function TerminosDeUsoPage() {
       <LegalSection id="objeto" number="1" heading={t("legal.terms.s1.heading")}>
         <p>{t("legal.terms.s1.p1")}</p>
         <p>{t("legal.terms.s1.p2")}</p>
-        <p><Trans i18nKey="legal.terms.s1.p3" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.terms.s1.p3" components={{ strong: S }} />
+        </p>
       </LegalSection>
 
       <LegalSection id="registro" number="2" heading={t("legal.terms.s2.heading")}>
@@ -83,7 +89,9 @@ export function TerminosDeUsoPage() {
       </LegalSection>
 
       <LegalSection id="uso-aceptable" number="3" heading={t("legal.terms.s3.heading")}>
-        <p><Trans i18nKey="legal.terms.s3.intro" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.terms.s3.intro" components={{ strong: S }} />
+        </p>
         <ul className="ml-4 mt-2 list-disc space-y-2">
           <li>{t("legal.terms.s3.li1")}</li>
           <li>{t("legal.terms.s3.li2")}</li>
@@ -95,32 +103,39 @@ export function TerminosDeUsoPage() {
       </LegalSection>
 
       <LegalSection id="propiedad-intelectual" number="4" heading={t("legal.terms.s4.heading")}>
-        <p><Trans i18nKey="legal.terms.s4.p1" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.terms.s4.p1" components={{ strong: S }} />
+        </p>
         <p>{t("legal.terms.s4.p2")}</p>
       </LegalSection>
 
       <LegalSection id="privacidad" number="5" heading={t("legal.terms.s5.heading")}>
         <p>
-          <Trans
-            i18nKey="legal.terms.s5.p1"
-            components={{ strong: S, privacyLink }}
-          />
+          <Trans i18nKey="legal.terms.s5.p1" components={{ strong: S, privacyLink }} />
         </p>
       </LegalSection>
 
       <LegalSection id="responsabilidad" number="6" heading={t("legal.terms.s6.heading")}>
         <p>{t("legal.terms.s6.p1")}</p>
-        <p><Trans i18nKey="legal.terms.s6.p2" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.terms.s6.p2" components={{ strong: S }} />
+        </p>
       </LegalSection>
 
       <LegalSection id="modificaciones" number="7" heading={t("legal.terms.s7.heading")}>
         <p>{t("legal.terms.s7.p1")}</p>
-        <p><Trans i18nKey="legal.terms.s7.p2" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.terms.s7.p2" components={{ strong: S }} />
+        </p>
       </LegalSection>
 
       <LegalSection id="ley-aplicable" number="8" heading={t("legal.terms.s8.heading")}>
-        <p><Trans i18nKey="legal.terms.s8.p1" components={{ strong: S }} /></p>
-        <p><Trans i18nKey="legal.terms.s8.p2" components={{ strong: S }} /></p>
+        <p>
+          <Trans i18nKey="legal.terms.s8.p1" components={{ strong: S }} />
+        </p>
+        <p>
+          <Trans i18nKey="legal.terms.s8.p2" components={{ strong: S }} />
+        </p>
       </LegalSection>
 
       <LegalSection id="contacto" number="9" heading={t("legal.terms.s9.heading")}>
@@ -128,11 +143,15 @@ export function TerminosDeUsoPage() {
         <address className="not-italic">
           <ul className="mt-2 space-y-1">
             <li>
-              <strong className="text-gray-700 dark:text-gray-300">{t("legal.terms.s9.companyLabel")}</strong>{" "}
+              <strong className="text-gray-700 dark:text-gray-300">
+                {t("legal.terms.s9.companyLabel")}
+              </strong>{" "}
               {RESPONSABLE.nombre} — {RESPONSABLE.nit}
             </li>
             <li>
-              <strong className="text-gray-700 dark:text-gray-300">{t("legal.terms.s9.emailLabel")}</strong>{" "}
+              <strong className="text-gray-700 dark:text-gray-300">
+                {t("legal.terms.s9.emailLabel")}
+              </strong>{" "}
               <a
                 href={`mailto:${RESPONSABLE.email}`}
                 className="text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
@@ -141,7 +160,9 @@ export function TerminosDeUsoPage() {
               </a>
             </li>
             <li>
-              <strong className="text-gray-700 dark:text-gray-300">{t("legal.terms.s9.domicilioLabel")}</strong>{" "}
+              <strong className="text-gray-700 dark:text-gray-300">
+                {t("legal.terms.s9.domicilioLabel")}
+              </strong>{" "}
               {RESPONSABLE.domicilio}
             </li>
           </ul>
