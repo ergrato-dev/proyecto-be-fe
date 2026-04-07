@@ -62,20 +62,20 @@ export function PoliticaCookiesPage() {
   const S = <strong className="text-gray-700 dark:text-gray-300" />;
   /** Elemento <code> reutilizable para Trans — estilo inline monoespaciado. */
   const C = (
-    <code className="rounded bg-gray-100 dark:bg-gray-800 px-1 text-xs text-blue-600 dark:text-blue-300" />
+    <code className="rounded bg-gray-100 dark:bg-gray-800 px-1 text-xs text-accent-600 dark:text-accent-300" />
   );
   /** Enlace a la Política de Privacidad. */
   const privacyLink = (
     <a
       href="/privacidad"
-      className="text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+      className="text-accent-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 rounded"
     />
   );
   /** Enlace al email de contacto legal. */
   const emailLink = (
     <a
       href="mailto:legal@nn-company.co"
-      className="text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+      className="text-accent-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 rounded"
     />
   );
 
@@ -105,7 +105,7 @@ export function PoliticaCookiesPage() {
         <div className="mt-4 space-y-4">
           {/* Categoría — Funcionales/Autenticación */}
           <div className="rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900 p-4">
-            <h3 className="mb-1 text-sm font-semibold text-blue-400">
+            <h3 className="mb-1 text-sm font-semibold text-accent-400">
               {t("legal.cookies.s2.authCategory.title")}
             </h3>
             <p>
@@ -121,7 +121,7 @@ export function PoliticaCookiesPage() {
 
           {/* Categoría — Preferencias */}
           <div className="rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900 p-4">
-            <h3 className="mb-1 text-sm font-semibold text-blue-400">
+            <h3 className="mb-1 text-sm font-semibold text-accent-400">
               {t("legal.cookies.s2.prefCategory.title")}
             </h3>
             <p>{t("legal.cookies.s2.prefCategory.p1")}</p>
@@ -157,7 +157,7 @@ export function PoliticaCookiesPage() {
                   className="bg-white dark:bg-gray-950 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
                 >
                   <td className="px-4 py-3">
-                    <code className="rounded bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 text-xs text-blue-600 dark:text-blue-300">
+                    <code className="rounded bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 text-xs text-accent-600 dark:text-accent-300">
                       {cookie.name}
                     </code>
                   </td>

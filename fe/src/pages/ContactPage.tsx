@@ -138,7 +138,8 @@ function fieldInputCls(error?: string): string {
     "disabled:cursor-not-allowed disabled:opacity-50 ";
   return error
     ? base + "border-red-400 dark:border-red-700 focus:ring-red-500/30"
-    : base + "border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500/20";
+    : base +
+        "border-gray-300 dark:border-gray-700 focus:border-accent-500 focus:ring-accent-500/20";
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -413,7 +414,7 @@ function ContactFormFields({
             aria-invalid={errors.acceptsPrivacy ? "true" : "false"}
             aria-describedby={errors.acceptsPrivacy ? "error-privacy" : undefined}
             disabled={isSubmitting}
-            className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-900 text-blue-600 focus:ring-2 focus:ring-blue-500/30 disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-900 text-accent-600 focus:ring-2 focus:ring-accent-500/30 disabled:cursor-not-allowed disabled:opacity-50"
           />
           <label
             htmlFor="contact-privacy"
@@ -424,7 +425,7 @@ function ContactFormFields({
               to="/privacidad"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+              className="text-accent-600 dark:text-accent-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 rounded"
             >
               {t("contact.form.privacy.link")}
             </Link>{" "}
@@ -449,7 +450,7 @@ function ContactFormFields({
           disabled={isSubmitting}
           aria-busy={isSubmitting}
           aria-label={isSubmitting ? t("contact.form.submitting") : t("contact.form.submit")}
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex items-center gap-2 rounded-lg bg-accent-600 px-6 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? (
             <>
@@ -593,12 +594,12 @@ export function ContactPage() {
           {/* Logo / wordmark */}
           <Link
             to="/"
-            className="flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
             aria-label="NN Auth System — volver al inicio"
           >
             <NNAuthLogo size={28} />
             <span className="text-sm font-semibold tracking-tight text-gray-700 dark:text-gray-300">
-              NN <span className="text-blue-500">Auth</span> System
+              NN <span className="text-accent-500">Auth</span> System
             </span>
           </Link>
 
@@ -608,7 +609,7 @@ export function ContactPage() {
             <ThemeToggle />
             <Link
               to="/"
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
             >
               <ArrowLeft size={15} aria-hidden="true" />
               {t("contact.nav.backToHome")}
@@ -723,11 +724,11 @@ export function ContactPage() {
                 </p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2 text-gray-700 dark:text-gray-400">
-                    <span className="mt-0.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500" />
+                    <span className="mt-0.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500" />
                     <span>{t("contact.info.deadlines.queries")}</span>
                   </li>
                   <li className="flex items-start gap-2 text-gray-700 dark:text-gray-400">
-                    <span className="mt-0.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500" />
+                    <span className="mt-0.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500" />
                     <span>{t("contact.info.deadlines.claims")}</span>
                   </li>
                 </ul>

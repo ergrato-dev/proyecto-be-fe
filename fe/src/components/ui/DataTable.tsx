@@ -415,12 +415,12 @@ function SortIcon({ direction }: Readonly<SortIconProps>) {
 
   if (direction === "asc") {
     return (
-      <ChevronUp className={`${baseClass} text-blue-600 dark:text-blue-400`} aria-hidden="true" />
+      <ChevronUp className={`${baseClass} text-accent-600 dark:text-accent-400`} aria-hidden="true" />
     );
   }
   if (direction === "desc") {
     return (
-      <ChevronDown className={`${baseClass} text-blue-600 dark:text-blue-400`} aria-hidden="true" />
+      <ChevronDown className={`${baseClass} text-accent-600 dark:text-accent-400`} aria-hidden="true" />
     );
   }
   return (
@@ -474,7 +474,7 @@ function ActionsMenu<T extends Record<string, any>>({
         className={`rounded-md p-1.5 transition-colors duration-150
           text-gray-500 hover:text-gray-700 hover:bg-gray-100
           dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700
-          focus:outline-none focus:ring-2 focus:ring-blue-500/40
+          focus:outline-none focus:ring-2 focus:ring-accent-500/40
           ${isOpen ? "bg-gray-100 dark:bg-gray-700" : ""}`}
         aria-label="Abrir menú de acciones"
         aria-haspopup="true"
@@ -870,9 +870,9 @@ export function DataTable<T extends Record<string, any>>({
               placeholder={searchPlaceholder}
               className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm
                 placeholder:text-gray-400 transition-colors duration-200
-                focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20
+                focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500/20
                 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100
-                dark:placeholder:text-gray-500 dark:focus:border-blue-400 dark:focus:ring-blue-400/20"
+                dark:placeholder:text-gray-500 dark:focus:border-accent-400 dark:focus:ring-accent-400/20"
               aria-label="Buscar en la tabla"
             />
           </div>
@@ -890,10 +890,10 @@ export function DataTable<T extends Record<string, any>>({
               value={rowsPerPage}
               onChange={handlePageSizeChange}
               className="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-sm
-                transition-colors duration-200 focus:border-blue-500 focus:outline-none
-                focus:ring-2 focus:ring-blue-500/20
+                transition-colors duration-200 focus:border-accent-500 focus:outline-none
+                focus:ring-2 focus:ring-accent-500/20
                 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100
-                dark:focus:border-blue-400 dark:focus:ring-blue-400/20"
+                dark:focus:border-accent-400 dark:focus:ring-accent-400/20"
             >
               {pageSizeOptions.map((size) => (
                 <option key={size} value={size}>
@@ -920,7 +920,7 @@ export function DataTable<T extends Record<string, any>>({
                 className="flex items-center gap-1.5 rounded-lg border border-gray-300
                   bg-white px-3 py-1.5 text-xs font-medium text-gray-700
                   transition-colors duration-200 hover:bg-gray-50 hover:border-gray-400
-                  focus:outline-none focus:ring-2 focus:ring-blue-500/20
+                  focus:outline-none focus:ring-2 focus:ring-accent-500/20
                   dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300
                   dark:hover:bg-gray-700 dark:hover:border-gray-500"
               >
@@ -937,7 +937,7 @@ export function DataTable<T extends Record<string, any>>({
                 className="flex items-center gap-1.5 rounded-lg border border-gray-300
                   bg-white px-3 py-1.5 text-xs font-medium text-gray-700
                   transition-colors duration-200 hover:bg-gray-50 hover:border-gray-400
-                  focus:outline-none focus:ring-2 focus:ring-blue-500/20
+                  focus:outline-none focus:ring-2 focus:ring-accent-500/20
                   dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300
                   dark:hover:bg-gray-700 dark:hover:border-gray-500"
               >
@@ -1069,7 +1069,7 @@ export function DataTable<T extends Record<string, any>>({
                     className={`border-b border-gray-100 transition-colors duration-100
                       last:border-b-0 dark:border-gray-700/50
                       ${rowBgClass}
-                      hover:bg-blue-50/40 dark:hover:bg-blue-900/10`}
+                      hover:bg-accent-50/40 dark:hover:bg-accent-900/10`}
                   >
                     {/* ── Celdas de datos ── */}
                     {columns.map((col) => {
@@ -1181,7 +1181,7 @@ export function DataTable<T extends Record<string, any>>({
               // ¿Qué? Calcular la clase del botón antes del JSX para evitar ternarios anidados.
               const isActivePage = page === safePage;
               const pageButtonClass = isActivePage
-                ? "border-blue-600 bg-blue-600 text-white dark:border-blue-500 dark:bg-blue-500"
+                ? "border-accent-600 bg-accent-600 text-white dark:border-accent-500 dark:bg-accent-500"
                 : "border-gray-300 text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700";
 
               return (

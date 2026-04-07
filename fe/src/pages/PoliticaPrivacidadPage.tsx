@@ -53,14 +53,14 @@ export function PoliticaPrivacidadPage() {
   const rightsLink = (
     <a
       href="#derechos"
-      className="text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+      className="text-accent-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 rounded"
     />
   );
   /** Enlace al email del responsable de datos. */
   const emailLink = (
     <a
       href={`mailto:${RESPONSABLE.email}`}
-      className="text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+      className="text-accent-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 rounded"
     />
   );
   /** Enlace externo a www.sic.gov.co. */
@@ -69,7 +69,7 @@ export function PoliticaPrivacidadPage() {
       href="https://www.sic.gov.co"
       target="_blank"
       rel="noopener noreferrer"
-      className="text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+      className="text-accent-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 rounded"
     />
   );
 
@@ -117,7 +117,7 @@ export function PoliticaPrivacidadPage() {
               </strong>{" "}
               <a
                 href={`mailto:${RESPONSABLE.email}`}
-                className="text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+                className="text-accent-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 rounded"
               >
                 {RESPONSABLE.email}
               </a>
@@ -301,7 +301,7 @@ export function PoliticaPrivacidadPage() {
               href="https://www.sic.gov.co"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+              className="text-accent-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 rounded"
             >
               www.sic.gov.co
             </a>

@@ -47,7 +47,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
       >
         <div className="flex flex-col items-center gap-3">
           <svg
-            className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400"
+            className="h-8 w-8 animate-spin text-accent-600 dark:text-accent-400"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

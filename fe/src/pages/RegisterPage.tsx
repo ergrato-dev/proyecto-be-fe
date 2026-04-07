@@ -270,9 +270,9 @@ export function RegisterPage() {
                     name={key}
                     checked={consents[key]}
                     onChange={handleConsentChange}
-                    className="mt-0.5 h-4 w-4 shrink-0 rounded border-gray-300 text-blue-600
-                      focus:ring-2 focus:ring-blue-500 focus:ring-offset-0
-                      dark:border-gray-600 dark:bg-gray-800 dark:checked:bg-blue-500
+                    className="mt-0.5 h-4 w-4 shrink-0 rounded border-gray-300 text-accent-600
+                      focus:ring-2 focus:ring-accent-500 focus:ring-offset-0
+                      dark:border-gray-600 dark:bg-gray-800 dark:checked:bg-accent-500
                       cursor-pointer"
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300 leading-snug">
@@ -284,8 +284,8 @@ export function RegisterPage() {
                             to={to}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-medium text-blue-600 hover:text-blue-700
-                              dark:text-blue-400 dark:hover:text-blue-300 underline"
+                            className="font-medium text-accent-600 hover:text-accent-700
+                              dark:text-accent-400 dark:hover:text-accent-300 underline"
                           />
                         ),
                       }}
@@ -313,7 +313,7 @@ export function RegisterPage() {
         {t("auth.register.haveAccount")}{" "}
         <Link
           to="/login"
-          className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+          className="font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300"
         >
           {t("auth.register.loginLink")}
         </Link>

@@ -945,7 +945,7 @@ volumes:
 | **Accesibilidad**     | Labels en inputs, `aria-*` básicos, contraste suficiente (WCAG AA) |
 
 ```typescript
-// ✅ CORRECTO — Botón de acción a la derecha, sin degradados, sans-serif
+// ✅ CORRECTO — Botón de acción a la derecha, sin degradados, sans-serif, accent token
 <div className="flex justify-end gap-3">
   <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300
     bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600
@@ -953,18 +953,80 @@ volumes:
     Cancelar
   </button>
   <button className="px-4 py-2 text-sm font-medium text-white
-    bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600
+    bg-accent-600 hover:bg-accent-700 dark:bg-accent-500 dark:hover:bg-accent-600
     rounded-lg transition-colors">
     Guardar
   </button>
 </div>
 
-// ❌ INCORRECTO — Degradados, botones centrados/izquierda, fuente serif
+// ❌ INCORRECTO — color concreto hardcodeado, degradados, botones centrados/izquierda
 <div className="flex justify-center">
   <button className="bg-gradient-to-r from-blue-500 to-purple-500 font-serif">
     Guardar
   </button>
 </div>
+```
+
+### 14.5 Sistema de Temas Diferenciales por Stack — OBLIGATORIO
+
+Este proyecto pertenece a una **serie educativa** de múltiples repos que implementan
+el mismo sistema con stacks backend diferentes. Cada proyecto tiene un color de acento
+único asignado a su stack:
+
+| Stack              | Proyecto              | Color Tailwind | Rol en la serie    |
+|--------------------|-----------------------|----------------|--------------------|
+| **FastAPI (Python)** | `proyecto-be-fe`    | **`emerald`**  | **← ESTE PROYECTO** |
+| Express.js (Node)  | `proyecto-beex-fe`    | `blue`         | referencia         |
+| Next.js fullstack  | `proyecto-be-fe-next` | `violet`       |                    |
+| Spring Boot Java   | `proyecto-besb-fe`    | `amber`        |                    |
+| Spring Boot Kotlin | `proyecto-besbk-fe`   | `fuchsia`      |                    |
+| Go REST API        | `proyecto-bego-fe`    | `cyan`         |                    |
+
+#### Regla fundamental: usar `accent-*`, nunca colores concretos
+
+Los componentes y páginas del frontend **NUNCA** deben usar clases de color concretas
+para elementos de marca o interacción primaria. **SIEMPRE** usar el token `accent-*`:
+
+```typescript
+// ✅ CORRECTO — token semántico, funciona en todos los proyectos de la serie
+<button className="bg-accent-600 hover:bg-accent-700 text-white ...">Enviar</button>
+<a className="text-accent-600 hover:text-accent-700 dark:text-accent-400">Ver más</a>
+<input className="focus:border-accent-500 focus:ring-accent-500/20 ..." />
+
+// ❌ INCORRECTO — color concreto hardcodeado (rompe la portabilidad del tema)
+<button className="bg-emerald-600 hover:bg-emerald-700 ...">Enviar</button>
+<button className="bg-blue-600 hover:bg-blue-700 ...">Enviar</button>
+```
+
+#### El único lugar donde se define el color concreto: `fe/src/index.css`
+
+```css
+/* fe/src/index.css — @theme inline */
+/* Para este proyecto: accent = emerald */
+--color-accent-600: var(--color-emerald-600);
+
+/* Para clonar hacia Express.js: cambiar emerald por blue */
+--color-accent-600: var(--color-blue-600);
+```
+
+**Clonar el tema** = cambiar 11 líneas en `index.css` + 2 valores SVG en el logo.
+Ver `_docs/referencia-tecnica/design-system.md` para instrucciones completas.
+
+#### Colores semánticos — NO cambian entre proyectos
+
+Los colores de estado son fijos independientemente del stack. **No reemplazar con `accent-`**:
+
+| Estado      | Color   | Ejemplo de uso              |
+|-------------|---------|---------------------------  |
+| Éxito       | `green` | Alert type="success"        |
+| Error       | `red`   | Alert type="error", inputs inválidos |
+| Información | `blue`  | Alert type="info", avisos informativos |
+| Advertencia | `yellow`| Avisos no críticos          |
+
+```typescript
+// ✅ CORRECTO — info SIEMPRE azul aunque el proyecto sea emerald/violet/amber
+<Alert type="info" message="Tu sesión expirará en 5 minutos" />
+// Internamente usa bg-blue-50 text-blue-800 — CORRECTO, no cambia
 ```
 
 ---

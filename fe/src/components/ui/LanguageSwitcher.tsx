@@ -134,7 +134,7 @@ export function LanguageSwitcher() {
             aria-pressed={isActive}
             className={`rounded-md px-2 py-1 text-xs font-medium transition-colors ${
               isActive
-                ? "bg-blue-600 text-white dark:bg-blue-500"
+                ? "bg-accent-600 text-white dark:bg-accent-500"
                 : "text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             }`}
           >

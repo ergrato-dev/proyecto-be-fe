@@ -50,7 +50,7 @@ export function TerminosDeUsoPage() {
   const privacyLink = (
     <a
       href="/privacidad"
-      className="text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+      className="text-accent-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 rounded"
     />
   );
 
@@ -154,7 +154,7 @@ export function TerminosDeUsoPage() {
               </strong>{" "}
               <a
                 href={`mailto:${RESPONSABLE.email}`}
-                className="text-blue-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+                className="text-accent-400 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 rounded"
               >
                 {RESPONSABLE.email}
               </a>

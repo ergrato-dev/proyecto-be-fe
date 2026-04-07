@@ -55,10 +55,10 @@ export function AuthLayout({ children, title, subtitle, wide = false }: AuthLayo
           <div className="mb-5 text-center">
             <Link
               to="/"
-              className="inline-block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="inline-block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
               aria-label="NN Auth System — volver al inicio"
             >
-              <h1 className="text-2xl font-bold tracking-tight text-gray-900 transition-colors hover:text-blue-600 dark:text-white dark:hover:text-blue-400">
+              <h1 className="text-2xl font-bold tracking-tight text-gray-900 transition-colors hover:text-accent-600 dark:text-white dark:hover:text-accent-400">
                 NN Auth
               </h1>
             </Link>

@@ -86,7 +86,7 @@ export function VerifyEmailPage() {
             <div className="mt-6">
               {/* ¿Qué? Spinner de carga animado con TailwindCSS. */}
               {/* ¿Para qué? Indicar al usuario que la verificación está en progreso. */}
-              <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+              <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-accent-600 border-t-transparent" />
               <p className="mt-4 text-gray-600 dark:text-gray-400">Verificando tu email...</p>
             </div>
           )}
@@ -110,7 +110,7 @@ export function VerifyEmailPage() {
               <div className="mt-6 flex justify-end">
                 <Link
                   to="/login"
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 rounded-lg transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-white bg-accent-600 hover:bg-accent-700 dark:bg-accent-500 dark:hover:bg-accent-600 rounded-lg transition-colors"
                 >
                   Iniciar sesión
                 </Link>
@@ -143,7 +143,7 @@ export function VerifyEmailPage() {
                 </Link>
                 <Link
                   to="/register"
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 rounded-lg transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-white bg-accent-600 hover:bg-accent-700 dark:bg-accent-500 dark:hover:bg-accent-600 rounded-lg transition-colors"
                 >
                   Crear cuenta
                 </Link>

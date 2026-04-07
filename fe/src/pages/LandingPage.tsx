@@ -44,7 +44,7 @@ export function NNAuthLogo({ size = 36 }: NNAuthLogoProps) {
         height="34"
         rx="8"
         fill="#0f172a"
-        stroke="#3b82f6"
+        stroke="#059669"
         strokeWidth="1.5"
       />
 
@@ -52,7 +52,7 @@ export function NNAuthLogo({ size = 36 }: NNAuthLogoProps) {
       <polyline
         points="7,27 7,9 15,27 15,9"
         fill="none"
-        stroke="#60a5fa"
+        stroke="#34d399"
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -62,7 +62,7 @@ export function NNAuthLogo({ size = 36 }: NNAuthLogoProps) {
       <polyline
         points="21,27 21,9 29,27 29,9"
         fill="none"
-        stroke="#60a5fa"
+        stroke="#34d399"
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -140,12 +140,12 @@ export function LandingPage() {
           {/* Wordmark */}
           <Link
             to="/"
-            className="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg"
+            className="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 rounded-lg"
             aria-label="NN Auth System — ir al inicio"
           >
             <NNAuthLogo size={32} />
             <span className="text-lg font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-              NN <span className="text-blue-500">Auth</span> System
+              NN <span className="text-accent-500">Auth</span> System
             </span>
           </Link>
 
@@ -160,7 +160,7 @@ export function LandingPage() {
             <li>
               <Link
                 to="/login"
-                className="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
               >
                 {t("landing.nav.login")}
               </Link>
@@ -168,7 +168,7 @@ export function LandingPage() {
             <li>
               <Link
                 to="/register"
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                className="rounded-lg bg-accent-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
               >
                 {t("landing.nav.register")}
               </Link>
@@ -196,7 +196,7 @@ export function LandingPage() {
               className="mb-5 text-5xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
             >
               {t("landing.hero.title")}{" "}
-              <span className="text-blue-500">{t("landing.hero.titleHighlight")}</span>
+              <span className="text-accent-500">{t("landing.hero.titleHighlight")}</span>
             </h1>
 
             <p className="mb-10 text-xl leading-relaxed text-gray-600 dark:text-gray-400">
@@ -208,7 +208,7 @@ export function LandingPage() {
             <div className="flex flex-wrap justify-center gap-4">
               <Link
                 to="/register"
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-7 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                className="inline-flex items-center gap-2 rounded-lg bg-accent-600 px-7 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-accent-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
               >
                 {t("landing.hero.ctaPrimary")}
                 <ArrowRight size={18} aria-hidden="true" />
@@ -255,7 +255,7 @@ export function LandingPage() {
                         className="mb-4 inline-flex rounded-lg bg-gray-100 p-3 dark:bg-gray-800"
                         aria-hidden="true"
                       >
-                        <Icon size={22} className="text-blue-500" />
+                        <Icon size={22} className="text-accent-500" />
                       </div>
                       <h3 className="mb-2 text-base font-semibold text-gray-900 dark:text-gray-100">
                         {t(`landing.features.${key}.title`)}
@@ -302,7 +302,7 @@ export function LandingPage() {
                   <div className="flex flex-col items-center text-center">
                     {/* Número del paso con estilo de badge */}
                     <div
-                      className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-blue-300 bg-blue-50 text-xl font-bold text-blue-600 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-400"
+                      className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-accent-300 bg-accent-50 text-xl font-bold text-accent-600 dark:border-accent-800 dark:bg-accent-950 dark:text-accent-400"
                       aria-hidden="true"
                     >
                       {stepNumbers[index]}
@@ -371,7 +371,7 @@ export function LandingPage() {
             <div className="flex justify-center">
               <Link
                 to="/register"
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-8 py-3.5 text-base font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                className="inline-flex items-center gap-2 rounded-lg bg-accent-600 px-8 py-3.5 text-base font-medium text-white transition-colors duration-200 hover:bg-accent-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
               >
                 {t("landing.cta.button")}
                 <ArrowRight size={18} aria-hidden="true" />
@@ -406,7 +406,7 @@ export function LandingPage() {
               <li>
                 <Link
                   to="/terminos-de-uso"
-                  className="rounded text-xs text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  className="rounded text-xs text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
                 >
                   {t("landing.footer.terms")}
                 </Link>
@@ -414,7 +414,7 @@ export function LandingPage() {
               <li>
                 <Link
                   to="/privacidad"
-                  className="rounded text-xs text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  className="rounded text-xs text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
                 >
                   {t("landing.footer.privacy")}
                 </Link>
@@ -422,7 +422,7 @@ export function LandingPage() {
               <li>
                 <Link
                   to="/cookies"
-                  className="rounded text-xs text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  className="rounded text-xs text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
                 >
                   {t("landing.footer.cookies")}
                 </Link>
@@ -430,7 +430,7 @@ export function LandingPage() {
               <li>
                 <Link
                   to="/contacto"
-                  className="rounded text-xs text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  className="rounded text-xs text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
                 >
                   {t("landing.footer.contact")}
                 </Link>

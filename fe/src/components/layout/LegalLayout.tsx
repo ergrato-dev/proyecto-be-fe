@@ -53,12 +53,12 @@ export function LegalLayout({ title, lastUpdated, version, children }: LegalLayo
           {/* Logo / wordmark — enlace al inicio */}
           <Link
             to="/"
-            className="flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
             aria-label="NN Auth System — volver al inicio"
           >
             <NNAuthLogo size={28} />
             <span className="text-sm font-semibold tracking-tight text-gray-700 dark:text-gray-300">
-              NN <span className="text-blue-500">Auth</span> System
+              NN <span className="text-accent-500">Auth</span> System
             </span>
           </Link>
 
@@ -68,7 +68,7 @@ export function LegalLayout({ title, lastUpdated, version, children }: LegalLayo
             <ThemeToggle />
             <Link
               to="/"
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
             >
               <ArrowLeft size={15} aria-hidden="true" />
               {t("legal.backToHome")}
@@ -176,7 +176,7 @@ export function LegalSection({ id, number, heading, children }: LegalSectionProp
       >
         {/* Número de sección con estilo badge sutil */}
         <span
-          className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-blue-300 bg-blue-50 text-xs font-bold text-blue-600 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-400"
+          className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-accent-300 bg-accent-50 text-xs font-bold text-accent-600 dark:border-accent-800 dark:bg-accent-950 dark:text-accent-400"
           aria-hidden="true"
         >
           {number}
