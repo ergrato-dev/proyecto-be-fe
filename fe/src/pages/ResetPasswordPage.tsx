@@ -39,12 +39,23 @@ export function ResetPasswordPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  /**
+   * ¿Qué? Actualiza el campo del formulario al escribir y limpia errores previos.
+   * ¿Para qué? Mantener el estado sincronizado con los inputs y limpiar mensajes de error.
+   * ¿Impacto? Al corregir los campos, los errores de validación desaparecen de inmediato.
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
     setGeneralError(null);
   };
 
+  /**
+   * ¿Qué? Validación del lado del cliente para el token y la nueva contraseña.
+   * ¿Para qué? Verificar que el token existe y que la contraseña cumple los requisitos de fortaleza.
+   * ¿Impacto? Si el token falta, muestra error inmediatamente sin llamar al backend.
+   *           Mismas reglas que el registro: 8+ chars, mayúscula, minúscula, número.
+   */
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
 
@@ -71,6 +82,12 @@ export function ResetPasswordPage() {
     return Object.keys(newErrors).length === 0;
   };
 
+  /**
+   * ¿Qué? Envía el token de recuperación y la nueva contraseña al backend.
+   * ¿Para qué? Completar el flujo de recuperación — validar → enviar → confirmar.
+   * ¿Impacto? Si el token es inválido, expirado o ya fue usado, el backend retorna error.
+   *           Si el reset es exitoso, el formulario se limpia y el usuario puede hacer login.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setGeneralError(null);

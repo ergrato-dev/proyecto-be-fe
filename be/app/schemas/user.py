@@ -142,7 +142,15 @@ class ChangePasswordRequest(BaseModel):
     @field_validator("new_password")
     @classmethod
     def validate_new_password_strength(cls, v: str) -> str:
-        """Aplica las mismas reglas de fortaleza que en el registro."""
+        """Valida la fortaleza de la nueva contraseña en el cambio de contraseña.
+
+        ¿Qué? Delega en _validate_password_strength para verificar longitud y composición.
+        ¿Para qué? Garantizar que el usuario no debilite su cuenta al cambiarla —
+                   las mismas reglas del registro aplican aquí (≥8 chars, mayúscula,
+                   minúscula, número). Principio DRY: una sola función con las reglas.
+        ¿Impacto? Sin esta validación, un usuario podría cambiar su contraseña
+                  segura por una débil como "abc" sin que el sistema lo impida.
+        """
         return _validate_password_strength(v)
 
 
@@ -176,7 +184,15 @@ class ResetPasswordRequest(BaseModel):
     @field_validator("new_password")
     @classmethod
     def validate_new_password_strength(cls, v: str) -> str:
-        """Aplica las mismas reglas de fortaleza que en el registro."""
+        """Valida la fortaleza de la nueva contraseña en el restablecimiento.
+
+        ¿Qué? Delega en _validate_password_strength para verificar longitud y composición.
+        ¿Para qué? El flujo de reset-password no debe ser una vía para establecer
+                   contraseñas débiles — las mismas reglas del registro aplican aquí.
+                   Principio DRY: una sola función centraliza las reglas de fortaleza.
+        ¿Impacto? Sin esta validación, alguien que recobre acceso a su cuenta podría
+                  reemplazar su contraseña robusta por "123" — dejando la cuenta vulnerable.
+        """
         return _validate_password_strength(v)
 
 

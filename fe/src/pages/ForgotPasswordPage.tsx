@@ -30,6 +30,12 @@ export function ForgotPasswordPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  /**
+   * ¿Qué? Envía el email al backend para iniciar el flujo de recuperación de contraseña.
+   * ¿Para qué? El backend genera un token de reset y envía un email con el enlace.
+   * ¿Impacto? La respuesta siempre es de éxito (sin revelar si el email existe en el sistema).
+   *           Esto previene ataques de enumeración de usuarios (OWASP A07: Identification Failures).
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);

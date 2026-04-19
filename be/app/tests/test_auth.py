@@ -111,7 +111,13 @@ class TestRegister:
         assert response.status_code == 422
 
     def test_register_password_no_uppercase(self, client: TestClient) -> None:
-        """Registro con contraseña sin mayúsculas → 422."""
+        """Registro con contraseña sin mayúsculas → 422.
+
+        ¿Qué? Envía una contraseña que solo tiene minúsculas y números (sin mayúscula).
+        ¿Para qué? Verificar que el validador exige al menos una letra mayúscula.
+        ¿Impacto? Las mayúsculas aumentan el espacio de búsqueda en ataques de fuerza bruta.
+                  Sin este requisito, contraseñas como "testpass123" serían aceptadas.
+        """
         response = client.post(
             self.URL,
             json={
@@ -125,7 +131,13 @@ class TestRegister:
         assert response.status_code == 422
 
     def test_register_password_no_lowercase(self, client: TestClient) -> None:
-        """Registro con contraseña sin minúsculas → 422."""
+        """Registro con contraseña sin minúsculas → 422.
+
+        ¿Qué? Envía una contraseña en mayúsculas y números, sin ninguna minúscula.
+        ¿Para qué? Verificar que el validador exige al menos una letra minúscula.
+        ¿Impacto? Las minúsculas, junto con mayúsculas y números, diversifican el conjunto
+                  de caracteres posibles. Sin este requisito, "TESTPASS123" sería válida.
+        """
         response = client.post(
             self.URL,
             json={
@@ -139,7 +151,13 @@ class TestRegister:
         assert response.status_code == 422
 
     def test_register_password_no_digit(self, client: TestClient) -> None:
-        """Registro con contraseña sin números → 422."""
+        """Registro con contraseña sin números → 422.
+
+        ¿Qué? Envía una contraseña con letras (mayúsculas y minúsculas) pero sin dígito.
+        ¿Para qué? Verificar que el validador exige al menos un número en la contraseña.
+        ¿Impacto? Los dígitos amplían el espacio de búsqueda para ataques de diccionario.
+                  Sin este requisito, "TestPassword" sería aceptada aunque sea débil.
+        """
         response = client.post(
             self.URL,
             json={
@@ -172,7 +190,13 @@ class TestRegister:
         assert response.status_code == 422
 
     def test_register_empty_name(self, client: TestClient) -> None:
-        """Registro con nombre vacío → 422."""
+        """Registro con nombre vacío (solo espacios) → 422.
+
+        ¿Qué? Envía espacios en blanco como first_name y last_name.
+        ¿Para qué? Verificar que el validador aplica strip() y rechaza nombres vacíos.
+        ¿Impacto? Sin esta validación, un usuario podría registrarse con nombre " ",
+                  generando registros inútiles y rompiendo la lógica de personalización de UI.
+        """
         response = client.post(
             self.URL,
             json={
@@ -573,7 +597,14 @@ class TestForgotPassword:
         assert "enlace de recuperación" in response.json()["message"].lower()
 
     def test_forgot_password_invalid_email(self, client: TestClient) -> None:
-        """Forgot con email inválido → 422."""
+        """Forgot con email inválido → 422.
+
+        ¿Qué? Envía una cadena sin formato de email (sin @, sin dominio).
+        ¿Para qué? Verificar que Pydantic EmailStr rechaza emails mal formados
+                   antes de siquiera consultar la base de datos.
+        ¿Impacto? Sin esta validación, el backend haría consultas a la BD con datos
+                  inútiles. Pydantic como primera línea de defensa ahorra procesamiento.
+        """
         response = client.post(
             self.URL,
             json={"email": "not-an-email"},
@@ -693,7 +724,13 @@ class TestResetPassword:
     def test_reset_password_weak_new_password(
         self, client: TestClient, valid_reset_token: str
     ) -> None:
-        """Reset con nueva contraseña débil → 422."""
+        """Reset con nueva contraseña débil → 422.
+
+        ¿Qué? Usa un token válido pero envía una contraseña que no cumple los requisitos.
+        ¿Para qué? Verificar que la validación de fortaleza aplica también en el reset.
+        ¿Impacto? El flujo de recuperación no debe ser una vía para establecer contraseñas
+                  débiles. Un token válido no exime de cumplir las reglas de seguridad.
+        """
         response = client.post(
             self.URL,
             json={

@@ -34,6 +34,11 @@ export function ChangePasswordPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  /**
+   * ¿Qué? Actualiza el campo del formulario al escribir y limpia mensajes previos.
+   * ¿Para qué? Mantener el estado sincronizado con los inputs y dar feedback limpio al usuario.
+   * ¿Impacto? Al empezar a escribir, desaparecen errores y mensajes de éxito anteriores.
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
@@ -71,6 +76,12 @@ export function ChangePasswordPage() {
     return Object.keys(newErrors).length === 0;
   };
 
+  /**
+   * ¿Qué? Envía la solicitud de cambio de contraseña al backend.
+   * ¿Para qué? Validar → enviar contraseña actual y nueva → confirmar el cambio al usuario.
+   * ¿Impacto? Si la contraseña actual es incorrecta, el backend retorna 400.
+   *           Si el cambio es exitoso, el formulario se limpia y se muestra un mensaje de éxito.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setGeneralError(null);

@@ -43,6 +43,12 @@ export function RegisterPage() {
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  /**
+   * ¿Qué? Actualiza el campo del formulario cuando el usuario escribe y limpia el error de ese campo.
+   * ¿Para qué? Mantener el estado sincronizado con los inputs y dar feedback inmediato al limpiar errores.
+   * ¿Impacto? Patrón controlled component — React controla el valor de cada input.
+   *           El error del campo desaparece en cuanto el usuario empieza a corregirlo.
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     // Limpiar error del campo cuando el usuario escribe
@@ -128,6 +134,12 @@ export function RegisterPage() {
     return Object.keys(newErrors).length === 0;
   };
 
+  /**
+   * ¿Qué? Envía los datos del formulario al backend para crear la cuenta.
+   * ¿Para qué? Ejecutar la secuencia: validar → registrar → login automático → redirigir al dashboard.
+   * ¿Impacto? Tras un registro exitoso, el usuario queda autenticado inmediatamente
+   *           sin necesidad de ir al formulario de login.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setGeneralError(null);
