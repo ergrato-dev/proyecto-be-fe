@@ -13,14 +13,15 @@
 # ¿Para qué? Generar el directorio dist/ con el HTML/JS/CSS optimizado y minificado.
 # ¿Impacto? Sin este stage, no habría archivos estáticos para servir en producción.
 # ────────────────────────────
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# ¿Qué? Activa pnpm usando Corepack (incluido en Node.js 20).
+# ¿Qué? Activa pnpm usando Corepack (incluido en Node.js 22).
 # ¿Para qué? El proyecto usa pnpm exclusivamente — nunca npm ni yarn.
-# ¿Impacto? Sin corepack enable, el comando `pnpm` no estará disponible en la imagen.
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# ¿Impacto? Versión pineada para builds reproducibles: pnpm@latest puede romper si
+#           la nueva versión requiere una versión de Node superior a la imagen base.
+RUN corepack enable && corepack prepare pnpm@11.0.9 --activate
 
 # ¿Qué? ARG para la URL de la API del backend, con valor por defecto para desarrollo.
 # ¿Para qué? Vite embebe esta variable en el bundle en tiempo de build (BUILD-TIME variable).
