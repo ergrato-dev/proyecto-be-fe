@@ -28,13 +28,13 @@ Cada servicio corre directamente en el sistema operativo:
 
 Instala las siguientes herramientas antes de comenzar:
 
-| Herramienta    | Versión mínima | Verificar con       | Descargar                                                    |
-| -------------- | -------------- | ------------------- | ------------------------------------------------------------ |
-| **Python**     | 3.12+          | `python3 --version` | https://www.python.org/downloads/                            |
-| **Node.js**    | 20 LTS+        | `node --version`    | https://nodejs.org/                                          |
-| **pnpm**       | 9+             | `pnpm --version`    | `corepack enable && corepack prepare pnpm@latest --activate` |
-| **PostgreSQL** | 17+            | `psql --version`    | https://www.postgresql.org/download/                         |
-| **Git**        | 2.40+          | `git --version`     | https://git-scm.com/downloads                                |
+| Herramienta    | Versión mínima | Verificar con       | Descargar                                                          |
+| -------------- | -------------- | ------------------- | ------------------------------------------------------------------ |
+| **Python**     | 3.12+          | `python3 --version` | https://www.python.org/downloads/                                  |
+| **Node.js**    | 22+            | `node --version`    | https://nodejs.org/                                                |
+| **pnpm**       | 11+            | `pnpm --version`    | `corepack enable && corepack prepare pnpm@11.0.9 --activate`       |
+| **PostgreSQL** | 17+            | `psql --version`    | https://www.postgresql.org/download/                               |
+| **Git**        | 2.40+          | `git --version`     | https://git-scm.com/downloads                                      |
 
 > ⚠️ **Nunca usar `npm` ni `yarn`** — solo `pnpm` para instalar dependencias de Node.js.
 
@@ -46,11 +46,15 @@ Instala las siguientes herramientas antes de comenzar:
 ```bash
 # Opción recomendada — vía corepack (incluido con Node.js 16+)
 corepack enable
-corepack prepare pnpm@latest --activate
+corepack prepare pnpm@11.0.9 --activate
 
 # Alternativa — instalación independiente
 curl -fsSL https://get.pnpm.io/install.sh | sh -
+# Luego fijar la versión:
+pnpm self-update 11.0.9
 ```
+
+> ⚠️ **pnpm 11 requiere Node.js ≥ 22.13**. Si tienes Node 20, actualiza antes de instalar pnpm 11.
 
 ### Instalar PostgreSQL
 
@@ -320,7 +324,7 @@ URLs disponibles:
 
 - API: http://localhost:8000
 - Swagger UI: http://localhost:8000/docs
-- Health check: http://localhost:8000/health
+- Health check: http://localhost:8000/api/v1/health
 
 ### Terminal 2 — Frontend (React + Vite)
 
@@ -350,12 +354,12 @@ mailpit
 
 Abrir en el navegador:
 
-| URL                          | Qué muestra                 |
-| ---------------------------- | --------------------------- |
-| http://localhost:5173        | Landing page del frontend   |
-| http://localhost:8000/docs   | Swagger UI del backend      |
-| http://localhost:8000/health | JSON `{"status": "ok"}`     |
-| http://localhost:8025        | Mailpit (si está corriendo) |
+| URL                                 | Qué muestra                 |
+| ----------------------------------- | --------------------------- |
+| http://localhost:5173               | Landing page del frontend   |
+| http://localhost:8000/docs          | Swagger UI del backend      |
+| http://localhost:8000/api/v1/health | JSON `{"status": "healthy"}` |
+| http://localhost:8025               | Mailpit (si está corriendo) |
 
 Probar el flujo completo:
 

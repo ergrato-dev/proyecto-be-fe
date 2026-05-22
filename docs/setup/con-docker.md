@@ -88,6 +88,26 @@ SMTP_HOST=                                # dejar vacío para desactivar SMTP/Ma
 
 ## Paso 3 — Construir imágenes y levantar todos los servicios
 
+### Opción A — Script automatizado (recomendado)
+
+El proyecto incluye scripts que automatizan el arranque con healthchecks y resumen final:
+
+```bash
+# Primera vez (o cuando hay cambios en código o dependencias) — construye + levanta
+./scripts/start.sh
+
+# Arranque rápido sin reconstruir imágenes
+./scripts/start.sh --no-build
+```
+
+El script:
+- Crea `be/.env` automáticamente desde `be/.env.example` si no existe
+- Construye las imágenes con `docker compose up --build -d`
+- Espera a que cada servicio esté listo (healthchecks activos)
+- Muestra un resumen con las URLs de todos los servicios
+
+### Opción B — Comandos manuales
+
 ```bash
 # Construye las imágenes de be y fe, y levanta todos los contenedores en segundo plano
 docker compose up --build -d
@@ -120,19 +140,19 @@ nn_auth_fe        proyecto-be-fe-fe  Up
 
 Abrir en el navegador:
 
-| URL                          | Qué muestra                                          |
-| ---------------------------- | ---------------------------------------------------- |
-| http://localhost:3000        | Landing page del frontend                            |
-| http://localhost:8000/docs   | Swagger UI del backend (solo en entorno development) |
-| http://localhost:8000/health | JSON `{"status": "ok"}` — healthcheck de la API      |
-| http://localhost:8025        | Mailpit — bandeja de emails capturados               |
+| URL                               | Qué muestra                                          |
+| --------------------------------- | ---------------------------------------------------- |
+| http://localhost:3000             | Landing page del frontend                            |
+| http://localhost:8000/docs        | Swagger UI del backend (solo en entorno development) |
+| http://localhost:8000/api/v1/health | JSON `{"status": "healthy"}` — healthcheck de la API |
+| http://localhost:8025             | Mailpit — bandeja de emails capturados               |
 
 Probar la API directamente:
 
 ```bash
 # Verificar que la API responde
-curl http://localhost:8000/health
-# → {"status":"ok","environment":"development"}
+curl http://localhost:8000/api/v1/health
+# → {"status":"healthy","project":"NN Auth System","version":"0.1.0"}
 
 # Registrar un usuario de prueba
 curl -X POST http://localhost:8000/api/v1/auth/register \
@@ -153,13 +173,19 @@ docker compose logs -f be        # solo logs del backend
 docker compose logs -f fe        # solo logs del frontend (Nginx)
 docker compose logs -f db        # solo logs de PostgreSQL
 
-# ─── Detener y reiniciar ───
+# ─── Detener y reiniciar (scripts del proyecto) ───
+./scripts/stop.sh                # detiene contenedores, conserva datos de la BD
+./scripts/stop.sh --volumes      # ídem + borra el volumen → ¡se pierden los datos! (pide confirmación)
+./scripts/start.sh --no-build    # vuelve a iniciarlos sin reconstruir imágenes
+
+# ─── Detener y reiniciar (comandos manuales equivalentes) ───
 docker compose stop              # detiene los contenedores (conserva datos)
 docker compose start             # vuelve a iniciarlos
 docker compose restart be        # reinicia solo el backend
 
 # ─── Reconstruir (cuando cambias código o dependencias) ───
-docker compose up --build        # reconstruye imágenes y reinicia
+./scripts/start.sh               # reconstruye + levanta + healthchecks (recomendado)
+docker compose up --build        # equivalente manual
 docker compose up --build be     # reconstruye solo el backend
 
 # ─── Limpiar ───
@@ -250,13 +276,15 @@ docker compose up --build -d
 ```bash
 # Setup inicial (una sola vez)
 git clone <url> && cd proyecto
-cp be/.env.example be/.env
-# Editar be/.env si es necesario
+# be/.env se crea automáticamente desde .env.example al ejecutar el script
+# Editarlo manualmente solo si quieres cambiar algún valor
 
-# Levantar todo
-docker compose up --build -d
+# Levantar todo (construye imágenes + healthchecks + resumen de URLs)
+./scripts/start.sh
 
-# Verificar
-docker compose ps
-# Abrir http://localhost:3000
+# Arranques siguientes (sin reconstruir)
+./scripts/start.sh --no-build
+
+# Detener
+./scripts/stop.sh
 ```
