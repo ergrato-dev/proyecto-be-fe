@@ -56,6 +56,28 @@ fi
 
 success "Docker disponible."
 
+# ─── Verificar / crear be/.env ───────────────────────────────────────────────
+# ¿Qué? Si be/.env no existe, lo crea automáticamente copiando be/.env.example.
+# ¿Para qué? docker-compose.yml usa env_file: ./be/.env — sin ese archivo el
+#            comando falla antes de levantar cualquier contenedor.
+# ¿Impacto? Los valores del .env.example son seguros para desarrollo local con
+#           Docker. Las variables críticas (DATABASE_URL, SECRET_KEY, etc.) son
+#           sobreescritas por el bloque environment: del docker-compose.yml,
+#           por lo que el sistema arranca correctamente sin edición manual.
+header "Verificando archivos de entorno..."
+if [[ ! -f "${PROJECT_ROOT}/be/.env" ]]; then
+  if [[ -f "${PROJECT_ROOT}/be/.env.example" ]]; then
+    cp "${PROJECT_ROOT}/be/.env.example" "${PROJECT_ROOT}/be/.env"
+    warn "be/.env no existía — creado automáticamente desde be/.env.example."
+    warn "Revisa be/.env y ajusta las variables según tu entorno si es necesario."
+  else
+    error "No se encontró be/.env ni be/.env.example. Crea be/.env manualmente."
+    exit 1
+  fi
+else
+  success "be/.env encontrado."
+fi
+
 # ─── Levantar servicios ──────────────────────────────────────────────────────
 header "Levantando servicios..."
 info "Ejecutando: docker compose up ${BUILD_FLAG} -d"
