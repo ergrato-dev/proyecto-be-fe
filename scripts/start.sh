@@ -111,7 +111,7 @@ header "Esperando Backend FastAPI (be)..."
 # ¿Qué? Hace polling al endpoint /health del backend hasta recibir HTTP 200.
 # ¿Para qué? Confirmar que FastAPI arrancó correctamente y las migraciones se aplicaron.
 # ¿Impacto? Si falla, muestra los logs para facilitar el diagnóstico.
-BE_URL="http://localhost:8000/health"
+BE_URL="http://localhost:8000/api/v1/health"
 attempt=0
 
 until curl -sf "${BE_URL}" &>/dev/null; do
