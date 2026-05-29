@@ -8,7 +8,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
-import { AppLayout } from "@/components/layout/AppLayout";
+import { AppShell } from "@/components/layout/AppShell";
 
 // ¿Qué? Imports de todas las páginas de la aplicación.
 // ¿Para qué? Cada página se renderiza según la ruta activa.
@@ -68,9 +68,9 @@ function App() {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <AppLayout>
+                <AppShell>
                   <DashboardPage />
-                </AppLayout>
+                </AppShell>
               </ProtectedRoute>
             }
           />
@@ -78,9 +78,9 @@ function App() {
             path="/change-password"
             element={
               <ProtectedRoute>
-                <AppLayout>
+                <AppShell>
                   <ChangePasswordPage />
-                </AppLayout>
+                </AppShell>
               </ProtectedRoute>
             }
           />

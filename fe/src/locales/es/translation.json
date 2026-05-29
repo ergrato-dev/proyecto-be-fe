@@ -2,7 +2,15 @@
   "nav": {
     "brand": "NN Auth",
     "logout": "Salir",
-    "language": "Idioma"
+    "language": "Idioma",
+    "sidebar": {
+      "dashboard": "Panel principal",
+      "employees": "Empleados",
+      "products": "Productos",
+      "reports": "Reportes",
+      "security": "Seguridad",
+      "comingSoon": "pronto"
+    }
   },
   "common": {
     "loading": "Cargando...",
