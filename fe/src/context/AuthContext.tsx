@@ -147,12 +147,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
    * ¿Qué? Acción de registro — crea cuenta, luego hace login automático.
    * ¿Para qué? Después de registrarse, el usuario queda logueado directamente.
    * ¿Impacto? Mejor UX: el usuario no tiene que ir al formulario de login después de registrarse.
+   *           Si el login automático falla por verificación de email pendiente, se lanza un error
+   *           tipado con `requiresEmailVerification: true` para que la UI lo distinga de un error real.
    */
   const register = useCallback(
     async (data: RegisterRequest) => {
       await authApi.registerUser(data);
-      // Login automático después del registro.
-      await login({ email: data.email, password: data.password });
+      // ¿Qué? Intenta el login automático después del registro.
+      // ¿Para qué? Evitar que el usuario tenga que ir al formulario de login manualmente.
+      // ¿Impacto? Si el backend exige verificación de email antes del login, el error se marca
+      //           con `requiresEmailVerification: true` para que RegisterPage muestre un aviso
+      //           informativo (amarillo) en lugar de un error rojo confuso.
+      try {
+        await login({ email: data.email, password: data.password });
+      } catch (loginErr) {
+        const err = new Error(loginErr instanceof Error ? loginErr.message : String(loginErr));
+        (err as Error & { requiresEmailVerification: boolean }).requiresEmailVerification = true;
+        throw err;
+      }
     },
     [login],
   );

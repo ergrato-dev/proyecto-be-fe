@@ -21,6 +21,14 @@ interface AuthLayoutProps {
   subtitle?: string;
   /** ¿Qué? Amplía el card a max-w-xl para formularios con más campos (ej: registro). */
   wide?: boolean;
+  /**
+   * ¿Qué? Contenido opcional que se muestra FUERA del card, entre el logo y el card.
+   * ¿Para qué? Mostrar avisos contextuales (ej: verificación de email pendiente) sin
+   *            mezclarlos con el contenido del formulario, evitando confusión visual.
+   * ¿Impacto? El usuario distingue claramente el aviso del formulario — no lo confunde
+   *           con un error dentro del formulario.
+   */
+  notice?: React.ReactNode;
 }
 
 /**
@@ -28,7 +36,7 @@ interface AuthLayoutProps {
  * ¿Para qué? Diseño mobile-first: el card ocupa el ancho completo en móvil y se centra en desktop.
  * ¿Impacto? Consistencia visual: todos los formularios de auth tienen el mismo look.
  */
-export function AuthLayout({ children, title, subtitle, wide = false }: AuthLayoutProps) {
+export function AuthLayout({ children, title, subtitle, wide = false, notice }: AuthLayoutProps) {
   const { t } = useTranslation();
 
   return (
@@ -63,6 +71,12 @@ export function AuthLayout({ children, title, subtitle, wide = false }: AuthLayo
               </h1>
             </Link>
           </div>
+
+          {/* ¿Qué? Slot de aviso contextual — renderiza FUERA del card cuando se provee. */}
+          {/* ¿Para qué? Separar visualmente avisos informativos del contenido del formulario. */}
+          {/* ¿Impacto? Evita que el usuario confunda un aviso de proceso (ej: verificar email) */}
+          {/*           con un error dentro del formulario. */}
+          {notice && <div className="mb-4">{notice}</div>}
 
           {/* ¿Qué? Card con fondo blanco, borde sutil y sombra suave. */}
           {/* ¿Para qué? Contener el formulario en una caja visual definida. */}

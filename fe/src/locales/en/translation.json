@@ -36,6 +36,9 @@
       "haveAccount": "Already have an account?",
       "loginLink": "Sign in",
       "errorDefault": "Error creating account",
+      "verifyEmailNotice": "Account created. Check {{email}} to verify your address before signing in.",
+      "verifyEmailCardTitle": "Account created successfully!",
+      "verifyEmailCardBody": "We sent you a verification email. Check your inbox and click the link to activate your account.",
       "validation": {
         "emailRequired": "Email is required",
         "confirmEmailRequired": "Please confirm your email address",

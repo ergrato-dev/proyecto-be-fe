@@ -36,6 +36,9 @@
       "haveAccount": "¿Ya tienes cuenta?",
       "loginLink": "Iniciar sesión",
       "errorDefault": "Error al registrar usuario",
+      "verifyEmailNotice": "Tu cuenta fue creada. Revisa {{email}} para verificar tu dirección antes de iniciar sesión.",
+      "verifyEmailCardTitle": "¡Cuenta creada con éxito!",
+      "verifyEmailCardBody": "Te enviamos un correo de verificación. Revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.",
       "validation": {
         "emailRequired": "El correo es obligatorio",
         "confirmEmailRequired": "Debes confirmar tu correo electrónico",
