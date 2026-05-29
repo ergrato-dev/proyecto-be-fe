@@ -15,7 +15,8 @@
     "save": "Guardar",
     "cancel": "Cancelar",
     "back": "Volver",
-    "or": "o"
+    "or": "o",
+    "close": "Cerrar"
   },
   "auth": {
     "login": {

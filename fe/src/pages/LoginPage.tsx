@@ -10,7 +10,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
-import { AuthLayout } from "@/components/layout/AuthLayout";
+import { Modal } from "@/components/ui/Modal";
+import { LandingPage } from "@/pages/LandingPage";
 import { InputField } from "@/components/ui/InputField";
 import { Button } from "@/components/ui/Button";
 import { Alert } from "@/components/ui/Alert";
@@ -72,67 +73,81 @@ export function LoginPage() {
   };
 
   return (
-    <AuthLayout title={t("auth.login.title")} subtitle={t("auth.login.subtitle")}>
-      {/* ¿Qué? Alerta de error visible cuando el login falla. */}
-      {error && (
-        <div className="mb-4">
-          <Alert type="error" message={error} onClose={() => setError(null)} />
+    <>
+      <LandingPage />
+      <Modal onClose={() => navigate("/")} aria-label={t("auth.login.title")}>
+        <div className="p-6 sm:p-8">
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              {t("auth.login.title")}
+            </h2>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              {t("auth.login.subtitle")}
+            </p>
+          </div>
+
+          {/* ¿Qué? Alerta de error visible cuando el login falla. */}
+          {error && (
+            <div className="mb-4">
+              <Alert type="error" message={error} onClose={() => setError(null)} />
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} noValidate>
+            <InputField
+              label={t("common.email")}
+              name="email"
+              type="email"
+              value={formData.email}
+              placeholder={t("common.emailPlaceholder")}
+              autoComplete="email"
+              autoFocus
+              icon={<Mail className="h-5 w-5" />}
+              onChange={handleChange}
+            />
+
+            <InputField
+              label={t("common.password")}
+              name="password"
+              type="password"
+              value={formData.password}
+              placeholder={t("common.passwordPlaceholder")}
+              autoComplete="current-password"
+              icon={<Lock className="h-5 w-5" />}
+              onChange={handleChange}
+            />
+
+            {/* ¿Qué? Enlace a recuperación de contraseña. */}
+            <div className="mb-6 flex justify-end">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300"
+              >
+                {t("auth.login.forgotPassword")}
+              </Link>
+            </div>
+
+            {/* ¿Qué? Botón de submit con estado de carga. */}
+            {/* ¿Para qué? Enviar el formulario y deshabilitarse mientras se procesa. */}
+            <div className="flex justify-end">
+              <Button type="submit" fullWidth isLoading={isLoading}>
+                {t("auth.login.submit")}
+              </Button>
+            </div>
+          </form>
+
+          {/* ¿Qué? Enlace a la página de registro. */}
+          <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+            {t("auth.login.noAccount")}{" "}
+            <Link
+              to="/register"
+              className="font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300"
+            >
+              {t("auth.login.createAccountLink")}
+            </Link>
+          </p>
         </div>
-      )}
-
-      <form onSubmit={handleSubmit} noValidate>
-        <InputField
-          label={t("common.email")}
-          name="email"
-          type="email"
-          value={formData.email}
-          placeholder={t("common.emailPlaceholder")}
-          autoComplete="email"
-          autoFocus
-          icon={<Mail className="h-5 w-5" />}
-          onChange={handleChange}
-        />
-
-        <InputField
-          label={t("common.password")}
-          name="password"
-          type="password"
-          value={formData.password}
-          placeholder={t("common.passwordPlaceholder")}
-          autoComplete="current-password"
-          icon={<Lock className="h-5 w-5" />}
-          onChange={handleChange}
-        />
-
-        {/* ¿Qué? Enlace a recuperación de contraseña. */}
-        <div className="mb-6 flex justify-end">
-          <Link
-            to="/forgot-password"
-            className="text-sm text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300"
-          >
-            {t("auth.login.forgotPassword")}
-          </Link>
-        </div>
-
-        {/* ¿Qué? Botón de submit con estado de carga. */}
-        {/* ¿Para qué? Enviar el formulario y deshabilitarse mientras se procesa. */}
-        <div className="flex justify-end">
-          <Button type="submit" fullWidth isLoading={isLoading}>
-            {t("auth.login.submit")}
-          </Button>
-        </div>
-      </form>
-
-      {/* ¿Qué? Enlace a la página de registro. */}
-      <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-        {t("auth.login.noAccount")}{" "}
-        <Link
-          to="/register"
-          className="font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300"
-        >
-          {t("auth.login.createAccountLink")}
-        </Link>
-      </p>
-    </AuthLayout>
+      </Modal>
+    </>
   );
 }

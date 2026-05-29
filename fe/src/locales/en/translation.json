@@ -15,7 +15,8 @@
     "save": "Save",
     "cancel": "Cancel",
     "back": "Back",
-    "or": "or"
+    "or": "or",
+    "close": "Close"
   },
   "auth": {
     "login": {
