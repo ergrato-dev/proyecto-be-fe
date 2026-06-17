@@ -175,15 +175,15 @@ Descripción: Utilidades de seguridad — hashing de contraseñas y manejo de to
 cd be
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+uv sync
 
 # ❌ INCORRECTO — Nunca instalar en Python del sistema
-pip install fastapi  # ← NO hacer esto sin .venv activado
+uv add fastapi  # ← uv gestiona el .venv automáticamente
 
 # ❌ INCORRECTO — No usar conda, pipenv, poetry u otros (salvo aprobación explícita)
 ```
 
-**NUNCA** ejecutar `pip install` sin antes verificar que el `.venv` está activo.
+**NUNCA** ejecutar `pip install` directamente — usar `uv sync` o `uv add`.
 
 ### 4.2 Node.js — SIEMPRE usar `pnpm`
 
@@ -211,7 +211,7 @@ Si algún tutorial o documentación sugiere `npm`, **reemplazar** por el equival
 
 > **"Una versión no pineada es una vulnerabilidad en espera de manifestarse."**
 
-**PROHIBIDO** usar rangos de versión en `requirements.txt` ni en `package.json`:
+**PROHIBIDO** usar rangos de versión en `pyproject.toml`, `uv.lock` ni en `package.json`:
 
 | Operador          | Significado               | Por qué está prohibido                        |
 | ----------------- | ------------------------- | --------------------------------------------- |
@@ -225,12 +225,15 @@ Si algún tutorial o documentación sugiere `npm`, **reemplazar** por el equival
 **OBLIGATORIO** usar versiones exactas en todo momento:
 
 ```python
-# ✅ CORRECTO — requirements.txt
-fastapi==0.135.1
-sqlalchemy==2.0.48
-cryptography==46.0.6
+# ✅ CORRECTO — pyproject.toml
+dependencies = [
+    "fastapi==0.135.1",
+]
 
-# ❌ INCORRECTO — requirements.txt
+# ❌ INCORRECTO — pyproject.toml
+dependencies = [
+    "fastapi>=0.135.1",
+]
 fastapi>=0.115.0     # ← PROHIBIDO
 sqlalchemy~=2.0.0    # ← PROHIBIDO
 cryptography         # ← PROHIBIDO (sin versión)
@@ -259,9 +262,8 @@ cryptography         # ← PROHIBIDO (sin versión)
 
 ```bash
 # Python
-pip install "paquete==X.Y.Z"          # Instalar versión exacta y auditada
-pip-audit                              # Verificar que no hay CVEs activos
-# Luego actualizar requirements.txt manualmente con ==X.Y.Z
+uv add "paquete==X.Y.Z"               # Añadir dependencia con versión exacta
+# Luego verificar que pyproject.toml tiene ==X.Y.Z y commitear uv.lock
 
 # Node.js — SIEMPRE con @X.Y.Z
 pnpm add paquete@X.Y.Z                 # pnpm respeta la versión exacta
@@ -286,7 +288,7 @@ pnpm audit                             # Verificar CVEs
 
 ```bash
 # Backend
-pip install pip-audit
+uv run pip-audit
 pip-audit                              # Audita todas las deps del venv activo
 
 # Frontend
@@ -338,7 +340,7 @@ proyecto/                          # Raíz del monorepo
 │   ├── .env                       # Variables de entorno (NO versionado)
 │   ├── .env.example               # Plantilla de variables de entorno
 │   ├── .venv/                     # Entorno virtual Python (NO versionado)
-│   ├── requirements.txt           # Dependencias Python
+│   ├── pyproject.toml / uv.lock        # Dependencias Python (uv)
 │   ├── alembic.ini                # Configuración de Alembic
 │   ├── alembic/                   # Migraciones de base de datos
 │   │   ├── env.py
@@ -640,7 +642,7 @@ Impact: Improves UX by redirecting to login instead of showing error page"
 # ✅ Ejemplo de chore
 git commit -m "chore(deps): upgrade fastapi to 0.115.6
 
-What: Updates FastAPI from 0.115.0 to 0.115.6 in requirements.txt
+What: Updates FastAPI from 0.115.0 to 0.115.6 in pyproject.toml / uv.lock
 For: Include latest security patches and bug fixes
 Impact: No breaking changes; all existing tests pass"
 ```
@@ -719,7 +721,7 @@ cd fe && pnpm format             # Formatear código
 - [ ] ¿Las variables sensibles están en `.env` y no hardcodeadas?
 - [ ] ¿El `.env.example` se actualizó si se agregaron nuevas variables?
 - [ ] **Si se agregó/actualizó una dependencia:** ¿`pip-audit` / `pnpm audit` no reporta CVEs?
-- [ ] **Si se agregó/actualizó una dependencia:** ¿La versión es exacta (`==` / sin `^` ni `~`) en `requirements.txt` / `package.json`?
+- [ ] **Si se agregó/actualizó una dependencia:** ¿La versión es exacta (`==` / sin `^` ni `~`) en `pyproject.toml` / `uv.lock` / `package.json`?
 
 ---
 
@@ -1060,7 +1062,7 @@ Los colores de estado son fijos independientemente del stack. **No reemplazar co
 ### Fase 1 — Backend Setup
 
 - [x] Inicializar `venv` en `be/`
-- [x] Crear `requirements.txt` con todas las dependencias
+- [x] Crear `pyproject.toml` y `uv.lock` con todas las dependencias
 - [x] Instalar dependencias
 - [x] Crear `app/config.py` — Pydantic Settings
 - [x] Crear `app/database.py` — SQLAlchemy engine + session

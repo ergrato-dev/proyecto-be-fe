@@ -149,7 +149,7 @@ python --version
 
 ```bash
 # Con el .venv activo:
-pip install -r requirements.txt
+uv sync
 
 # Verificar instalación
 pip list | grep fastapi
@@ -508,7 +508,7 @@ git clone <url> && cd proyecto
 
 # Backend
 cd be && python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+uv sync
 cp .env.example .env   # editar DATABASE_URL y FRONTEND_URL
 alembic upgrade head
 

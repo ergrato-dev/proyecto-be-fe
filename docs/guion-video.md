@@ -276,12 +276,12 @@ source .venv/bin/activate
 # Eso confirma que estamos dentro del entorno virtual
 
 # Instalar dependencias
-pip install -r requirements.txt
+uv sync
 ```
 
 > "¿Por qué un entorno virtual? Porque sin él, cada paquete que instalemos va al Python del sistema, y si tenemos otro proyecto con versiones diferentes de las mismas librerías, habrá conflictos. El entorno virtual crea una instalación de Python completamente aislada para este proyecto."
 
-**[Abrir `requirements.txt`]**
+**[Abrir \`pyproject.toml\`]**
 
 > "Vamos a revisar las dependencias principales:
 >
@@ -1678,7 +1678,7 @@ cd be && source .venv/bin/activate && alembic upgrade head
 | ----- | --------------------------------------------- | ----------------------------------------- |
 | 01    | `docker-compose.yml`                          | Infraestructura y servicios               |
 | 02    | `be/.env.example`                             | Variables de entorno                      |
-| 03    | `be/requirements.txt`                         | Dependencias Python                       |
+| 03    | `be/pyproject.toml`                         | Dependencias Python                       |
 | 04    | `be/app/config.py`                            | Settings + `ENVIRONMENT`                  |
 | 05    | `be/app/database.py`                          | Engine, Session, Base de SQLAlchemy       |
 | 06    | `be/app/main.py`                              | FastAPI app, CORS, security headers, docs |

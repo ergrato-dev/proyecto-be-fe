@@ -9,8 +9,8 @@
 
 # ────────────────────────────
 # Stage 1: builder
-# ¿Qué? Instala todas las dependencias Python en un venv aislado.
-# ¿Para qué? Aprovechar el caché de capas de Docker — si requirements.txt no cambia,
+# ¿Qué? Instala todas las dependencias Python en un venv aislado con uv.
+# ¿Para qué? Aprovechar el caché de capas de Docker — si pyproject.toml/uv.lock no cambian,
 #            esta capa se reutiliza y el build es mucho más rápido.
 # ¿Impacto? Sin este stage, cada rebuild reinstalaría todas las dependencias desde cero.
 # ────────────────────────────
@@ -18,23 +18,19 @@ FROM python:3.12-slim AS builder
 
 WORKDIR /app
 
-# ¿Qué? Crea un entorno virtual en /opt/venv para instalar dependencias.
-# ¿Para qué? Aislar los paquetes del sistema base Python — buena práctica igual
-#            que usar .venv en desarrollo local.
-# ¿Impacto? Permite copiar el venv completo al stage runtime de forma limpia.
-RUN python -m venv /opt/venv
+# Instalar uv — gestor de paquetes ultrarrápido escrito en Rust
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
-# Activar el venv para los comandos RUN siguientes
-ENV PATH="/opt/venv/bin:$PATH"
+# Instalar dependencias directamente en /opt/venv
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 
-# ¿Qué? Copia SOLO el archivo de dependencias antes que el resto del código.
-# ¿Para qué? Optimizar el caché de Docker — si el código cambia pero requirements.txt
-#            no, Docker reutiliza la capa de instalación de paquetes.
+# ¿Qué? Copia SOLO los archivos de dependencias antes que el resto del código.
+# ¿Para qué? Optimizar el caché de Docker — si el código cambia pero pyproject.toml
+#            y uv.lock no, Docker reutiliza la capa de instalación de paquetes.
 # ¿Impacto? Build hasta 10x más rápido en iteraciones del día a día.
-COPY requirements.txt .
+COPY pyproject.toml uv.lock ./
 
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+RUN uv sync --frozen --no-install-project
 
 
 # ────────────────────────────

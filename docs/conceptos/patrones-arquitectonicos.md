@@ -407,7 +407,7 @@ Múltiples proyectos (frontend, backend, infraestructura) conviven en **un solo 
 proyecto/                  ← Un solo repositorio git
 ├── be/                    ← Backend (Python/FastAPI)
 │   ├── app/
-│   └── requirements.txt
+│   └── pyproject.toml
 ├── fe/                    ← Frontend (React/TypeScript)
 │   ├── src/
 │   └── package.json

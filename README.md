@@ -121,7 +121,7 @@ source .venv/bin/activate          # Linux/macOS y Windows (Git Bash) ← usar s
 # source .venv/Scripts/activate    # Windows (Git Bash — ruta alternativa si la anterior falla)
 
 # Instalar dependencias
-pip install -r requirements.txt
+uv sync
 
 # Copiar y configurar variables de entorno
 cp .env.example .env
@@ -236,7 +236,7 @@ proyecto/
 │   │   ├── utils/                    # Utilidades (security, email)
 │   │   └── tests/                    # Tests con pytest
 │   ├── alembic/                      # Migraciones de BD
-│   └── requirements.txt              # Dependencias Python
+│   └── pyproject.toml / uv.lock       # Dependencias Python (uv)
 └── fe/                               # Frontend — React + Vite + TypeScript
     ├── src/
     │   ├── api/                      # Clientes HTTP

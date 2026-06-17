@@ -20,7 +20,7 @@
 | 1   | [Prerrequisitos](#1-prerrequisitos)                                                         | Herramientas necesarias      |
 | 2   | [Estructura del backend](#2-estructura-del-backend)                                         | Cómo se organiza el código   |
 | 3   | [Entorno virtual Python](#3-entorno-virtual-python-venv)                                    | Aislamiento de dependencias  |
-| 4   | [Dependencias (`requirements.txt`)](#4-dependencias-requirementstxt)                        | Cada librería y su rol       |
+| 4   | [Dependencias (`pyproject.toml`)](#4-dependencias-pyprojecttoml)                        | Cada librería y su rol       |
 | 5   | [Variables de entorno](#5-variables-de-entorno)                                             | Configuración segura         |
 | 6   | [Configuración (`config.py`)](#6-configuración-configpy)                                    | Pydantic Settings            |
 | 7   | [Base de datos (`database.py`)](#7-base-de-datos-databasepy)                                | SQLAlchemy engine y sesión   |
@@ -83,7 +83,7 @@ docker compose ps
 be/
 ├── .env                    # Variables de entorno — NO versionado en git
 ├── .env.example            # Plantilla de variables — SÍ versionado en git
-├── requirements.txt        # Dependencias Python del proyecto
+├── pyproject.toml / uv.lock      # Dependencias Python (uv)
 ├── alembic.ini             # Configuración de Alembic (migraciones)
 ├── alembic/
 │   ├── env.py              # Conecta Alembic con la BD y los modelos
@@ -151,7 +151,7 @@ which python3
 # Debe mostrar: .../be/.venv/bin/python3
 
 # Instalar todas las dependencias
-pip install -r requirements.txt
+uv sync
 ```
 
 > **¿Por qué `venv`?**
@@ -173,47 +173,59 @@ cd be && source .venv/bin/activate
 
 ---
 
-## 4. Dependencias (`requirements.txt`)
+## 4. Dependencias (`pyproject.toml`)
+
+Las dependencias se gestionan con [uv](https://docs.astral.sh/uv/), un gestor de paquetes
+ultrarrápido escrito en Rust. El archivo `pyproject.toml` declara todas las dependencias
+con versiones exactas, y `uv.lock` garantiza instalaciones 100% reproducibles.
 
 ```
 # Framework y servidor
-fastapi>=0.115.0        # El framework web — maneja rutas, requests, responses
-uvicorn[standard]>=0.32.0  # Servidor ASGI que ejecuta FastAPI
-python-multipart>=0.0.18   # Necesario para leer form data (como el login)
+fastapi==0.135.1            # El framework web — maneja rutas, requests, responses
+uvicorn[standard]==0.42.0   # Servidor ASGI que ejecuta FastAPI
+python-multipart==0.0.22    # Necesario para leer form data (como el login)
 
 # ORM y base de datos
-sqlalchemy>=2.0.0       # ORM — permite manejar la BD con clases Python
-alembic>=1.14.0         # Migraciones versionadas de la BD
-psycopg2-binary>=2.9.0  # Driver que conecta Python con PostgreSQL
+sqlalchemy==2.0.48          # ORM — permite manejar la BD con clases Python
+alembic==1.18.4             # Migraciones versionadas de la BD
+psycopg2-binary==2.9.11     # Driver que conecta Python con PostgreSQL
 
 # Validación y configuración
-pydantic>=2.0.0         # Validación de datos con tipos Python
-pydantic-settings>=2.0.0  # Leer y validar variables de entorno
-email-validator>=2.0.0  # Validar formato de emails (lo usa Pydantic)
+pydantic==2.12.5            # Validación de datos con tipos Python
+pydantic-settings==2.13.1   # Leer y validar variables de entorno
+email-validator==2.3.0      # Validar formato de emails (lo usa Pydantic)
 
 # Seguridad
-python-jose[cryptography]>=3.3.0  # Crear y verificar tokens JWT
-passlib[bcrypt]>=1.7.0            # Hashear contraseñas con bcrypt
-bcrypt>=4.0.0,<4.1.0              # Motor de bcrypt (versión fijada por compatibilidad)
+python-jose[cryptography]==3.5.0  # Crear y verificar tokens JWT
+passlib[bcrypt]==1.7.4            # Hashear contraseñas con bcrypt
+bcrypt==4.0.1                     # Motor de bcrypt (versión fijada por compatibilidad)
 
 # Email
-resend>=2.25.0          # SDK del servicio de envío de emails Resend
+resend==2.25.0              # SDK del servicio de envío de emails Resend
 
 # Testing
-pytest>=8.0.0           # Framework de testing
-pytest-asyncio>=0.24.0  # Soporte para funciones async en tests
-httpx>=0.27.0           # Cliente HTTP para llamar a la API en los tests
-pytest-cov>=6.0.0       # Medir cobertura de código
+pytest==9.0.2               # Framework de testing
+pytest-asyncio==1.3.0       # Soporte para funciones async en tests
+httpx==0.28.1               # Cliente HTTP para llamar a la API en los tests
+pytest-cov==7.0.0           # Medir cobertura de código
 
 # Linting
-ruff>=0.8.0             # Linter y formateador ultrarrápido (reemplaza black + flake8)
-slowapi>=0.1.9          # Rate limiting — limita peticiones por IP (seguridad OWASP A04)
+ruff==0.15.7                # Linter y formateador ultrarrápido
+slowapi==0.1.9              # Rate limiting — limita peticiones por IP (seguridad OWASP A04)
 ```
 
-> **¿Por qué separar testing y linting en `requirements.txt`?**
-> En un proyecto de producción, se separarian en `requirements-dev.txt`. Aquí los mantenemos
-> juntos por simplicidad pedagógica, pero la idea es la misma: las dependencias de desarrollo
-> no deben instalarse en los servidores de producción.
+> **¿Por qué separar testing y linting de producción?**
+> En un proyecto de producción, se usarían [dependency groups](https://docs.astral.sh/uv/concepts/dependencies/)
+> de uv para separar dev de prod (`uv sync --no-dev`). Aquí los mantenemos
+> juntos por simplicidad pedagógica.
+
+> **Comandos útiles con uv:**
+> ```bash
+> uv sync              # Instalar/actualizar dependencias según uv.lock
+> uv add paquete       # Añadir una nueva dependencia
+> uv lock              # Regenerar uv.lock después de cambios en pyproject.toml
+> uv tree              # Ver el árbol de dependencias
+> ```
 
 ---
 

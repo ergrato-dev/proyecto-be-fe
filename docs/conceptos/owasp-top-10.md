@@ -328,7 +328,7 @@ todo el sistema.
 
 ### Cómo lo mitiga este proyecto
 
-**Versiones mínimas fijadas** ([be/requirements.txt](../be/requirements.txt)):
+**Versiones mínimas fijadas** ([be/pyproject.toml](../be/pyproject.toml)):
 
 ```
 fastapi>=0.115       # Requiere versión mínima con patches de seguridad
@@ -342,10 +342,10 @@ slowapi>=0.1.9
 
 ```bash
 # Verificar vulnerabilidades conocidas en dependencias:
-pip install safety && safety check
+uv run pip-audit
 
 # O con pip-audit:
-pip install pip-audit && pip-audit
+uv run pip-audit
 ```
 
 > **Nota pedagógica**: Usar `>=version` (versión mínima) en lugar de `==version` (versión exacta)

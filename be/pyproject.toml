@@ -1,0 +1,52 @@
+[project]
+name = "nn-auth-system"
+version = "0.1.0"
+description = "Sistema de autenticación con FastAPI"
+requires-python = ">=3.12"
+dependencies = [
+    # Framework y servidor
+    "fastapi==0.135.1",
+    "uvicorn[standard]==0.42.0",
+    "python-multipart==0.0.22",
+    # Base de datos y ORM
+    "sqlalchemy==2.0.48",
+    "alembic==1.18.4",
+    "psycopg2-binary==2.9.11",
+    # Validación y configuración
+    "pydantic==2.12.5",
+    "pydantic-settings==2.13.1",
+    "email-validator==2.3.0",
+    # Seguridad y autenticación
+    "python-jose[cryptography]==3.5.0",
+    "passlib[bcrypt]==1.7.4",
+    "bcrypt==4.0.1",
+    # Email
+    "resend==2.25.0",
+    # Testing
+    "pytest==9.0.2",
+    "pytest-asyncio==1.3.0",
+    "httpx==0.28.1",
+    "pytest-cov==7.0.0",
+    # Linting y formateo
+    "ruff==0.15.7",
+    "slowapi==0.1.9",
+    # Pins de seguridad — dependencias transitivas con CVEs
+    "cryptography==46.0.6",
+    "ecdsa==0.19.2",
+    "pygments==2.20.0",
+    "requests==2.33.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+target-version = "py312"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

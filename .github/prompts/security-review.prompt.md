@@ -50,7 +50,7 @@ OWASP Top 10 (2021) en el contexto de una API REST con FastAPI + React/TypeScrip
 
 ### A06 — Vulnerable and Outdated Components
 
-- ¿Las versiones en `requirements.txt` y `package.json` están pineadas con `==` / sin `^`?
+- ¿Las versiones en `pyproject.toml`, `uv.lock` y `package.json` están pineadas con `==` / sin `^`?
 - ¿`pip-audit` y `pnpm audit` reportan 0 CVEs?
 
 ### A07 — Identification and Authentication Failures
