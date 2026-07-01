@@ -1,17 +1,18 @@
 /**
  * Archivo: pages/ResetPasswordPage.tsx
- * Descripción: Página para restablecer la contraseña usando el token recibido por email.
+ * Descripción: Modal (sobre landing) para restablecer la contraseña usando el token recibido por email.
  * ¿Para qué? Completar el flujo de recuperación: el usuario ingresa la nueva contraseña
  *            junto con el token que recibió en el enlace del email.
  * ¿Impacto? Una vez restablecida, el token se marca como usado y el usuario puede hacer login.
  */
 
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { KeyRound, ShieldCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
-import { AuthLayout } from "@/components/layout/AuthLayout";
+import { Modal } from "@/components/ui/Modal";
+import { LandingPage } from "@/pages/LandingPage";
 import { InputField } from "@/components/ui/InputField";
 import { Button } from "@/components/ui/Button";
 import { Alert } from "@/components/ui/Alert";
@@ -22,6 +23,7 @@ import { Alert } from "@/components/ui/Alert";
  * ¿Impacto? Si el token es inválido, expirado o ya usado, el backend retorna error.
  */
 export function ResetPasswordPage() {
+  const navigate = useNavigate();
   const { resetPassword } = useAuth();
   const { t } = useTranslation();
   // ¿Qué? Lee el token del query param de la URL.
@@ -114,73 +116,97 @@ export function ResetPasswordPage() {
   // ¿Qué? Si no hay token en la URL, mostrar mensaje de error.
   if (!token) {
     return (
-      <AuthLayout title={t("auth.resetPassword.invalidLinkTitle")}>
-        <Alert type="error" message={t("auth.resetPassword.invalidLinkMessage")} />
-        <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-          <Link
-            to="/forgot-password"
-            className="font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300"
-          >
-            {t("auth.resetPassword.requestNewLink")}
-          </Link>
-        </p>
-      </AuthLayout>
+      <>
+        <LandingPage />
+        <Modal onClose={() => navigate("/")} aria-label={t("auth.resetPassword.invalidLinkTitle")}>
+          <div className="p-6 sm:p-8">
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                {t("auth.resetPassword.invalidLinkTitle")}
+              </h2>
+            </div>
+            <Alert type="error" message={t("auth.resetPassword.invalidLinkMessage")} />
+            <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+              <Link
+                to="/forgot-password"
+                className="font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300"
+              >
+                {t("auth.resetPassword.requestNewLink")}
+              </Link>
+            </p>
+          </div>
+        </Modal>
+      </>
     );
   }
 
   return (
-    <AuthLayout title={t("auth.resetPassword.title")} subtitle={t("auth.resetPassword.subtitle")}>
-      {success && (
-        <div className="mb-4">
-          <Alert type="success" message={success} />
-        </div>
-      )}
-      {generalError && (
-        <div className="mb-4">
-          <Alert type="error" message={generalError} onClose={() => setGeneralError(null)} />
-        </div>
-      )}
-
-      {!success ? (
-        <form onSubmit={handleSubmit} noValidate>
-          <InputField
-            label={t("auth.changePassword.newPassword")}
-            name="new_password"
-            type="password"
-            value={formData.new_password}
-            placeholder={t("common.passwordPlaceholder")}
-            autoComplete="new-password"
-            autoFocus
-            icon={<KeyRound className="h-5 w-5" />}
-            error={errors.new_password}
-            onChange={handleChange}
-          />
-
-          <InputField
-            label={t("auth.changePassword.confirmPassword")}
-            name="confirmPassword"
-            type="password"
-            value={formData.confirmPassword}
-            placeholder={t("common.passwordPlaceholder")}
-            autoComplete="new-password"
-            icon={<ShieldCheck className="h-5 w-5" />}
-            error={errors.confirmPassword}
-            onChange={handleChange}
-          />
-
-          <div className="mt-2 flex justify-end">
-            <Button type="submit" fullWidth isLoading={isLoading}>
-              {t("auth.resetPassword.submit")}
-            </Button>
+    <>
+      <LandingPage />
+      <Modal onClose={() => navigate("/")} aria-label={t("auth.resetPassword.title")}>
+        <div className="p-6 sm:p-8">
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              {t("auth.resetPassword.title")}
+            </h2>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              {t("auth.resetPassword.subtitle")}
+            </p>
           </div>
-        </form>
-      ) : (
-        <div className="flex justify-end">
-          <Link to="/login">
-            <Button>{t("auth.resetPassword.loginLink")}</Button>
-          </Link>
+
+          {success && (
+            <div className="mb-4">
+              <Alert type="success" message={success} />
+            </div>
+          )}
+          {generalError && (
+            <div className="mb-4">
+              <Alert type="error" message={generalError} onClose={() => setGeneralError(null)} />
+            </div>
+          )}
+
+          {!success ? (
+            <form onSubmit={handleSubmit} noValidate>
+              <InputField
+                label={t("auth.changePassword.newPassword")}
+                name="new_password"
+                type="password"
+                value={formData.new_password}
+                placeholder={t("common.passwordPlaceholder")}
+                autoComplete="new-password"
+                autoFocus
+                icon={<KeyRound className="h-5 w-5" />}
+                error={errors.new_password}
+                onChange={handleChange}
+              />
+
+              <InputField
+                label={t("auth.changePassword.confirmPassword")}
+                name="confirmPassword"
+                type="password"
+                value={formData.confirmPassword}
+                placeholder={t("common.passwordPlaceholder")}
+                autoComplete="new-password"
+                icon={<ShieldCheck className="h-5 w-5" />}
+                error={errors.confirmPassword}
+                onChange={handleChange}
+              />
+
+              <div className="mt-2 flex justify-end">
+                <Button type="submit" fullWidth isLoading={isLoading}>
+                  {t("auth.resetPassword.submit")}
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <div className="flex justify-end">
+              <Link to="/login">
+                <Button>{t("auth.resetPassword.loginLink")}</Button>
+              </Link>
+            </div>
+          )}
         </div>
-      )}
-    </AuthLayout>
+      </Modal>
+    </>
   );
 }
