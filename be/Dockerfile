@@ -63,16 +63,20 @@ COPY --from=builder /opt/venv /opt/venv
 # ¿Impacto? Los archivos en .dockerignore NO se copian (ej: .env, .venv local, __pycache__).
 COPY . .
 
+# ¿Qué? Hace ejecutable el entrypoint que corre migraciones + valida el esquema.
+# ¿Para qué? sh necesita el bit +x para poder ejecutar el script directamente.
+# ¿Impacto? Sin esto, el contenedor falla al arrancar con "Permission denied".
+RUN chmod +x docker-entrypoint.sh
+
 # ¿Qué? Documenta que el contenedor escucha en el puerto 8000.
 # ¿Para qué? Convención Docker que informa a herramientas y operadores qué puerto usar.
 # ¿Impacto? No abre el puerto por sí solo — docker-compose.yml define el mapeo real.
 EXPOSE 8000
 
-# ¿Qué? Comando de inicio del contenedor.
-# ¿Para qué? Primero ejecuta las migraciones pendientes de Alembic, luego arranca
-#            Uvicorn escuchando en todas las interfaces (0.0.0.0) en el puerto 8000.
-# ¿Impacto? Sin `alembic upgrade head`, el backend podría arrancar con un esquema de
-#           BD desactualizado, causando errores en las primeras operaciones.
-#           Sin `--host 0.0.0.0`, Uvicorn escucharía solo en localhost y el contenedor
-#           no sería accesible desde fuera.
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+# ¿Qué? Comando de inicio del contenedor — ver docker-entrypoint.sh.
+# ¿Para qué? Corre las migraciones de Alembic, valida que el esquema real coincida con lo
+#            que Alembic cree haber aplicado, y solo entonces arranca Uvicorn en 0.0.0.0:8000.
+# ¿Impacto? Si el volumen de Postgres queda con alembic_version en head sin las tablas
+#           reales (visto en desarrollo), el contenedor falla al arrancar con un mensaje
+#           claro en vez de exponer un backend que responde 500 en cada request.
+CMD ["./docker-entrypoint.sh"]
