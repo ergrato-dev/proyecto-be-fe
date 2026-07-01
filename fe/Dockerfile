@@ -67,7 +67,7 @@ RUN pnpm build
 #            Alpine lo hace extremadamente liviano (~30MB).
 # ¿Impacto? Node.js, pnpm y el código fuente NO están en esta imagen final.
 # ────────────────────────────
-FROM nginx:1.27.4-alpine AS runtime
+FROM nginx:1.28.3-alpine AS runtime
 
 # ¿Qué? Copia la configuración de Nginx personalizada para una SPA (Single Page App).
 # ¿Para qué? La configuración por defecto de Nginx no soporta React Router —

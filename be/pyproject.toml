@@ -7,7 +7,7 @@ dependencies = [
     # Framework y servidor
     "fastapi==0.135.1",
     "uvicorn[standard]==0.42.0",
-    "python-multipart==0.0.22",
+    "python-multipart==0.0.32",
     # Base de datos y ORM
     "sqlalchemy==2.0.48",
     "alembic==1.18.4",
@@ -31,10 +31,10 @@ dependencies = [
     "ruff==0.15.7",
     "slowapi==0.1.9",
     # Pins de seguridad — dependencias transitivas con CVEs
-    "cryptography==46.0.6",
+    "cryptography==46.0.7",
     "ecdsa==0.19.2",
     "pygments==2.20.0",
-    "requests==2.33.0",
+    "requests==2.34.2",
 ]
 
 [build-system]
