@@ -125,11 +125,11 @@ docker compose ps
 Deberías ver algo así:
 
 ```
-NAME              IMAGE              STATUS
-nn_auth_db        postgres:17-alpine Up (healthy)
-nn_auth_mailpit   axllent/mailpit    Up
-nn_auth_be        proyecto-be-fe-be  Up
-nn_auth_fe        proyecto-be-fe-fe  Up
+NAME              IMAGE                                    STATUS
+nn_auth_db        postgres:17-alpine                        Up (healthy)
+nn_auth_mailpit   axllent/mailpit                            Up
+nn_auth_be        proyecto-be_fastapi-fe_react-be            Up
+nn_auth_fe        proyecto-be_fastapi-fe_react-fe            Up
 ```
 
 > Si algún servicio aparece como `Exit` o `unhealthy`, ver el Paso 6 — Solución de problemas.

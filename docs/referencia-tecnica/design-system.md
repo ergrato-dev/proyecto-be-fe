@@ -24,7 +24,7 @@ Este color no es decorativo: es **semiótico**. Verde = Python; Azul = Node.js; 
 
 | Stack backend               | Proyecto              | Color Tailwind | Hex referencia |
 | --------------------------- | --------------------- | -------------- | -------------- |
-| **FastAPI (Python)** ← ESTE | `proyecto-be-fe`      | `emerald`      | `#059669`      |
+| **FastAPI (Python)** ← ESTE | `proyecto-be_fastapi-fe_react` | `emerald`      | `#059669`      |
 | Express.js (Node)           | `proyecto-beex-fe`    | `blue`         | `#2563eb`      |
 | Next.js fullstack           | `proyecto-be-fe-next` | `violet`       | `#7c3aed`      |
 | Spring Boot Java            | `proyecto-besb-fe`    | `amber`        | `#d97706`      |
@@ -250,7 +250,7 @@ El repositorio `ergrato-dev/proyecto-beex-fe` (Express.js) implementa el mismo
 sistema con `blue` como acento. Es el proyecto de referencia para comparar la
 misma arquitectura con distinto stack y distinto color de identidad.
 
-| Repositorio        | Stack             | Acento  | URL                                       |
-| ------------------ | ----------------- | ------- | ----------------------------------------- |
-| `proyecto-be-fe`   | FastAPI + Python  | emerald | _(este repo)_                             |
-| `proyecto-beex-fe` | Express.js + Node | blue    | `github.com/ergrato-dev/proyecto-beex-fe` |
+| Repositorio                       | Stack             | Acento  | URL                                       |
+| ---------------------------------- | ----------------- | ------- | ----------------------------------------- |
+| `proyecto-be_fastapi-fe_react`    | FastAPI + Python  | emerald | _(este repo)_                             |
+| `proyecto-beex-fe`                | Express.js + Node | blue    | `github.com/ergrato-dev/proyecto-beex-fe` |

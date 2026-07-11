@@ -156,7 +156,7 @@ Esto se conoce como **Separation of Concerns** (separación de responsabilidades
 ### Paso 1 — Posicionarse en la carpeta del frontend
 
 ```bash
-cd proyecto-be-fe/fe
+cd proyecto-be_fastapi-fe_react/fe
 ```
 
 ### Paso 2 — Instalar dependencias
@@ -1588,7 +1588,7 @@ pnpm preview            # Sirve el build de dist/ localmente (preview local)
 
 ```bash
 # 1. Asegurarse de estar en la carpeta fe/
-cd proyecto-be-fe/fe
+cd proyecto-be_fastapi-fe_react/fe
 
 # 2. Instalar dependencias (solo la primera vez o al agregar paquetes)
 pnpm install

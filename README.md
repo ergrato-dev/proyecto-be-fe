@@ -14,6 +14,15 @@ Incluye landing page pública, registro de usuarios, login, cambio de contraseñ
 
 ---
 
+## 📝 Antes de empezar
+
+Este repo **no es solo para clonar y cambiar el look**. Antes de presentarlo como evidencia de
+aprendizaje, completa la [**Bitácora obligatoria**](BITACORA.md) — es un checklist secuencial
+que verifica, con commits de tu propio repo, que entendiste el flujo real (arquitectura, auth,
+base de datos) y no solo la apariencia.
+
+---
+
 ## 📋 Tabla de Contenidos
 
 - [🔐 NN Auth System](#-nn-auth-system)
@@ -271,6 +280,8 @@ Para las reglas completas, ver [`.github/copilot-instructions.md`](.github/copil
 
 | Documento                                                                                    | Descripción                                              |
 | -------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| [`BITACORA.md`](BITACORA.md)                                                                 | Checklist obligatorio de aprendizaje, fase por fase       |
+| [`AUDITORIA.md`](AUDITORIA.md)                                                               | Auditoría de pertinencia/relevancia/completitud/actualidad/seguridad |
 | [`docs/referencia-tecnica/architecture.md`](docs/referencia-tecnica/architecture.md)         | Arquitectura general, flujos y decisiones técnicas       |
 | [`docs/referencia-tecnica/api-endpoints.md`](docs/referencia-tecnica/api-endpoints.md)       | Todos los endpoints con parámetros, respuestas y errores |
 | [`docs/referencia-tecnica/database-schema.md`](docs/referencia-tecnica/database-schema.md)   | Esquema ER, tablas, columnas y migraciones               |

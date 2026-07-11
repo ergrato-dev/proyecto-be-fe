@@ -977,7 +977,7 @@ el mismo sistema con stacks backend diferentes. Cada proyecto tiene un color de 
 
 | Stack                | Proyecto              | Color Tailwind | Rol en la serie     |
 | -------------------- | --------------------- | -------------- | ------------------- |
-| **FastAPI (Python)** | `proyecto-be-fe`      | **`emerald`**  | **← ESTE PROYECTO** |
+| **FastAPI (Python)** | `proyecto-be_fastapi-fe_react` | **`emerald`**  | **← ESTE PROYECTO** |
 | Express.js (Node)    | `proyecto-beex-fe`    | `blue`         | referencia          |
 | Next.js fullstack    | `proyecto-be-fe-next` | `violet`       |                     |
 | Spring Boot Java     | `proyecto-besb-fe`    | `amber`        |                     |

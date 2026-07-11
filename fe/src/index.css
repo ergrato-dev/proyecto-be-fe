@@ -11,9 +11,9 @@
  *
  * Cada proyecto de la serie educativa usa un color de acento distinto:
  *
- * | Stack              | Proyecto              | Color Tailwind |
- * |--------------------|-----------------------|----------------|
- * | FastAPI (Python)   | proyecto-be-fe        | emerald ← ESTE |
+ * | Stack              | Proyecto                        | Color Tailwind |
+ * |--------------------|----------------------------------|----------------|
+ * | FastAPI (Python)   | proyecto-be_fastapi-fe_react    | emerald ← ESTE |
  * | Express.js (Node)  | proyecto-beex-fe      | blue           |
  * | Next.js fullstack  | proyecto-be-fe-next   | violet         |
  * | Spring Boot Java   | proyecto-besb-fe      | amber          |
