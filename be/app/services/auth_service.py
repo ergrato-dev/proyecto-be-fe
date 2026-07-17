@@ -35,6 +35,7 @@ from app.utils.audit_log import (
 )
 from app.utils.email import send_password_reset_email, send_verification_email
 from app.utils.security import (
+    DUMMY_PASSWORD_HASH,
     create_access_token,
     create_refresh_token,
     decode_token,
@@ -142,7 +143,13 @@ def login_user(db: Session, login_data: UserLogin) -> TokenResponse:
     stmt = select(User).where(User.email == login_data.email)
     user = db.execute(stmt).scalar_one_or_none()
 
-    if not user or not verify_password(login_data.password, user.hashed_password):
+    # ¿Qué? Si el usuario no existe, igual se corre bcrypt contra DUMMY_PASSWORD_HASH.
+    # ¿Para qué? Sin esto, el branch "usuario no existe" retorna en microsegundos
+    #           mientras que "contraseña incorrecta" tarda lo que tarda bcrypt (~60-100ms) —
+    #           esa diferencia de tiempo delata qué emails existen aunque el mensaje
+    #           de error sea idéntico (timing attack, OWASP A07).
+    password_hash = user.hashed_password if user else DUMMY_PASSWORD_HASH
+    if not user or not verify_password(login_data.password, password_hash):
         # ¿Qué? Registrar el intento fallido antes de lanzar la excepción.
         # ¿Para qué? Detectar patrones de fuerza bruta — múltiples fallos en poco tiempo son alarma.
         # ¿Impacto? OWASP A09: sin este log, un ataque de 10,000 intentos pasa desapercibido.

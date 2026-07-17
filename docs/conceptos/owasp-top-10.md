@@ -410,6 +410,29 @@ used: Mapped[bool] = mapped_column(Boolean, default=False)
 raise HTTPException(status_code=401, detail="Credenciales incorrectas")
 ```
 
+**6. Timing attack en login — el mensaje genérico no es suficiente**:
+
+Si el código busca el usuario y solo llama a `verify_password` cuando existe
+(`if not user or not verify_password(...)`), el branch "usuario no existe"
+responde en microsegundos mientras que "contraseña incorrecta" tarda lo que
+tarda bcrypt (~60-100ms). Un atacante puede medir esa diferencia con Burp
+Repeater y enumerar usuarios válidos aunque el mensaje de error sea idéntico
+en ambos casos — el mensaje no es la única señal que existe.
+
+```python
+# app/utils/security.py — hash fijo sin usuario real detrás
+DUMMY_PASSWORD_HASH = "$2b$12$..."
+
+# app/services/auth_service.py
+user = db.execute(select(User).where(User.email == login_data.email)).scalar_one_or_none()
+
+# ✅ Si el usuario no existe, igual se corre bcrypt contra DUMMY_PASSWORD_HASH —
+#    ambos branches tardan lo mismo, no hay señal de timing que enumerar.
+password_hash = user.hashed_password if user else DUMMY_PASSWORD_HASH
+if not user or not verify_password(login_data.password, password_hash):
+    raise HTTPException(status_code=401, detail="Credenciales inválidas")
+```
+
 ---
 
 ## A08 — Software and Data Integrity Failures
